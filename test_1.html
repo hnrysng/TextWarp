@@ -1,0 +1,61 @@
+<html>
+  <head>
+    <style>
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        /* background-color: antiquewhite; */
+        background-color: #222222;
+        color: white;
+        display: flex;
+        justify-content: center;
+      }
+
+      canvas {
+        /* display: block; */
+        margin: auto;
+        width: 500px;
+      }
+
+    </style>
+  </head>
+
+  <body>
+
+    <div id="container"></div>
+
+    <canvas id="canvas" width="1000" height="1000"></canvas>
+    
+
+
+    <script>
+
+        let canvas = document.getElementById('canvas');
+        let ctx = canvas.getContext('2d');
+        ctx.imageSmoothingEnabled = true;
+        ctx.webkitImageSmoothingEnabled = true;
+        ctx.mozImageSmoothingEnabled = true;
+        ctx.msImageSmoothingEnabled = true;
+        ctx.oImageSmoothingEnabled = true;
+
+
+
+
+
+        function anim() {
+
+            
+            window.requestAnimationFrame(anim);
+
+
+        }
+
+        anim();
+
+
+
+
+    </script>
+  </body>
+</html>
