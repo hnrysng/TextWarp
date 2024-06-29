@@ -27,31 +27,515 @@
 
     <canvas id="canvas" width="1000" height="1000"></canvas>
     
+    <script src="letter_data/cap_c_der.js"></script>
 
 
     <script>
-
-        let canvas = document.getElementById('canvas');
-        let ctx = canvas.getContext('2d');
-        ctx.imageSmoothingEnabled = true;
-        ctx.webkitImageSmoothingEnabled = true;
-        ctx.mozImageSmoothingEnabled = true;
-        ctx.msImageSmoothingEnabled = true;
-        ctx.oImageSmoothingEnabled = true;
-
+      let canvas = document.getElementById('canvas');
+      let ctx = canvas.getContext('2d');
+      ctx.imageSmoothingEnabled = true;
+      ctx.webkitImageSmoothingEnabled = true;
+      ctx.mozImageSmoothingEnabled = true;
+      ctx.msImageSmoothingEnabled = true;
+      ctx.ImageSmoothingEnabled = true;
 
 
+      function bezier_cut(path, num_of_points, scale){
+        
+      }
 
 
-        function anim() {
+      function spin_type(letter_glyphs, num_of_points, scale) {
+          scale = typeof scale !== 'undefined' ? scale : 1;
+          pos_x = typeof pos_x !== 'undefined' ? pos_x : 0;
+          pos_y = typeof pos_y !== 'undefined' ? pos_y : 0;
 
-            
-            window.requestAnimationFrame(anim);
+          console.log(letter_glyphs);
+
+          num_of_points = num_of_points - 1;
+
+          function glyphs_to_canvas(letter_glyphs_con) {
+
+              let letter_canvas = {structure: {container: [], baseline: []}, path: []};
+
+              let glyphs_con_height_point = Object.entries(letter_glyphs_con.structure.container)[0][1].y;
 
 
-        }
+              // converting strcuture path to canvas
+              for (let i = 0; i < Object.entries(letter_glyphs_con.structure.container).length; i++) {
+                  letter_canvas.structure.container.push({
+                      x: 0,
+                      y: 0
+                  });
+              }
 
-        anim();
+
+              for (let i = 0; i < Object.entries(letter_glyphs_con.structure.container).length; i++) {
+                  letter_canvas.structure.container[i].x = (Object.entries(letter_glyphs_con.structure.container)[i][1].x * scale);
+                  letter_canvas.structure.container[i].y = (-(Object.entries(letter_glyphs_con.structure.container)[i][1].y - glyphs_con_height_point) * scale);
+              }
+
+
+
+
+              // converting path to canvas
+              for (let i = 0; i < Object.entries(letter_glyphs_con.path).length; i++) {
+                  letter_canvas.path.push({
+                      x: 0,
+                      y: 0,
+                      in_x: 0,
+                      in_y: 0,
+                      out_x: 0,
+                      out_y: 0
+                  });
+              }
+
+              function glyph_y_con(letter_canvas) {
+                  let glyph_y_pos = -letter_canvas + glyphs_con_height_point;
+                  glyph_y_pos = glyph_y_pos * scale;
+                  return glyph_y_pos;
+              }
+
+              function glyph_y_hndl_con(letter_canvas) {
+                  let glyph_y_pos_hndl = -letter_canvas;
+                  glyph_y_pos_hndl = glyph_y_pos_hndl * scale;
+                  return glyph_y_pos_hndl;
+              }
+
+
+              for (let i = 0; i < Object.entries(letter_glyphs_con.path).length; i++) {
+                  letter_canvas.path[i].x = (Object.entries(letter_glyphs_con.path)[i][1].x * scale);
+                  letter_canvas.path[i].in_x = (Object.entries(letter_glyphs_con.path)[i][1].in_x * scale) + letter_canvas.path[i].x;
+                  letter_canvas.path[i].out_x = (Object.entries(letter_glyphs_con.path)[i][1].out_x * scale) + letter_canvas.path[i].x;
+                  letter_canvas.path[i].y = glyph_y_con(Object.entries(letter_glyphs_con.path)[i][1].y);
+                  letter_canvas.path[i].in_y = glyph_y_hndl_con(Object.entries(letter_glyphs_con.path)[i][1].in_y) + letter_canvas.path[i].y;
+                  letter_canvas.path[i].out_y = glyph_y_hndl_con(Object.entries(letter_glyphs_con.path)[i][1].out_y) + letter_canvas.path[i].y;
+              }
+
+
+
+              return letter_canvas;
+          }
+
+          function get_bezier_points(letter_canvas_path_con) {
+              let q0_x = [],
+                  q0_y = [],
+                  q1_x = [],
+                  q1_y = [],
+                  q2_x = [],
+                  q2_y = [],
+                  r0_x = [],
+                  r0_y = [],
+                  r1_x = [],
+                  r1_y = [],
+                  s0_x = [],
+                  s0_y = [];
+
+              number_of_times = 1000;
+              let time = [];
+
+              for (let i = 0; i <= number_of_times; i++) {
+                  time[i] = i * (1 / number_of_times)
+              }
+
+              for (let i = 0; i < letter_canvas_path_con.length - 1; i++) {
+                  q0_x[i] = [];
+                  q0_y[i] = [];
+                  q1_x[i] = [];
+                  q1_y[i] = [];
+                  q2_x[i] = [];
+                  q2_y[i] = [];
+
+                  r0_x[i] = [];
+                  r0_y[i] = [];
+                  r1_x[i] = [];
+                  r1_y[i] = [];
+
+                  s0_x[i] = [];
+                  s0_y[i] = [];
+              }
+
+              for (let i = 0; i < letter_canvas_path_con.length - 1; i = i + 1) {
+                  for (let a = 0; a <= number_of_times; a = a + 1) {
+                      q0_x[i][a] = (1 - time[a]) * (letter_canvas_path_con[i].x) + time[a] * (letter_canvas_path_con[i].out_x);
+                      q0_y[i][a] = (1 - time[a]) * (letter_canvas_path_con[i].y) + time[a] * (letter_canvas_path_con[i].out_y);
+
+                      q1_x[i][a] = (1 - time[a]) * (letter_canvas_path_con[i].out_x) + time[a] * (letter_canvas_path_con[i + 1].in_x);
+                      q1_y[i][a] = (1 - time[a]) * (letter_canvas_path_con[i].out_y) + time[a] * (letter_canvas_path_con[i + 1].in_y);
+
+                      q2_x[i][a] = (1 - time[a]) * (letter_canvas_path_con[i + 1].in_x) + time[a] * (letter_canvas_path_con[i + 1].x);
+                      q2_y[i][a] = (1 - time[a]) * (letter_canvas_path_con[i + 1].in_y) + time[a] * (letter_canvas_path_con[i + 1].y);
+
+                      r0_x[i][a] = (1 - time[a]) * (q0_x[i][a]) + time[a] * (q1_x[i][a]);
+                      r0_y[i][a] = (1 - time[a]) * (q0_y[i][a]) + time[a] * (q1_y[i][a]);
+
+                      r1_x[i][a] = (1 - time[a]) * (q1_x[i][a]) + time[a] * (q2_x[i][a]);
+                      r1_y[i][a] = (1 - time[a]) * (q1_y[i][a]) + time[a] * (q2_y[i][a]);
+
+                      s0_x[i][a] = (1 - time[a]) * (r0_x[i][a]) + time[a] * (r1_x[i][a]);
+                      s0_y[i][a] = (1 - time[a]) * (r0_y[i][a]) + time[a] * (r1_y[i][a]);
+                  }
+              }
+
+
+              let s0_points = {
+                  s0_x,
+                  s0_y
+              }
+
+              return s0_points;
+          }
+          
+          function get_bezier_length(bezier_path) {
+              let each_point_length = [];
+              let each_path_length = [];
+              let bezier_total_length;
+
+
+              for (let i = 0; i < bezier_path.s0_x.length; i++) {
+                  each_point_length[i] = [];
+              }
+
+              for (let i = 0; i < bezier_path.s0_x.length; i++) {
+                  for (let a = 0; a < bezier_path.s0_x[0].length - 1; a++) {
+                      each_point_length[i].push(Math.hypot(bezier_path.s0_x[i][a] - bezier_path.s0_x[i][a + 1], bezier_path.s0_y[i][a] - bezier_path.s0_y[i][a + 1]))
+                  }
+              }
+
+              for (let i = 0; i < bezier_path.s0_x.length; i++) {
+                  each_path_length.push(each_point_length[i].reduce(function(a, b) {
+                      return (a + b);
+                  }, 0))
+              }
+
+              bezier_total_length = each_path_length.reduce(function(a, b) {
+                  return (a + b);
+              }, 0);
+
+              
+
+              return {
+                  each_point_length,
+                  each_path_length,
+                  bezier_total_length
+              };
+          }
+
+          function equally_divide_length(total_length, each_point_length) {
+              let point_length_tracker = 0;
+              let array_index = [];
+
+              for (let i = 0; i < each_point_length.length; i++) {
+                  array_index[i] = [];
+              }
+
+              let avg_distance = (total_length / num_of_points);
+              
+              each_point_length.forEach(matching_avg_dist_and_each_point_length);
+
+              function matching_avg_dist_and_each_point_length(item, index, arr) {
+                  for (let i = 0; i < each_point_length[index].length; i++) {
+                      point_length_tracker = point_length_tracker + each_point_length[index][i];
+                      if (point_length_tracker >= avg_distance) {
+                          array_index[index].push(i);
+                          point_length_tracker = point_length_tracker - avg_distance;
+                      }
+                  }
+              }
+
+
+              // adding the first point
+              array_index[0].unshift(0);
+
+
+              // the calculation isn't accurate keeping track of point_length_tracker. 
+              // this prevents from not inlcuding the last point of the path by two conditions: 
+              // A: if the avg_distance and point length tracker only has 0.00001 difference
+              // B: if the array_index doesn't include the last point(999) by the matching_avg_dist_and_each_point_length calculation
+              // Warning: there might be an edge case for this
+              if(avg_distance - point_length_tracker < 0.00001 && array_index[array_index.length - 1].includes(999) == false){
+                  array_index[array_index.length - 1].push(999);
+              }
+
+              return array_index;
+
+
+          };
+
+          function get_points_position(bezier_points_con, divided_length_array_index){
+
+              let point_con = [];
+              
+              for(let i = 0; i < bezier_points_con.s0_x.length; i++){
+                  for(let a = 0; a < divided_length_array_index[i].length; a++){
+                          point_con.push({x : bezier_points_con.s0_x[i][divided_length_array_index[i][a]], y: bezier_points_con.s0_y[i][divided_length_array_index[i][a]]})
+                  }
+              }
+
+              return point_con;
+          }
+
+
+          //convert glyph structure path to canvas
+          let letter_canvas_structure_con = glyphs_to_canvas(letter_glyphs).structure.container;
+
+          //convert glyph path to canvas
+          let letter_canvas_path_con = glyphs_to_canvas(letter_glyphs).path;
+
+          //get the bezier point position (s0_x and s0_y) with 1000 amount -> 1000 because it needs to get as much data in order to sort out the right s0 point when equally_divide_length(!)
+          //output = array of position
+          let bezier_points_con = get_bezier_points(letter_canvas_path_con, 100);
+          console.log(bezier_points_con)
+          //calculate the length with the bezier_points_con (s0_x and s0_y) points
+          //output = total length, array of each point length
+          let bezier_length = get_bezier_length(bezier_points_con);
+
+          //divide the length with number_of_point amount and get the matching array index for get_bezier_points output array
+          let divided_length_array_index = equally_divide_length(bezier_length.bezier_total_length, bezier_length.each_point_length);
+
+          //get the array of point position by matching or filtering bezier_points_con(every points array) with divided_length_array_index(selected index)
+          let points_position = get_points_position(bezier_points_con, divided_length_array_index);
+
+
+
+          function derivative(bezier_points_con) {
+
+              let derivative_con = [];
+
+              for (let i = 0; i < bezier_points_con.s0_x.length; i++) {
+                  derivative_con[i] = [];
+              }
+
+              for (let i = 0; i < bezier_points_con.s0_x.length; i++) {
+                  for (let a = 0; a < bezier_points_con.s0_x[i].length - 1; a++) {
+                      derivative_con[i].push(angle(bezier_points_con.s0_x[i][a], bezier_points_con.s0_y[i][a], bezier_points_con.s0_x[i][a + 1], bezier_points_con.s0_y[i][a + 1]));
+                  }
+              }
+
+              function angle(cx, cy, ex, ey) {
+                  var dx = ex - cx;
+                  var dy = ey - cy;
+                  var theta = Math.atan2(dy, dx);
+                  theta *= -180 / Math.PI;
+                  
+                  if(theta >= 90){
+                      theta = theta - 90
+                  }else if(theta < 0){
+                      theta = theta + 270
+                  }else if(theta > 0 && theta < 90){
+                      theta = theta + 270
+                  }
+
+                  return theta;
+              }
+              
+              return derivative_con;
+
+          }
+
+          function get_point_angle(derivative_angle_con, divided_length_array_index){
+
+              let deg_der = [];
+
+              for(let i = 0; i < derivative_angle_con.length; i++){
+                  for(let a = 0; a < divided_length_array_index[i].length; a++){
+                      deg_der.push(derivative_angle_con[i][divided_length_array_index[i][a]])
+                  }
+              }
+
+
+              let deg_90 = [];
+
+              let deg_45 = [];
+
+              let deg_0 = [];
+
+              deg_90.length = deg_der.length
+              deg_45.length = deg_der.length
+              deg_0.length = deg_der.length
+
+              for(let i = 0; i < deg_der.length; i++){
+                  deg_90[i] = 90;
+                  deg_45[i] = 45;
+                  deg_0[i] = 0;
+              }
+
+              return {deg_der, deg_90, deg_45, deg_0};
+          }
+
+
+          //get the derivative angles with bezier_points_con => same number of array with bezier_points_con
+          let derivative_angle_con = derivative(bezier_points_con);
+
+          //get the array of point derivative by matching or filtering bezier_points_con(every points array) with divided_length_array_index(selected index)
+          //get the angle of points with the same length of point_derivative
+          let points_angle = get_point_angle(derivative_angle_con, divided_length_array_index);
+
+          return {letter_canvas_structure_con, points_position, letter_canvas_path_con, points_angle}
+
+      }    
+      
+      function Draw_spintype(letter, letter_90, letter_0, letter_italic){
+
+          let default_key = 0;
+
+          let current_angle = [];
+
+          current_angle.length = letter.points_angle.deg_der.length
+
+          for(let i = 0; i < letter.points_angle.deg_der.length; i++){
+              current_angle[i] = letter.points_angle.deg_0[i];
+          }
+
+
+
+          let current_point = [];
+
+          current_point.length = letter.points_position.length
+
+          for(let i = 0; i < letter.points_position.length; i++){
+              current_point[i] = { x: letter.points_position[i].x, y:letter.points_position[i].y}
+          }
+
+          
+          console.log(letter)
+
+          let next_point;
+          let next_angle;
+
+          this.draw = function(key){
+
+              if(key == 1){
+                  next_angle = letter.points_angle.deg_45
+                  next_points = letter.points_position
+              }else if(key == 2){
+                  next_angle = letter.points_angle.deg_90
+                  next_points = letter_90.points_position
+              }else if(key == 3){
+                  next_angle = letter.points_angle.deg_0
+                  next_points = letter_0.points_position
+              }else if(key == 4){
+                  next_angle = letter.points_angle.deg_0
+                  next_points = letter_italic.points_position
+              }
+              
+
+              if (default_key !== key) {
+                  for (let i = 0; i <  next_angle.length; i++) {
+                      current_angle[i] = current_angle[i] + (0.04 * (next_angle[i] - current_angle[i]));
+                  }
+
+                  for (let i = 0; i <  next_points.length; i++) {
+                      current_point[i].x = current_point[i].x + (0.04 * (next_points[i].x - current_point[i].x));
+                      current_point[i].y = current_point[i].y + (0.04 * (next_points[i].y - current_point[i].y));
+                  }
+              }
+              
+              
+
+                  for(let i = 0; i < letter.points_position.length; i++ ){
+                      ctx.beginPath();
+                      
+                      ctx.moveTo(
+                          rotation(current_point[i].x + 50, current_point[i].y, current_point[i].x, current_point[i].y, current_angle[i]).nx, 
+                          rotation(current_point[i].x + 50, current_point[i].y, current_point[i].x, current_point[i].y, current_angle[i]).ny);
+
+                      ctx.lineTo(
+                          rotation(current_point[i].x - 50, current_point[i].y, current_point[i].x, current_point[i].y, current_angle[i]).nx, 
+                          rotation(current_point[i].x - 50, current_point[i].y, current_point[i].x, current_point[i].y, current_angle[i]).ny);
+                      ctx.lineWidth = 1;
+                      ctx.strokeStyle = "#eeeeee";
+                      ctx.stroke();
+
+                      
+                      ctx.fill();
+                      ctx.closePath();
+                  }
+
+          }
+
+
+
+          this.draw_structure = function(key){
+
+              ctx.beginPath();
+              ctx.moveTo(letter.letter_canvas_structure_con[0].x, letter.letter_canvas_structure_con[0].y)
+              
+              for(let i = 1; i < letter.letter_canvas_structure_con.length; i++ ){
+                  ctx.lineTo(letter.letter_canvas_structure_con[i].x, letter.letter_canvas_structure_con[i].y, 1, 0, 2 * Math.PI);
+              }
+
+              ctx.lineTo(letter.letter_canvas_structure_con[0].x, letter.letter_canvas_structure_con[0].y)
+              ctx.stroke();
+              ctx.closePath();
+
+
+          }
+
+
+
+
+
+          this.draw_points = function(){
+              for(let i = 0; i < letter.points_position.length; i++ ){
+                  ctx.beginPath();
+                  ctx.arc(letter.points_position[i].x, letter.points_position[i].y, 1, 0, 2 * Math.PI);
+                  ctx.stroke();
+              }
+          }
+
+
+
+          }
+
+      function rotation(x, y, cx, cy, angle_value) {
+          var radians = (Math.PI / 180) * angle_value,
+              cos = Math.cos(radians),
+              sin = Math.sin(radians),
+              nx = (cos * (x - cx)) + (sin * (y - cy)) + cx,
+              ny = (cos * (y - cy)) - (sin * (x - cx)) + cy;
+
+          return {nx, ny};
+      }
+      
+      function math_round_two_decimal(value){
+          let output = Math.round((value) * 100) / 100;
+
+          return output;
+      }
+
+
+
+
+
+      let cap_c_der = spin_type(cap_c_der_glyph, 120, 1.5);
+        // let cap_c_italic_der = spin_type(cap_c_italic_der_glyph, 100, 0.5);
+        // let cap_c_0 = spin_type(cap_c_0_glyph, 100, 0.5);
+        // let cap_c_90 = spin_type(cap_c_90_glyph, 100, 0.5);
+        
+
+        let cap_c = new Draw_spintype(cap_c_der);
+
+
+
+      function anim() {
+        
+
+        ctx.beginPath();
+            ctx.fillStyle = "#000000";
+            ctx.rect(0, 0, 3000, 3000);
+            ctx.fill();
+            ctx.closePath();
+
+            // cap_c.draw(key, update_deg, val, pos.x, pos.y, 100);
+            // cap_c.draw_points(pos.x, pos.y);
+            // cap_c.draw_structure(key, pos.x, pos.y);
+
+          window.requestAnimationFrame(anim);
+
+      }
+
+      anim();
 
 
 
