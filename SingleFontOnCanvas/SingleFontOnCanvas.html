@@ -73,7 +73,8 @@
 
 
 
-        let letter_a_1 = new StaticSingleFontOnCanvas(Neue_Haas_Grotesk_Display_Pro_55_Roman, 'Aamburgefonstiv', assets);
+        let letter_a_1 = new StaticSingleFontOnCanvas(Neue_Haas_Grotesk_Display_Pro_55_Roman, 'aaAA', assets);
+        // let letter_a_2 = new StaticSingleFontOnCanvas(Neue_Haas_Grotesk_Display_Pro_55_Roman, 'Aavs', assets);
 
 
 
@@ -537,80 +538,80 @@
 
             letter_a_1.draw();
 
-            ctx.beginPath();
-            ctx.rect(100, 100, 10, 10);
-            ctx.fillStyle = "#ff0000";
-            ctx.fill();
-            ctx.closePath();
+          //   ctx.beginPath();
+          //   ctx.rect(100, 100, 10, 10);
+          //   ctx.fillStyle = "#ff0000";
+          //   ctx.fill();
+          //   ctx.closePath();
 
 
 
-            ctx.beginPath();
+          //   ctx.beginPath();
 
-            for(let i = 0; i < grid_point_con.length;i++){
-              ctx.moveTo(grid_point_con[i].x + 100, grid_point_con[i].y + 100);
-              ctx.lineTo(grid_point_con[i].x + 100, grid_point_con[i].y + letter_a_1.total_height + 100);
-            }
+          //   for(let i = 0; i < grid_point_con.length;i++){
+          //     ctx.moveTo(grid_point_con[i].x + 100, grid_point_con[i].y + 100);
+          //     ctx.lineTo(grid_point_con[i].x + 100, grid_point_con[i].y + letter_a_1.total_height + 100);
+          //   }
 
-            ctx.stroke();
-            ctx.closePath();
-
-
-
-
-            ctx.beginPath();
-
-            for(let i = 0; i < test_grid.length;i++){
-              ctx.moveTo(test_grid[i].x + test.x, test_grid[i].y + test.y);
-              ctx.lineTo(test_grid[i].x + test.x, test_grid[i].y + letter_a_1.total_height + test.y);
-            }
-
-            ctx.stroke();
-            ctx.closePath();
+          //   ctx.stroke();
+          //   ctx.closePath();
 
 
 
 
-            ctx.beginPath();
-            for(let i = 0; i < new_path_con.length; i++){
-              for(let j = 0; j < new_path_con[i].length; j++){
+          //   ctx.beginPath();
 
-                        ctx.moveTo(
-                          (test_grid[new_path_con_1[i][j][0].x].x + ((test_grid[new_path_con_1[i][j][0].x + 1].x - test_grid[new_path_con_1[i][j][0].x].x) * new_path_con[i][j][0].x)) + test.x, 
-                          (new_path_con[i][j][0].y * height) + test.y
-                        );
+          //   for(let i = 0; i < test_grid.length;i++){
+          //     ctx.moveTo(test_grid[i].x + test.x, test_grid[i].y + test.y);
+          //     ctx.lineTo(test_grid[i].x + test.x, test_grid[i].y + letter_a_1.total_height + test.y);
+          //   }
 
-                        for(let k = 0; k < new_path_con[i][j].length - 1; k++){
-                          ctx.bezierCurveTo(
-                            (test_grid[new_path_con_1[i][j][k].out_x].x + ((test_grid[new_path_con_1[i][j][k].out_x + 1].x - test_grid[new_path_con_1[i][j][k].out_x].x) * new_path_con[i][j][k].out_x)) + test.x, 
-                            (new_path_con[i][j][k].out_y * height) + test.y,
-                            (test_grid[new_path_con_1[i][j][k + 1].in_x].x + ((test_grid[new_path_con_1[i][j][k + 1].in_x + 1].x - test_grid[new_path_con_1[i][j][k + 1].in_x].x) * new_path_con[i][j][k + 1].in_x)) + test.x, 
-                            (new_path_con[i][j][k + 1].in_y * height) + test.y,
-                            (test_grid[new_path_con_1[i][j][k + 1].x].x + ((test_grid[new_path_con_1[i][j][k + 1].x + 1].x - test_grid[new_path_con_1[i][j][k + 1].x].x) * new_path_con[i][j][k + 1].x)) + test.x, 
-                            (new_path_con[i][j][k + 1].y * height) + test.y
-                          );
-                        }
+          //   ctx.stroke();
+          //   ctx.closePath();
 
-                        ctx.bezierCurveTo(
-                            (test_grid[new_path_con_1[i][j][new_path_con[i][j].length - 1].out_x].x + ((test_grid[new_path_con_1[i][j][new_path_con[i][j].length - 1].out_x + 1].x - test_grid[new_path_con_1[i][j][new_path_con[i][j].length - 1].out_x].x) * new_path_con[i][j][new_path_con[i][j].length - 1].out_x)) + test.x, 
-                            (new_path_con[i][j][new_path_con[i][j].length - 1].out_y * height) + test.y,
-                            (test_grid[new_path_con_1[i][j][0].in_x].x + ((test_grid[new_path_con_1[i][j][0].in_x + 1].x - test_grid[new_path_con_1[i][j][0].in_x].x) * new_path_con[i][j][0].in_x)) + test.x, 
-                            (new_path_con[i][j][0].in_y * height) + test.y,
-                            (test_grid[new_path_con_1[i][j][0].x].x + ((test_grid[new_path_con_1[i][j][0].x + 1].x - test_grid[new_path_con_1[i][j][0].x].x) * new_path_con[i][j][0].x)) + test.x, 
-                            (new_path_con[i][j][0].y * height) + test.y
-                        );
 
-                        ctx.lineTo(
-                          (test_grid[new_path_con_1[i][j][0].x].x + ((test_grid[new_path_con_1[i][j][0].x + 1].x - test_grid[new_path_con_1[i][j][0].x].x) * new_path_con[i][j][0].x)) + test.x, 
-                          (new_path_con[i][j][0].y * height) + test.y
-                        );
 
-            }
-          }
 
-                  ctx.fillStyle = "#ff0000";
-                  ctx.fill();
-                  ctx.closePath();
+          //   ctx.beginPath();
+          //   for(let i = 0; i < new_path_con.length; i++){
+          //     for(let j = 0; j < new_path_con[i].length; j++){
+
+          //               ctx.moveTo(
+          //                 (test_grid[new_path_con_1[i][j][0].x].x + ((test_grid[new_path_con_1[i][j][0].x + 1].x - test_grid[new_path_con_1[i][j][0].x].x) * new_path_con[i][j][0].x)) + test.x, 
+          //                 (new_path_con[i][j][0].y * height) + test.y
+          //               );
+
+          //               for(let k = 0; k < new_path_con[i][j].length - 1; k++){
+          //                 ctx.bezierCurveTo(
+          //                   (test_grid[new_path_con_1[i][j][k].out_x].x + ((test_grid[new_path_con_1[i][j][k].out_x + 1].x - test_grid[new_path_con_1[i][j][k].out_x].x) * new_path_con[i][j][k].out_x)) + test.x, 
+          //                   (new_path_con[i][j][k].out_y * height) + test.y,
+          //                   (test_grid[new_path_con_1[i][j][k + 1].in_x].x + ((test_grid[new_path_con_1[i][j][k + 1].in_x + 1].x - test_grid[new_path_con_1[i][j][k + 1].in_x].x) * new_path_con[i][j][k + 1].in_x)) + test.x, 
+          //                   (new_path_con[i][j][k + 1].in_y * height) + test.y,
+          //                   (test_grid[new_path_con_1[i][j][k + 1].x].x + ((test_grid[new_path_con_1[i][j][k + 1].x + 1].x - test_grid[new_path_con_1[i][j][k + 1].x].x) * new_path_con[i][j][k + 1].x)) + test.x, 
+          //                   (new_path_con[i][j][k + 1].y * height) + test.y
+          //                 );
+          //               }
+
+          //               ctx.bezierCurveTo(
+          //                   (test_grid[new_path_con_1[i][j][new_path_con[i][j].length - 1].out_x].x + ((test_grid[new_path_con_1[i][j][new_path_con[i][j].length - 1].out_x + 1].x - test_grid[new_path_con_1[i][j][new_path_con[i][j].length - 1].out_x].x) * new_path_con[i][j][new_path_con[i][j].length - 1].out_x)) + test.x, 
+          //                   (new_path_con[i][j][new_path_con[i][j].length - 1].out_y * height) + test.y,
+          //                   (test_grid[new_path_con_1[i][j][0].in_x].x + ((test_grid[new_path_con_1[i][j][0].in_x + 1].x - test_grid[new_path_con_1[i][j][0].in_x].x) * new_path_con[i][j][0].in_x)) + test.x, 
+          //                   (new_path_con[i][j][0].in_y * height) + test.y,
+          //                   (test_grid[new_path_con_1[i][j][0].x].x + ((test_grid[new_path_con_1[i][j][0].x + 1].x - test_grid[new_path_con_1[i][j][0].x].x) * new_path_con[i][j][0].x)) + test.x, 
+          //                   (new_path_con[i][j][0].y * height) + test.y
+          //               );
+
+          //               ctx.lineTo(
+          //                 (test_grid[new_path_con_1[i][j][0].x].x + ((test_grid[new_path_con_1[i][j][0].x + 1].x - test_grid[new_path_con_1[i][j][0].x].x) * new_path_con[i][j][0].x)) + test.x, 
+          //                 (new_path_con[i][j][0].y * height) + test.y
+          //               );
+
+          //   }
+          // }
+
+          //         ctx.fillStyle = "#ff0000";
+          //         ctx.fill();
+          //         ctx.closePath();
 
 
 

@@ -1,0 +1,576 @@
+<html>
+  <head>
+    <link rel="stylesheet" href="assets/css/style.css">
+  </head>
+
+  <body>
+    
+
+    <canvas id="canvas" width="3000" height="3000"></canvas>
+    <script src="assets/data/data_obj.js"></script>
+    <script src="assets/data/shope_0.js"></script>
+    <script src="assets/data/shope_1.js"></script>
+    <script src="assets/data/shope_2.js"></script>
+    <script src="assets/data/shope_3.js"></script>
+
+
+
+
+    <script>
+      
+      let canvas = document.getElementById("canvas");
+      let ctx = canvas.getContext("2d");
+      ctx.imageSmoothingEnabled = true;
+      ctx.webkitImageSmoothingEnabled = true;
+      ctx.mozImageSmoothingEnabled = true;
+      ctx.msImageSmoothingEnabled = true;
+      ctx.oImageSmoothingEnabled = true;
+
+        let shape_data_con = [shape_0, shape_1, shape_2, shape_3]
+
+
+        console.log(shape_obj)
+        console.log(shape_data_con)
+
+
+      function get_bezier_points(letter_canvas_path_con) {
+                let q0_x = [],
+                    q0_y = [],
+                    q1_x = [],
+                    q1_y = [],
+                    q2_x = [],
+                    q2_y = [],
+                    r0_x = [],
+                    r0_y = [],
+                    r1_x = [],
+                    r1_y = [],
+                    s0_x = [],
+                    s0_y = [];
+
+                number_of_times = 1000;
+                let time = [];
+
+                for (let i = 0; i <= number_of_times; i++) {
+                    time[i] = i * (1 / number_of_times)
+                }
+
+                for (let i = 0; i < letter_canvas_path_con.length - 1; i++) {
+                    q0_x[i] = [];
+                    q0_y[i] = [];
+                    q1_x[i] = [];
+                    q1_y[i] = [];
+                    q2_x[i] = [];
+                    q2_y[i] = [];
+
+                    r0_x[i] = [];
+                    r0_y[i] = [];
+                    r1_x[i] = [];
+                    r1_y[i] = [];
+
+                    s0_x[i] = [];
+                    s0_y[i] = [];
+                }
+
+                for (let i = 0; i < letter_canvas_path_con.length - 1; i = i + 1) {
+                    for (let a = 0; a <= number_of_times; a = a + 1) {
+                        q0_x[i][a] = (1 - time[a]) * (letter_canvas_path_con[i].x) + time[a] * (letter_canvas_path_con[i].out_x);
+                        q0_y[i][a] = (1 - time[a]) * (letter_canvas_path_con[i].y) + time[a] * (letter_canvas_path_con[i].out_y);
+
+                        q1_x[i][a] = (1 - time[a]) * (letter_canvas_path_con[i].out_x) + time[a] * (letter_canvas_path_con[i + 1].in_x);
+                        q1_y[i][a] = (1 - time[a]) * (letter_canvas_path_con[i].out_y) + time[a] * (letter_canvas_path_con[i + 1].in_y);
+
+                        q2_x[i][a] = (1 - time[a]) * (letter_canvas_path_con[i + 1].in_x) + time[a] * (letter_canvas_path_con[i + 1].x);
+                        q2_y[i][a] = (1 - time[a]) * (letter_canvas_path_con[i + 1].in_y) + time[a] * (letter_canvas_path_con[i + 1].y);
+
+                        r0_x[i][a] = (1 - time[a]) * (q0_x[i][a]) + time[a] * (q1_x[i][a]);
+                        r0_y[i][a] = (1 - time[a]) * (q0_y[i][a]) + time[a] * (q1_y[i][a]);
+
+                        r1_x[i][a] = (1 - time[a]) * (q1_x[i][a]) + time[a] * (q2_x[i][a]);
+                        r1_y[i][a] = (1 - time[a]) * (q1_y[i][a]) + time[a] * (q2_y[i][a]);
+
+                        s0_x[i][a] = ((1 - time[a]) * (r0_x[i][a]) + time[a] * (r1_x[i][a]));
+                        s0_y[i][a] = ((1 - time[a]) * (r0_y[i][a]) + time[a] * (r1_y[i][a]));
+                    }
+                }
+
+
+                let s0_points = {
+                    s0_x,
+                    s0_y
+                }
+
+                return s0_points;
+            }
+
+
+      function get_bezier_length(bezier_path) {
+                let each_point_length = [];
+                let each_path_length = [];
+                let bezier_total_length;
+
+
+                for (let i = 0; i < bezier_path.s0_x.length; i++) {
+                    each_point_length[i] = [];
+                }
+
+                for (let i = 0; i < bezier_path.s0_x.length; i++) {
+                    for (let a = 0; a < bezier_path.s0_x[0].length - 1; a++) {
+                        each_point_length[i].push(Math.hypot(bezier_path.s0_x[i][a] - bezier_path.s0_x[i][a + 1], bezier_path.s0_y[i][a] - bezier_path.s0_y[i][a + 1]))
+                    }
+                }
+
+                for (let i = 0; i < bezier_path.s0_x.length; i++) {
+                    each_path_length.push(each_point_length[i].reduce(function(a, b) {
+                        return (a + b);
+                    }, 0))
+                }
+
+                bezier_total_length = each_path_length.reduce(function(a, b) {
+                    return (a + b);
+                }, 0);
+
+                
+
+                return {
+                    each_point_length,
+                    each_path_length,
+                    bezier_total_length
+                };
+            }
+
+
+      function equally_divide_length(total_length, each_point_length, num_of_points) {
+
+
+                if(num_of_points == undefined){
+                  num_of_points = 100;
+                }
+
+                let point_length_tracker = 0;
+                let array_index = [];
+
+                for (let i = 0; i < each_point_length.length; i++) {
+                    array_index[i] = [];
+                }
+
+                let avg_distance = (total_length / num_of_points);
+                
+                each_point_length.forEach(matching_avg_dist_and_each_point_length);
+
+                function matching_avg_dist_and_each_point_length(item, index, arr) {
+                    for (let i = 0; i < each_point_length[index].length; i++) {
+                        point_length_tracker = point_length_tracker + each_point_length[index][i];
+                        if (point_length_tracker >= avg_distance) {
+                            array_index[index].push(i);
+                            point_length_tracker = point_length_tracker - avg_distance;
+                        }
+                    }
+                }
+
+
+                // adding the first point
+                array_index[0].unshift(0);
+
+
+                // the calculation isn't accurate keeping track of point_length_tracker. 
+                // this prevents from not inlcuding the last point of the path by two conditions: 
+                // A: if the avg_distance and point length tracker only has 0.00001 difference
+                // B: if the array_index doesn't include the last point(999) by the matching_avg_dist_and_each_point_length calculation
+                // Warning: there might be an edge case for this
+                if(avg_distance - point_length_tracker < 0.00001 && array_index[array_index.length - 1].includes(999) == false){
+                    array_index[array_index.length - 1].push(999);
+                }
+
+                return array_index;
+
+      };
+      
+
+      function get_points_position(bezier_points_con, divided_length_array_index){      
+
+                let point_con = [];
+                
+                for(let i = 0; i < bezier_points_con.s0_x.length; i++){
+                    for(let a = 0; a < divided_length_array_index[i].length; a++){
+                            point_con.push({x : bezier_points_con.s0_x[i][divided_length_array_index[i][a]], y: bezier_points_con.s0_y[i][divided_length_array_index[i][a]]})
+                    }
+                }
+
+                return point_con;
+            }
+
+
+      function derivative(bezier_points_con) {
+
+                let derivative_con = [];
+
+                for (let i = 0; i < bezier_points_con.s0_x.length; i++) {
+                    derivative_con[i] = [];
+                }
+
+                for (let i = 0; i < bezier_points_con.s0_x.length; i++) {
+                    for (let a = 0; a < bezier_points_con.s0_x[i].length - 1; a++) {
+                        derivative_con[i].push(angle(bezier_points_con.s0_x[i][a], bezier_points_con.s0_y[i][a], bezier_points_con.s0_x[i][a + 1], bezier_points_con.s0_y[i][a + 1]));
+                    }
+                }
+
+                function angle(cx, cy, ex, ey) {
+                    var dx = ex - cx;
+                    var dy = ey - cy;
+                    var theta = Math.atan2(dy, dx);
+                    theta *= -180 / Math.PI;
+                    
+                    if(theta >= 90){
+                        theta = theta - 90
+                    }else if(theta < 0){
+                        theta = theta + 270
+                    }else if(theta > 0 && theta < 90){
+                        theta = theta + 270
+                    }
+
+                    return theta;
+                }
+                
+                return derivative_con;
+
+            }
+
+
+      function get_point_angle(derivative_angle_con, divided_length_array_index){      
+
+                let deg = [];
+
+                for(let i = 0; i < derivative_angle_con.length; i++){
+                    for(let a = 0; a < divided_length_array_index[i].length; a++){
+                        deg.push(derivative_angle_con[i][divided_length_array_index[i][a]])
+                    }
+                }
+
+                return deg;
+            }
+
+
+      function apply_parameters(obj, shapes){
+
+                console.log(obj)
+                console.log(shapes)
+
+
+                return shapes   
+            }
+
+
+
+
+      function Shape_container_arr(shapes, num_of_points){
+
+        let letter_canvas_path_con = [];
+        let letter_canvas_path_con_1 = [];
+
+        let bezier_points_con = [];
+
+        let bezier_length = [];
+
+        let divided_length_array_index = [];
+
+        let points_position = [];
+
+        let derivative_angle_con = [];
+
+        let points_angle = [];
+
+
+        for(let i = 0; i < shapes.length; i++){
+          
+            letter_canvas_path_con[i] = shapes[i].letters.path[2][0];
+
+            for(let a = 0; a < letter_canvas_path_con[i].length; a++){
+                letter_canvas_path_con[i][a].y = shapes[i].parameters.cap_height - letter_canvas_path_con[i][a].y;
+                letter_canvas_path_con[i][a].in_y = shapes[i].parameters.cap_height - letter_canvas_path_con[i][a].in_y;
+                letter_canvas_path_con[i][a].out_y = shapes[i].parameters.cap_height - letter_canvas_path_con[i][a].out_y;
+            }
+
+            console.log(letter_canvas_path_con)
+
+            bezier_points_con[i] = get_bezier_points(letter_canvas_path_con[i]);
+
+            bezier_length[i] = get_bezier_length(bezier_points_con[i]);
+
+            divided_length_array_index[i] = equally_divide_length(bezier_length[i].bezier_total_length, bezier_length[i].each_point_length, num_of_points);
+
+            points_position[i] = get_points_position(bezier_points_con[i], divided_length_array_index[i]);
+
+            derivative_angle_con[i] = derivative(bezier_points_con[i]);
+
+            points_angle[i] = get_point_angle(derivative_angle_con[i], divided_length_array_index[i]);
+
+            points_angle[i].pop();
+
+            points_position[i].pop();
+
+        }
+
+
+
+        return {points_position, points_angle}
+        
+      }
+
+
+        for(let i = 0; i < shape_data_con.length; i++){
+            let n = Object.assign({},shape_data_con[i].letters.path[2][0][0]);
+            shape_data_con[i].letters.path[2][0].push(n)
+        }
+
+
+
+        let pos = {
+            x: 250,
+            y: -70
+        }
+
+        let scale = 1.5
+
+        
+      let shape_con = new Shape_container_arr(shape_data_con, 500)
+
+
+      function rotation(x, y, cx, cy, angle_value) {
+            var radians = (Math.PI / 180) * angle_value,
+                cos = Math.cos(radians),
+                sin = Math.sin(radians),
+                nx = (cos * (x - cx)) + (sin * (y - cy)) + cx,
+                ny = (cos * (y - cy)) - (sin * (x - cx)) + cy;
+
+            return {nx, ny};
+        }
+
+
+
+      function Transition(text, spacing, font_style){
+
+        
+        ctx.font = '50px Helvetica';        
+
+
+
+        let current_point = [];
+
+        current_point.length = shape_con.points_position[2].length
+
+        for(let i = 0; i < shape_con.points_position[2].length; i++){
+            current_point[i] = { x: shape_con.points_position[2][i].x, y:shape_con.points_position[2][i].y}
+        }
+
+
+
+        let current_angle = [];
+
+        current_angle.length = shape_con.points_angle[0].length
+
+        for(let i = 0; i < shape_con.points_angle[0].length; i++){
+            current_angle[i] = shape_con.points_angle[0][i]
+        }
+
+
+        let next_point;
+        let next_angle;
+
+
+
+
+      function placement(value, points) {
+
+            if (value <= 0) return { x: points[0].x, y: points[0].y };
+            if (value >= 1) return { x: points[points.length - 1].x, y: points[points.length - 1].y };
+
+            let totalLength = points.length - 1;
+            let segment = value * totalLength;
+            let index = Math.floor(segment);
+            let progress = segment - index;
+
+            let startPoint = points[index];
+            let endPoint = points[index + 1];
+
+            let x = startPoint.x + (endPoint.x - startPoint.x) * progress;
+            let y = startPoint.y + (endPoint.y - startPoint.y) * progress;
+
+            return { x, y };
+
+        }
+
+        function angle(value, points){
+
+            let totalLength = points.length - 1;
+            let segment = value * totalLength;
+            let index = Math.floor(segment);
+
+            let angle = points[index]
+
+            return angle;
+        }
+
+
+        let position_t_con = [];
+
+        for(let i = 0; i < shape_con.points_position.length; i++){
+            position_t_con[i] = [];
+        }
+
+        for(let i = 0; i < shape_con.points_position.length; i++){
+            for(let a = 0; a < text.length; a++){
+                position_t_con[i][a] = a * spacing[i];
+            }
+        }
+        
+
+
+        let position_con = [];
+        let angle_con = [];
+
+
+        let current_position_con = [];
+        let current_angle_con = [];
+
+        let next_position_con = [];
+        let next_angle_con = [];
+        
+
+        for(let i = 0; i < text.length; i++){
+            current_position_con[i] = placement(position_t_con[0][i], shape_con.points_position[0]);
+            current_angle_con[i] = angle(position_t_con[0][i], shape_con.points_angle[0]);
+
+            next_position_con[i] = placement(position_t_con[0][i], shape_con.points_position[0]);
+            next_angle_con[i] = angle(position_t_con[0][i], shape_con.points_angle[0]);
+        }
+
+
+
+    let ang = [];
+    
+    for(let i = 0; i < shape_con.points_angle[0].length; i++){
+        ang[i] = -90;
+    }
+
+
+    let ang_test = ang
+        this.draw = function(key, angle_1, pos, scale){
+
+
+            if(angle_1 == false){
+                    ang_test = ang;
+                }else{
+                    ang_test = shape_con.points_angle[key];   
+                }
+
+
+            for(let i = 0; i < shape_con.points_position.length; i++){
+                for(let a = 0; a < text.length; a++){
+                    if(position_t_con[i][a] >= 1){
+                        position_t_con[i][a] = 0
+                    }else{
+                        position_t_con[i][a] =  position_t_con[i][a] + 0.001;
+                    }
+                }
+            }
+
+
+            for(let i = 0; i < text.length; i++){
+                next_position_con[i] = placement(position_t_con[key][i], shape_con.points_position[key]);
+
+                next_angle_con[i] = angle(position_t_con[key][i], ang_test);
+
+            }
+
+
+            for(let i = 0; i < text.length; i++){
+
+                ctx.save();
+                ctx.translate((current_position_con[i].x * scale) + pos.x, (current_position_con[i].y * scale) + pos.y)
+                ctx.rotate(((current_angle_con[i] + 90) * -Math.PI / 180));
+
+
+                ctx.font = font_style;
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillStyle = 'black';
+                ctx.fillText(text[i], 0, 0);
+
+                ctx.restore();
+
+            }
+
+
+
+
+            for (let i = 0; i < current_position_con.length; i++) {
+                current_position_con[i].x = current_position_con[i].x + (0.04 * (next_position_con[i].x - current_position_con[i].x));
+                current_position_con[i].y = current_position_con[i].y + (0.04 * (next_position_con[i].y - current_position_con[i].y));
+            }
+                            
+            for (let i = 0; i < current_angle_con.length; i++) {
+                current_angle_con[i] = current_angle_con[i] + (0.04 * (next_angle_con[i] - current_angle_con[i]));
+            }
+
+
+        }
+
+
+      }
+
+
+
+        let angle_test = false;
+        let key_1 = 0;
+        
+        // let font_style = "24px Helvetica";
+        // let spacing = [0.012, 0.01, 0.01, 0.006, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01];
+        // let move = new Transition('THE ONLY WAY TO DO GREAT WORK IS TO LOVE WHAT YOU DO.', spacing, font_style);
+
+        // let font_style = "40px Helvetica";
+        // let spacing = [0.02, 0.02, 0.02, 0.012, 0.012, 0.012, 0.012, 0.012, 0.012, 0.012];
+
+
+        let font_style = "80px Helvetica";
+        let spacing = [0.035, 0.035, 0.035, 0.02, 0.035, 0.035, 0.035, 0.035, 0.035, 0.035];
+        // let move = new Transition('The only way to do great work is to love what you do.');
+        // let move = new Transition('TYPE@COOPER EXTENED PROGRAM', spacing, font_style);
+        let move = new Transition('STREAM OF CONSCIOUSNESS', spacing, font_style);
+        // let move = new Transition('TYPE SOMETHING', spacing, font_style);
+
+
+        // let font_style = "100px Helvetica";
+        // let spacing = [0.04, 0.04, 0.04, 0.02, 0.035, 0.035, 0.035, 0.035, 0.035, 0.035];
+        // let move = new Transition('HYEONG GEUN HENRY SONG', spacing, font_style);
+
+      function anim() {
+
+
+        ctx.beginPath();
+        ctx.rect(0,0,3000,3000)
+        ctx.fillStyle = 'rgba(255,255,255,1)';
+        ctx.fillStyle = '#F5A92B';
+        // ctx.fillStyle = 'yellow';
+        // ctx.fillStyle = '#FEFBA1';
+        ctx.fill();
+        ctx.closePath();
+        
+
+        move.draw(key_1, angle_test, pos, scale)
+
+        window.requestAnimationFrame(anim);
+
+      }
+
+      anim();
+
+
+
+
+    </script>
+
+
+    <!-- <script src="assets/js/orbit.js"></script> -->
+    <!-- <script src="assets/js/orbit_display.js"></script> -->
+  </body>
+</html>

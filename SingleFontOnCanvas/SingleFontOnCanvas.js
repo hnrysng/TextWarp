@@ -51,11 +51,10 @@ function StaticSingleFontOnCanvas(typeface, letter, assets){
     }
 
     for(let i = 0; i < letter.length; i++){
-            typeface_path_con[i] = typeface.letters.path[index_con[i]];
-            typeface_info_con[i] = typeface.letters.info[index_con[i]];
+            typeface_path_con[i] = structuredClone(typeface.letters.path[index_con[i]]);
+            typeface_info_con[i] = structuredClone(typeface.letters.info[index_con[i]]);
     }
-
-
+    
 
     //  Similar to typeface_path_con, letter_path_con containers points but ONLY for the selected letters
     let letter_path_con = [];
@@ -234,7 +233,7 @@ function StaticSingleFontOnCanvas(typeface, letter, assets){
         this.total_width = total_width;
         this.min_max_x_val = {min: min_val, max: max_val};
         this.total_height = structure_con[0].point_2.y - structure_con[0].point_0.y;
-
+        
         this.draw = function(){
 
             

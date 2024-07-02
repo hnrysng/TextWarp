@@ -1,0 +1,118 @@
+{
+.appVersion = "3151";
+.formatVersion = 3;
+DisplayStrings = (
+O
+);
+date = "2023-11-09 07:34:43 +0000";
+familyName = "New Font";
+fontMaster = (
+{
+id = m01;
+metricValues = (
+{
+over = 16;
+pos = 800;
+},
+{
+over = 16;
+pos = 700;
+},
+{
+over = 16;
+pos = 500;
+},
+{
+over = -16;
+},
+{
+over = -16;
+pos = -200;
+},
+{
+over = -16;
+}
+);
+name = Regular;
+}
+);
+glyphs = (
+{
+glyphname = O;
+lastChange = "2023-11-17 02:04:40 +0000";
+layers = (
+{
+layerId = m01;
+shapes = (
+{
+closed = 1;
+nodes = (
+(321,499,o),
+(372,521,o),
+(414,494,cs),
+(455,468,o),
+(466,414,o),
+(440,378,c),
+(481,381,o),
+(525,349,o),
+(525,300,cs),
+(525,251,o),
+(481,219,o),
+(439,222,c),
+(466,186,o),
+(455,133,o),
+(414,106,cs),
+(370,77,o),
+(321,101,o),
+(301,140,c),
+(282,101,o),
+(231,78,o),
+(189,106,cs),
+(147,134,o),
+(137,186,o),
+(164,223,c),
+(122,219,o),
+(77,251,o),
+(77,300,cs),
+(77,349,o),
+(122,381,o),
+(165,377,c),
+(137,414,o),
+(146,468,o),
+(189,494,cs),
+(232,521,o),
+(282,499,o),
+(301,460,c)
+);
+}
+);
+width = 600;
+}
+);
+unicode = 79;
+}
+);
+metrics = (
+{
+type = ascender;
+},
+{
+type = "cap height";
+},
+{
+type = "x-height";
+},
+{
+type = baseline;
+},
+{
+type = descender;
+},
+{
+type = "italic angle";
+}
+);
+unitsPerEm = 1000;
+versionMajor = 1;
+versionMinor = 0;
+}

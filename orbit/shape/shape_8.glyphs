@@ -1,0 +1,98 @@
+{
+.appVersion = "3151";
+.formatVersion = 3;
+DisplayStrings = (
+O
+);
+date = "2023-11-09 07:34:43 +0000";
+familyName = "New Font";
+fontMaster = (
+{
+id = m01;
+metricValues = (
+{
+over = 16;
+pos = 800;
+},
+{
+over = 16;
+pos = 700;
+},
+{
+over = 16;
+pos = 500;
+},
+{
+over = -16;
+},
+{
+over = -16;
+pos = -200;
+},
+{
+over = -16;
+}
+);
+name = Regular;
+}
+);
+glyphs = (
+{
+glyphname = O;
+lastChange = "2023-11-17 02:33:39 +0000";
+layers = (
+{
+layerId = m01;
+shapes = (
+{
+closed = 1;
+nodes = (
+(350,496,l),
+(350,363,l),
+(479,403,l),
+(508,313,l),
+(379,270,l),
+(458,159,l),
+(380,104,l),
+(301,211,l),
+(224,104,l),
+(144,159,l),
+(224,270,l),
+(95,313,l),
+(124,403,l),
+(254,361,l),
+(253,496,l),
+(301,496,l)
+);
+}
+);
+width = 600;
+}
+);
+unicode = 79;
+}
+);
+metrics = (
+{
+type = ascender;
+},
+{
+type = "cap height";
+},
+{
+type = "x-height";
+},
+{
+type = baseline;
+},
+{
+type = descender;
+},
+{
+type = "italic angle";
+}
+);
+unitsPerEm = 1000;
+versionMajor = 1;
+versionMinor = 0;
+}
