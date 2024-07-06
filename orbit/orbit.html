@@ -380,7 +380,14 @@ console.log(grid_con_1[0][0])
 
         for(let i = 0; i < grid_con_1.length; i++){
             for(let j = 0; j < grid_con_1[i].length; j++){
-                
+                                
+                // Start a new Path
+                ctx.beginPath();
+                ctx.moveTo(grid_con_1[i][j].x, grid_con_1[i][j].y);
+                ctx.lineTo(grid_con_2[i][j].x, grid_con_2[i][j].y);
+
+                // Draw the Path
+                ctx.stroke();
             }
         }
 
