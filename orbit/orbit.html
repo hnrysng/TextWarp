@@ -15,261 +15,33 @@
 
 
 
-
+    <script src="../beziertools.js"></script>
     <script>
       
-      let canvas = document.getElementById("canvas");
-      let ctx = canvas.getContext("2d");
-      ctx.imageSmoothingEnabled = true;
-      ctx.webkitImageSmoothingEnabled = true;
-      ctx.mozImageSmoothingEnabled = true;
-      ctx.msImageSmoothingEnabled = true;
-      ctx.oImageSmoothingEnabled = true;
+    let canvas = document.getElementById("canvas");
+    let ctx = canvas.getContext("2d");
+    ctx.imageSmoothingEnabled = true;
+    ctx.webkitImageSmoothingEnabled = true;
+    ctx.mozImageSmoothingEnabled = true;
+    ctx.msImageSmoothingEnabled = true;
+    ctx.oImageSmoothingEnabled = true;
 
-        let shape_data_con = [shape_0, shape_1, shape_2, shape_3]
 
+    let shape_data_con = [shape_0, shape_1, shape_2, shape_3];
 
-        // i think this is looping, it needs to add the initial path one additional time as the last path.
-        for(let i = 0; i < shape_data_con.length; i++){
-            let n = Object.assign({},shape_data_con[i].letters.path[2][0][0]);
-            shape_data_con[i].letters.path[2][0].push(n)
-        }
 
-        // console.log(shape_obj)
-        // console.log(shape_data_con)
+    // i think this is looping, it needs to add the initial path one additional time as the last path.
+    for(let i = 0; i < shape_data_con.length; i++){
+        let n = Object.assign({},shape_data_con[i].letters.path[2][0][0]);
+        shape_data_con[i].letters.path[2][0].push(n)
+    }
 
+    // console.log(shape_obj)
+    // console.log(shape_data_con)
 
-      function get_bezier_points(letter_canvas_path_con) {
-                let q0_x = [],
-                    q0_y = [],
-                    q1_x = [],
-                    q1_y = [],
-                    q2_x = [],
-                    q2_y = [],
-                    r0_x = [],
-                    r0_y = [],
-                    r1_x = [],
-                    r1_y = [],
-                    s0_x = [],
-                    s0_y = [];
 
-                let number_of_points = 1000;
 
-                let time = [];
-
-                for (let i = 0; i <= number_of_points; i++) {
-                    time[i] = i * (1 / number_of_points)
-                }
-
-                for (let i = 0; i < letter_canvas_path_con.length - 1; i++) {
-                    q0_x[i] = [];
-                    q0_y[i] = [];
-                    q1_x[i] = [];
-                    q1_y[i] = [];
-                    q2_x[i] = [];
-                    q2_y[i] = [];
-
-                    r0_x[i] = [];
-                    r0_y[i] = [];
-                    r1_x[i] = [];
-                    r1_y[i] = [];
-
-                    s0_x[i] = [];
-                    s0_y[i] = [];
-                }
-
-                for (let i = 0; i < letter_canvas_path_con.length - 1; i = i + 1) {
-                    for (let a = 0; a <= number_of_points; a = a + 1) {
-                        q0_x[i][a] = (1 - time[a]) * (letter_canvas_path_con[i].x) + time[a] * (letter_canvas_path_con[i].out_x);
-                        q0_y[i][a] = (1 - time[a]) * (letter_canvas_path_con[i].y) + time[a] * (letter_canvas_path_con[i].out_y);
-
-                        q1_x[i][a] = (1 - time[a]) * (letter_canvas_path_con[i].out_x) + time[a] * (letter_canvas_path_con[i + 1].in_x);
-                        q1_y[i][a] = (1 - time[a]) * (letter_canvas_path_con[i].out_y) + time[a] * (letter_canvas_path_con[i + 1].in_y);
-
-                        q2_x[i][a] = (1 - time[a]) * (letter_canvas_path_con[i + 1].in_x) + time[a] * (letter_canvas_path_con[i + 1].x);
-                        q2_y[i][a] = (1 - time[a]) * (letter_canvas_path_con[i + 1].in_y) + time[a] * (letter_canvas_path_con[i + 1].y);
-
-                        r0_x[i][a] = (1 - time[a]) * (q0_x[i][a]) + time[a] * (q1_x[i][a]);
-                        r0_y[i][a] = (1 - time[a]) * (q0_y[i][a]) + time[a] * (q1_y[i][a]);
-
-                        r1_x[i][a] = (1 - time[a]) * (q1_x[i][a]) + time[a] * (q2_x[i][a]);
-                        r1_y[i][a] = (1 - time[a]) * (q1_y[i][a]) + time[a] * (q2_y[i][a]);
-
-                        s0_x[i][a] = ((1 - time[a]) * (r0_x[i][a]) + time[a] * (r1_x[i][a]));
-                        s0_y[i][a] = ((1 - time[a]) * (r0_y[i][a]) + time[a] * (r1_y[i][a]));
-                    }
-                }
-
-
-                let s0_points = {
-                    s0_x,
-                    s0_y
-                }
-
-                return s0_points;
-            }
-
-
-      function get_bezier_length(bezier_path) {
-                let each_point_length = [];
-                let each_path_length = [];
-                let total_length;
-
-
-                for (let i = 0; i < bezier_path.s0_x.length; i++) {
-                    each_point_length[i] = [];
-                }
-
-                for (let i = 0; i < bezier_path.s0_x.length; i++) {
-                    for (let a = 0; a < bezier_path.s0_x[0].length - 1; a++) {
-                        each_point_length[i].push(Math.hypot(bezier_path.s0_x[i][a] - bezier_path.s0_x[i][a + 1], bezier_path.s0_y[i][a] - bezier_path.s0_y[i][a + 1]))
-                    }
-                }
-
-                for (let i = 0; i < bezier_path.s0_x.length; i++) {
-                    each_path_length.push(each_point_length[i].reduce(function(a, b) {
-                        return (a + b);
-                    }, 0))
-                }
-
-                total_length = each_path_length.reduce(function(a, b) {
-                    return (a + b);
-                }, 0);
-
-                
-
-                return {
-                    each_point_length,
-                    each_path_length,
-                    total_length
-                };
-            }
-
- 
-      function equally_divide_length(total_length, each_point_length, num_of_points) {
-
-
-                if(num_of_points == undefined){
-                  num_of_points = 100;
-                }
-
-                let point_length_tracker = 0;
-                let array_index = [];
-
-                for (let i = 0; i < each_point_length.length; i++) {
-                    array_index[i] = [];
-                }
-
-                let avg_distance = (total_length / num_of_points);
-                
-                each_point_length.forEach(matching_avg_dist_and_each_point_length);
-
-                function matching_avg_dist_and_each_point_length(item, index, arr) {
-                    for (let i = 0; i < each_point_length[index].length; i++) {
-                        point_length_tracker = point_length_tracker + each_point_length[index][i];
-                        if (point_length_tracker >= avg_distance) {
-                            array_index[index].push(i);
-                            point_length_tracker = point_length_tracker - avg_distance;
-                        }
-                    }
-                }
-
-
-                // adding the first point
-                array_index[0].unshift(0);
-
-
-                // the calculation isn't accurate keeping track of point_length_tracker. 
-                // this prevents from not inlcuding the last point of the path by two conditions: 
-                // A: if the avg_distance and point length tracker only has 0.00001 difference
-                // B: if the array_index doesn't include the last point(999) by the matching_avg_dist_and_each_point_length calculation
-                // Warning: there might be an edge case for this
-                if(avg_distance - point_length_tracker < 0.00001 && array_index[array_index.length - 1].includes(999) == false){
-                    array_index[array_index.length - 1].push(999);
-                }
-
-                return array_index;
-
-      };
-      
-
-      function get_points_position(bezier_points_con, divided_length_array_index){      
-
-                let point_con = [];
-                
-                for(let i = 0; i < bezier_points_con.s0_x.length; i++){
-                    for(let a = 0; a < divided_length_array_index[i].length; a++){
-                            point_con.push({x : bezier_points_con.s0_x[i][divided_length_array_index[i][a]], y: bezier_points_con.s0_y[i][divided_length_array_index[i][a]]})
-                    }
-                }
-
-                return point_con;
-            }
-
-
-      function derivative(bezier_points_con) {
-
-                let derivative_con = [];
-
-                for (let i = 0; i < bezier_points_con.s0_x.length; i++) {
-                    derivative_con[i] = [];
-                }
-
-                for (let i = 0; i < bezier_points_con.s0_x.length; i++) {
-                    for (let a = 0; a < bezier_points_con.s0_x[i].length - 1; a++) {
-                        derivative_con[i].push(angle(bezier_points_con.s0_x[i][a], bezier_points_con.s0_y[i][a], bezier_points_con.s0_x[i][a + 1], bezier_points_con.s0_y[i][a + 1]));
-                    }
-                }
-
-                function angle(cx, cy, ex, ey) {
-                    var dx = ex - cx;
-                    var dy = ey - cy;
-                    var theta = Math.atan2(dy, dx);
-                    theta *= -180 / Math.PI;
-                    
-                    if(theta >= 90){
-                        theta = theta - 90
-                    }else if(theta < 0){
-                        theta = theta + 270
-                    }else if(theta > 0 && theta < 90){
-                        theta = theta + 270
-                    }
-
-                    return theta;
-                }
-                
-                return derivative_con;
-
-            }
-
-
-      function get_point_angle(derivative_angle_con, divided_length_array_index){      
-
-                let deg = [];
-
-                for(let i = 0; i < derivative_angle_con.length; i++){
-                    for(let a = 0; a < divided_length_array_index[i].length; a++){
-                        deg.push(derivative_angle_con[i][divided_length_array_index[i][a]])
-                    }
-                }
-
-                return deg;
-            }
-
-
-      function apply_parameters(obj, shapes){
-
-                console.log(obj)
-                console.log(shapes)
-
-
-                return shapes   
-            }
-
-
-
-
-      function Shape_container_arr(shapes, num_of_points){
+    function Shape_container_arr(shapes, num_of_points){
 
         let letter_canvas_path_con = [];
         let letter_canvas_path_con_1 = [];
@@ -319,50 +91,45 @@
 
         return {points_position, points_angle}
         
-      }
+    }
 
 
 
 
+    let pos = {
+        x: 250,
+        y: -70
+    }
 
-        let pos = {
-            x: 250,
-            y: -70
-        }
+    let scale = 1.5
 
-        let scale = 1.5
-
-        // console.log(shape_data_con)
-
-      let shape_con = new Shape_container_arr(shape_data_con, 500)
+    let shape_con = new Shape_container_arr(shape_data_con, 500)
 
         
-      function rotation(x, y, cx, cy, angle_value) {
-            var radians = (Math.PI / 180) * angle_value,
-                cos = Math.cos(radians),
-                sin = Math.sin(radians),
-                nx = (cos * (x - cx)) + (sin * (y - cy)) + cx,
-                ny = (cos * (y - cy)) - (sin * (x - cx)) + cy;
+    function rotation(x, y, cx, cy, angle_value) {
+        var radians = (Math.PI / 180) * angle_value,
+            cos = Math.cos(radians),
+            sin = Math.sin(radians),
+            nx = (cos * (x - cx)) + (sin * (y - cy)) + cx,
+            ny = (cos * (y - cy)) - (sin * (x - cx)) + cy;
 
-            return {nx, ny};
+        return {nx, ny};
 
-        }
+    }
 
 
 
-      function Transition(text, spacing, font_style){
+    function Transition(text, spacing, font_style){
 
         
         ctx.font = '50px Helvetica';        
 
-
-
         let current_point = [];
 
-        current_point.length = shape_con.points_position[2].length
+        current_point.length = shape_con.points_position[0].length
 
-        for(let i = 0; i < shape_con.points_position[2].length; i++){
-            current_point[i] = { x: shape_con.points_position[2][i].x, y:shape_con.points_position[2][i].y}
+        for(let i = 0; i < shape_con.points_position[0].length; i++){
+            current_point[i] = { x: shape_con.points_position[0][i].x, y:shape_con.points_position[0][i].y}
         }
 
 
@@ -376,6 +143,8 @@
         }
 
 
+
+        
         let next_point;
         let next_angle;
 
@@ -412,6 +181,8 @@
 
             return angle;
         }
+
+
 
 
         let position_t_con = [];
@@ -458,6 +229,9 @@
 
         let ang_test = ang
         
+
+
+
         this.draw = function(key, angle_1, pos, scale){
 
 
@@ -485,8 +259,7 @@
                 next_angle_con[i] = angle(position_t_con[key][i], ang_test);
 
             }
-
-
+            
             for(let i = 0; i < text.length; i++){
 
                 ctx.save();
@@ -519,54 +292,111 @@
 
         }
 
-
-      }
-
+    }
 
 
-        let angle_test = false;
-        let key_1 = 0;
+
+    let angle_test = false;
+    let key_1 = 0;
         
         
-        let font_style = "80px Helvetica";
-        let spacing = [0.035, 0.035, 0.035, 0.02, 0.035, 0.035, 0.035, 0.035, 0.035, 0.035];
-        // let move = new Transition('The only way to do great work is to love what you do.');
-        // let move = new Transition('TYPE@COOPER EXTENED PROGRAM', spacing, font_style);
-        let move = new Transition('THOUGHTS AFTER THOUGHTS AFTER', spacing, font_style);
-        // let move = new Transition('TYPE SOMETHING', spacing, font_style);
+    let font_style = "80px Helvetica";
+    let spacing = [0.035, 0.035, 0.035, 0.02, 0.035, 0.035, 0.035, 0.035, 0.035, 0.035];
+    // let move = new Transition('The only way to do great work is to love what you do.');
+    // let move = new Transition('TYPE@COOPER EXTENED PROGRAM', spacing, font_style);
+    
+    let move = new Transition('THOUGHTS AFTER THOUGHTS AFTER', spacing, font_style);
 
 
-        // let font_style = "100px Helvetica";
-        // let spacing = [0.04, 0.04, 0.04, 0.02, 0.035, 0.035, 0.035, 0.035, 0.035, 0.035];
-        // let move = new Transition('HYEONG GEUN HENRY SONG', spacing, font_style);
+    // let move = new Transition('TYPE SOMETHING', spacing, font_style);
 
-      function anim() {
+
+    // let font_style = "100px Helvetica";
+    // let spacing = [0.04, 0.04, 0.04, 0.02, 0.035, 0.035, 0.035, 0.035, 0.035, 0.035];
+    // let move = new Transition('HYEONG GEUN HENRY SONG', spacing, font_style);
+
+
+    console.log(shape_con.points_position[0])
+
+    let test = [];
+
+    let grid_1 = structuredClone(shape_con.points_position[0])
+    let grid_2 = structuredClone(shape_con.points_position[0])
+
+
+
+    console.log(shape_con.points_angle);
+
+    console.log(grid_1[0]);
+
+
+    let grid_con_1 = structuredClone(shape_con.points_position)
+    let grid_con_2 = structuredClone(shape_con.points_position)
+
+
+    for(let i = 0; i < shape_con.points_position.length; i++){
+        for(let j = 0; j < shape_con.points_position[i].length; j++){
+            grid_con_1[i][j] = calculateNewPosition(
+                shape_con.points_position[i][j].x, shape_con.points_position[i][j].y,shape_con.points_angle[i][j], 10
+            )
+            grid_con_2[i][j] = calculateNewPosition(
+                shape_con.points_position[i][j].x, shape_con.points_position[i][j].y,shape_con.points_angle[i][j], -10
+            )
+        }
+    }
+    
+console.log(grid_con_1[0][0])
+
+
+    function calculateNewPosition(x, y, angle, length) {
+        // Convert angle from degrees to radians
+        let radians = angle * (Math.PI / 180);
+
+        // Calculate the new x and y positions
+        let newX = x + length * Math.cos(radians);
+        let newY = y + length * Math.sin(radians);
+
+        return { x: newX, y: newY };
+    }
+
+
+
+
+
+    function anim() {
 
         ctx.beginPath();
         ctx.rect(0,0,3000,3000)
         ctx.fillStyle = 'rgba(255,255,255,1)';
         ctx.fillStyle = '#F5A92B';
-        // ctx.fillStyle = 'yellow';
-        // ctx.fillStyle = '#FEFBA1';
         ctx.fill();
         ctx.closePath();
         
+        move.draw(0, true, pos, scale)
+        // move_1.draw(0, angle_test, pos, scale)
 
-        move.draw(key_1, angle_test, pos, scale)
+
+        
+
+        for(let i = 0; i < grid_con_1.length; i++){
+            for(let j = 0; j < grid_con_1[i].length; j++){
+                
+            }
+        }
+
+        
+
 
         window.requestAnimationFrame(anim);
 
-      }
+    }
 
-      anim();
+    anim();
 
 
 
 
     </script>
-
-
-    <!-- <script src="assets/js/orbit.js"></script> -->
-    <!-- <script src="assets/js/orbit_display.js"></script> -->
+    
   </body>
 </html>
