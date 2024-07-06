@@ -337,15 +337,15 @@
     for(let i = 0; i < shape_con.points_position.length; i++){
         for(let j = 0; j < shape_con.points_position[i].length; j++){
             grid_con_1[i][j] = calculateNewPosition(
-                shape_con.points_position[i][j].x, shape_con.points_position[i][j].y,shape_con.points_angle[i][j], 10
+                shape_con.points_position[i][j].x, shape_con.points_position[i][j].y,shape_con.points_angle[i][j], 100
             )
             grid_con_2[i][j] = calculateNewPosition(
-                shape_con.points_position[i][j].x, shape_con.points_position[i][j].y,shape_con.points_angle[i][j], -10
+                shape_con.points_position[i][j].x, shape_con.points_position[i][j].y,shape_con.points_angle[i][j], -100
             )
         }
     }
     
-console.log(grid_con_1[0][0])
+
 
 
     function calculateNewPosition(x, y, angle, length) {
@@ -360,7 +360,7 @@ console.log(grid_con_1[0][0])
     }
 
 
-
+console.log(grid_con_1[0][0].x)
 
 
     function anim() {
@@ -380,6 +380,13 @@ console.log(grid_con_1[0][0])
 
         for(let i = 0; i < grid_con_1.length; i++){
             for(let j = 0; j < grid_con_1[i].length; j++){
+
+                ctx.lineWidth = 1;
+                ctx.beginPath();
+                ctx.moveTo(grid_con_1[i][j].x, grid_con_1[i][j].y);
+                ctx.lineTo(grid_con_2[i][j].x, grid_con_2[i][j].y);   
+                ctx.stroke();
+                ctx.closePath();
                 
             }
         }
