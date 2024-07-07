@@ -94,7 +94,7 @@
     }
 
 
-    let shape_con = new Shape_container_arr(shape_data_con, 500);
+    let shape_con = new Shape_container_arr(shape_data_con, 1000);
 
         
     let grid_con_1 = structuredClone(shape_con.points_position)
@@ -107,7 +107,7 @@
 
 
     for(let i = 0; i < shape_con.points_angle[3].length; i++){
-        // shape_con.points_angle[3][i] = shape_con.points_angle[3][i] * -1
+        shape_con.points_angle[3][i] = shape_con.points_angle[3][i] * -1
     }
 
     console.log(shape_con.points_angle[3])
@@ -116,10 +116,10 @@
     for(let i = 0; i < shape_con.points_position.length; i++){
         for(let j = 0; j < shape_con.points_position[i].length; j++){
             grid_con_1[i][j] = calculateNewPosition(
-                shape_con.points_position[i][j].x * scale, shape_con.points_position[i][j].y * scale, shape_con.points_angle[i][j], 50
+                shape_con.points_position[i][j].x * scale, shape_con.points_position[i][j].y * scale, shape_con.points_angle[i][j], 200
             )
             grid_con_2[i][j] = calculateNewPosition(
-                shape_con.points_position[i][j].x * scale, shape_con.points_position[i][j].y * scale, shape_con.points_angle[i][j], -50
+                shape_con.points_position[i][j].x * scale, shape_con.points_position[i][j].y * scale, shape_con.points_angle[i][j], -200
             )
         }
     }
@@ -245,7 +245,7 @@
 
         }
 
-        let grid_letter = new Grid_based_Glyph(letter_a_1, 480);
+        let grid_letter = new Grid_based_Glyph(letter_a_1, 200);
 
 
         let test_grid = [];
@@ -274,9 +274,6 @@
         }
 
 
-// console.log(interpolatePoint(grid_con_1[0][grid_letter.corresponding_grid_index[i][j][0].x], grid_con_2[0][grid_letter.corresponding_grid_index[i][j][0].x], grid_letter.path_pos_by_perc[i][j][0].x))
-
-console.log(grid_letter.corresponding_grid_index[0][0][0].x)
 
 
 
@@ -286,10 +283,12 @@ console.log(grid_letter.corresponding_grid_index[0][0][0].x)
 
 
 
+console.log(grid_letter.corresponding_grid_index)
+
+    let path = 3;
 
 
-let path = 0;
-
+    let n = 0;
 
     function anim() {
 
@@ -301,45 +300,33 @@ let path = 0;
         ctx.closePath();
         
 
-
+n++;
         
 
-        // for(let i = 0; i < grid_con_1.length; i++){
-        //     for(let j = 0; j < grid_con_1[i].length; j++){
-                                
-        //         // Start a new Path
-        //         ctx.beginPath();
-        //         ctx.moveTo(grid_con_1[i][j].x, grid_con_1[i][j].y);
-        //         ctx.lineTo(grid_con_2[i][j].x, grid_con_2[i][j].y);
-
-        //         // Draw the Path
-        //         ctx.stroke();
-        //     }
-        // }
 
             for(let j = 0; j < grid_con_1[0].length; j++){
                                 
                 // Start a new Path
                 ctx.beginPath();
-                ctx.moveTo(grid_con_1[3][j].x, grid_con_1[3][j].y);
-                ctx.lineTo(grid_con_2[3][j].x, grid_con_2[3][j].y);
+                ctx.moveTo(grid_con_1[path][j].x, grid_con_1[path][j].y);
+                ctx.lineTo(grid_con_2[path][j].x, grid_con_2[path][j].y);
 
                 // Draw the Path
                 ctx.stroke();
             }
 
-            ctx.beginPath();
+            // ctx.beginPath();
 
-            for(let j = 0; j < grid_con_1[0].length; j++){
+            // for(let j = 0; j < grid_con_1[0].length; j++){
                                 
-                // Start a new Path
-                ctx.rect(grid_con_1[3][j].x, grid_con_1[3][j].y, 5, 5);
+            //     // Start a new Path
+            //     ctx.rect(grid_con_1[path][j].x, grid_con_1[path][j].y, 5, 5);
 
-                // Draw the Path
-            }
-            ctx.stroke();
+            //     // Draw the Path
+            // }
+            // ctx.stroke();
 
-        // console.log(interpolatePoint(grid_con_1[0][grid_letter.corresponding_grid_index[i][j][0].x], grid_con_2[0][grid_letter.corresponding_grid_index[i][j][0].x], grid_letter.path_pos_by_perc[i][j][0].x))
+
 
             ctx.beginPath();
 
@@ -349,13 +336,13 @@ let path = 0;
 
                     ctx.moveTo(
                       interpolatePoint(
-                        interpolatePoint(grid_con_2[path][grid_letter.corresponding_grid_index[i][j][0].x], grid_con_2[path][grid_letter.corresponding_grid_index[i][j][0].x + 1], grid_letter.path_pos_by_perc[i][j][0].x),
-                        interpolatePoint(grid_con_1[path][grid_letter.corresponding_grid_index[i][j][0].x], grid_con_1[path][grid_letter.corresponding_grid_index[i][j][0].x + 1], grid_letter.path_pos_by_perc[i][j][0].x),
+                        interpolatePoint(grid_con_2[path][grid_letter.corresponding_grid_index[i][j][0].x + n], grid_con_2[path][grid_letter.corresponding_grid_index[i][j][0].x + 1 + n], grid_letter.path_pos_by_perc[i][j][0].x),
+                        interpolatePoint(grid_con_1[path][grid_letter.corresponding_grid_index[i][j][0].x + n], grid_con_1[path][grid_letter.corresponding_grid_index[i][j][0].x + 1 + n], grid_letter.path_pos_by_perc[i][j][0].x),
                         grid_letter.path_pos_by_perc[i][j][0].y
                       ).x,
                       interpolatePoint(
-                        interpolatePoint(grid_con_2[path][grid_letter.corresponding_grid_index[i][j][0].x], grid_con_2[path][grid_letter.corresponding_grid_index[i][j][0].x + 1], grid_letter.path_pos_by_perc[i][j][0].x),
-                        interpolatePoint(grid_con_1[path][grid_letter.corresponding_grid_index[i][j][0].x], grid_con_1[path][grid_letter.corresponding_grid_index[i][j][0].x + 1], grid_letter.path_pos_by_perc[i][j][0].x),
+                        interpolatePoint(grid_con_2[path][grid_letter.corresponding_grid_index[i][j][0].x + n], grid_con_2[path][grid_letter.corresponding_grid_index[i][j][0].x + 1 + n], grid_letter.path_pos_by_perc[i][j][0].x),
+                        interpolatePoint(grid_con_1[path][grid_letter.corresponding_grid_index[i][j][0].x + n], grid_con_1[path][grid_letter.corresponding_grid_index[i][j][0].x + 1 + n], grid_letter.path_pos_by_perc[i][j][0].x),
                         grid_letter.path_pos_by_perc[i][j][0].y
                       ).y
                     );
@@ -364,35 +351,35 @@ let path = 0;
                       ctx.bezierCurveTo(
 
                         interpolatePoint(
-                          interpolatePoint(grid_con_2[path][grid_letter.corresponding_grid_index[i][j][k].out_x], grid_con_2[path][grid_letter.corresponding_grid_index[i][j][k].out_x + 1], grid_letter.path_pos_by_perc[i][j][k].out_x),
-                          interpolatePoint(grid_con_1[path][grid_letter.corresponding_grid_index[i][j][k].out_x], grid_con_1[path][grid_letter.corresponding_grid_index[i][j][k].out_x + 1], grid_letter.path_pos_by_perc[i][j][k].out_x),
+                          interpolatePoint(grid_con_2[path][grid_letter.corresponding_grid_index[i][j][k].out_x + n], grid_con_2[path][grid_letter.corresponding_grid_index[i][j][k].out_x + 1 + n], grid_letter.path_pos_by_perc[i][j][k].out_x),
+                          interpolatePoint(grid_con_1[path][grid_letter.corresponding_grid_index[i][j][k].out_x + n], grid_con_1[path][grid_letter.corresponding_grid_index[i][j][k].out_x + 1 + n], grid_letter.path_pos_by_perc[i][j][k].out_x),
                           grid_letter.path_pos_by_perc[i][j][k].out_y
                         ).x,
                         interpolatePoint(
-                          interpolatePoint(grid_con_2[path][grid_letter.corresponding_grid_index[i][j][k].out_x], grid_con_2[path][grid_letter.corresponding_grid_index[i][j][k].out_x + 1], grid_letter.path_pos_by_perc[i][j][k].out_x),
-                          interpolatePoint(grid_con_1[path][grid_letter.corresponding_grid_index[i][j][k].out_x], grid_con_1[path][grid_letter.corresponding_grid_index[i][j][k].out_x + 1], grid_letter.path_pos_by_perc[i][j][k].out_x),
+                          interpolatePoint(grid_con_2[path][grid_letter.corresponding_grid_index[i][j][k].out_x + n], grid_con_2[path][grid_letter.corresponding_grid_index[i][j][k].out_x + 1 + n], grid_letter.path_pos_by_perc[i][j][k].out_x),
+                          interpolatePoint(grid_con_1[path][grid_letter.corresponding_grid_index[i][j][k].out_x + n], grid_con_1[path][grid_letter.corresponding_grid_index[i][j][k].out_x + 1 + n], grid_letter.path_pos_by_perc[i][j][k].out_x),
                           grid_letter.path_pos_by_perc[i][j][k].out_y
                         ).y,
 
                         interpolatePoint(
-                          interpolatePoint(grid_con_2[path][grid_letter.corresponding_grid_index[i][j][k + 1].in_x], grid_con_2[path][grid_letter.corresponding_grid_index[i][j][k + 1].in_x + 1], grid_letter.path_pos_by_perc[i][j][k + 1].in_x),
-                          interpolatePoint(grid_con_1[path][grid_letter.corresponding_grid_index[i][j][k + 1].in_x], grid_con_1[path][grid_letter.corresponding_grid_index[i][j][k + 1].in_x + 1], grid_letter.path_pos_by_perc[i][j][k + 1].in_x),
+                          interpolatePoint(grid_con_2[path][grid_letter.corresponding_grid_index[i][j][k + 1].in_x + n], grid_con_2[path][grid_letter.corresponding_grid_index[i][j][k + 1].in_x + 1 + n], grid_letter.path_pos_by_perc[i][j][k + 1].in_x),
+                          interpolatePoint(grid_con_1[path][grid_letter.corresponding_grid_index[i][j][k + 1].in_x + n], grid_con_1[path][grid_letter.corresponding_grid_index[i][j][k + 1].in_x + 1 + n], grid_letter.path_pos_by_perc[i][j][k + 1].in_x),
                           grid_letter.path_pos_by_perc[i][j][k + 1].in_y
                         ).x,
                         interpolatePoint(
-                          interpolatePoint(grid_con_2[path][grid_letter.corresponding_grid_index[i][j][k + 1].in_x], grid_con_2[path][grid_letter.corresponding_grid_index[i][j][k + 1].in_x + 1], grid_letter.path_pos_by_perc[i][j][k + 1].in_x),
-                          interpolatePoint(grid_con_1[path][grid_letter.corresponding_grid_index[i][j][k + 1].in_x], grid_con_1[path][grid_letter.corresponding_grid_index[i][j][k + 1].in_x + 1], grid_letter.path_pos_by_perc[i][j][k + 1].in_x),
+                          interpolatePoint(grid_con_2[path][grid_letter.corresponding_grid_index[i][j][k + 1].in_x + n], grid_con_2[path][grid_letter.corresponding_grid_index[i][j][k + 1].in_x + 1 + n], grid_letter.path_pos_by_perc[i][j][k + 1].in_x),
+                          interpolatePoint(grid_con_1[path][grid_letter.corresponding_grid_index[i][j][k + 1].in_x + n], grid_con_1[path][grid_letter.corresponding_grid_index[i][j][k + 1].in_x + 1 + n], grid_letter.path_pos_by_perc[i][j][k + 1].in_x),
                           grid_letter.path_pos_by_perc[i][j][k + 1].in_y
                         ).y,
 
                         interpolatePoint(
-                          interpolatePoint(grid_con_2[path][grid_letter.corresponding_grid_index[i][j][k + 1].x], grid_con_2[path][grid_letter.corresponding_grid_index[i][j][k + 1].x + 1], grid_letter.path_pos_by_perc[i][j][k + 1].x),
-                          interpolatePoint(grid_con_1[path][grid_letter.corresponding_grid_index[i][j][k + 1].x], grid_con_1[path][grid_letter.corresponding_grid_index[i][j][k + 1].x + 1], grid_letter.path_pos_by_perc[i][j][k + 1].x),
+                          interpolatePoint(grid_con_2[path][grid_letter.corresponding_grid_index[i][j][k + 1].x + n], grid_con_2[path][grid_letter.corresponding_grid_index[i][j][k + 1].x + 1 + n], grid_letter.path_pos_by_perc[i][j][k + 1].x),
+                          interpolatePoint(grid_con_1[path][grid_letter.corresponding_grid_index[i][j][k + 1].x + n], grid_con_1[path][grid_letter.corresponding_grid_index[i][j][k + 1].x + 1 + n], grid_letter.path_pos_by_perc[i][j][k + 1].x),
                           grid_letter.path_pos_by_perc[i][j][k + 1].y
                         ).x,
                         interpolatePoint(
-                          interpolatePoint(grid_con_2[path][grid_letter.corresponding_grid_index[i][j][k + 1].x], grid_con_2[path][grid_letter.corresponding_grid_index[i][j][k + 1].x + 1], grid_letter.path_pos_by_perc[i][j][k + 1].x),
-                          interpolatePoint(grid_con_1[path][grid_letter.corresponding_grid_index[i][j][k + 1].x], grid_con_1[path][grid_letter.corresponding_grid_index[i][j][k + 1].x + 1], grid_letter.path_pos_by_perc[i][j][k + 1].x),
+                          interpolatePoint(grid_con_2[path][grid_letter.corresponding_grid_index[i][j][k + 1].x + n], grid_con_2[path][grid_letter.corresponding_grid_index[i][j][k + 1].x + 1 + n], grid_letter.path_pos_by_perc[i][j][k + 1].x),
+                          interpolatePoint(grid_con_1[path][grid_letter.corresponding_grid_index[i][j][k + 1].x + n], grid_con_1[path][grid_letter.corresponding_grid_index[i][j][k + 1].x + 1 + n], grid_letter.path_pos_by_perc[i][j][k + 1].x),
                           grid_letter.path_pos_by_perc[i][j][k + 1].y
                         ).y,
 
@@ -402,35 +389,35 @@ let path = 0;
                       ctx.bezierCurveTo(
 
                         interpolatePoint(
-                          interpolatePoint(grid_con_2[path][grid_letter.corresponding_grid_index[i][j][grid_letter.path_pos_by_perc[i][j].length - 1].out_x], grid_con_2[path][grid_letter.corresponding_grid_index[i][j][grid_letter.path_pos_by_perc[i][j].length - 1].out_x + 1], grid_letter.path_pos_by_perc[i][j][grid_letter.path_pos_by_perc[i][j].length - 1].out_x),
-                          interpolatePoint(grid_con_1[path][grid_letter.corresponding_grid_index[i][j][grid_letter.path_pos_by_perc[i][j].length - 1].out_x], grid_con_1[path][grid_letter.corresponding_grid_index[i][j][grid_letter.path_pos_by_perc[i][j].length - 1].out_x + 1], grid_letter.path_pos_by_perc[i][j][grid_letter.path_pos_by_perc[i][j].length - 1].out_x),
+                          interpolatePoint(grid_con_2[path][grid_letter.corresponding_grid_index[i][j][grid_letter.path_pos_by_perc[i][j].length - 1].out_x + n], grid_con_2[path][grid_letter.corresponding_grid_index[i][j][grid_letter.path_pos_by_perc[i][j].length - 1].out_x + 1 + n], grid_letter.path_pos_by_perc[i][j][grid_letter.path_pos_by_perc[i][j].length - 1].out_x),
+                          interpolatePoint(grid_con_1[path][grid_letter.corresponding_grid_index[i][j][grid_letter.path_pos_by_perc[i][j].length - 1].out_x + n], grid_con_1[path][grid_letter.corresponding_grid_index[i][j][grid_letter.path_pos_by_perc[i][j].length - 1].out_x + 1 + n], grid_letter.path_pos_by_perc[i][j][grid_letter.path_pos_by_perc[i][j].length - 1].out_x),
                           grid_letter.path_pos_by_perc[i][j][grid_letter.path_pos_by_perc[i][j].length - 1].out_y
                         ).x,
                         interpolatePoint(
-                          interpolatePoint(grid_con_2[path][grid_letter.corresponding_grid_index[i][j][grid_letter.path_pos_by_perc[i][j].length - 1].out_x], grid_con_2[path][grid_letter.corresponding_grid_index[i][j][grid_letter.path_pos_by_perc[i][j].length - 1].out_x + 1], grid_letter.path_pos_by_perc[i][j][grid_letter.path_pos_by_perc[i][j].length - 1].out_x),
-                          interpolatePoint(grid_con_1[path][grid_letter.corresponding_grid_index[i][j][grid_letter.path_pos_by_perc[i][j].length - 1].out_x], grid_con_1[path][grid_letter.corresponding_grid_index[i][j][grid_letter.path_pos_by_perc[i][j].length - 1].out_x + 1], grid_letter.path_pos_by_perc[i][j][grid_letter.path_pos_by_perc[i][j].length - 1].out_x),
+                          interpolatePoint(grid_con_2[path][grid_letter.corresponding_grid_index[i][j][grid_letter.path_pos_by_perc[i][j].length - 1].out_x + n], grid_con_2[path][grid_letter.corresponding_grid_index[i][j][grid_letter.path_pos_by_perc[i][j].length - 1].out_x + 1 + n], grid_letter.path_pos_by_perc[i][j][grid_letter.path_pos_by_perc[i][j].length - 1].out_x),
+                          interpolatePoint(grid_con_1[path][grid_letter.corresponding_grid_index[i][j][grid_letter.path_pos_by_perc[i][j].length - 1].out_x + n], grid_con_1[path][grid_letter.corresponding_grid_index[i][j][grid_letter.path_pos_by_perc[i][j].length - 1].out_x + 1 + n], grid_letter.path_pos_by_perc[i][j][grid_letter.path_pos_by_perc[i][j].length - 1].out_x),
                           grid_letter.path_pos_by_perc[i][j][grid_letter.path_pos_by_perc[i][j].length - 1].out_y
                         ).y,
 
                         interpolatePoint(
-                          interpolatePoint(grid_con_2[path][grid_letter.corresponding_grid_index[i][j][0].in_x], grid_con_2[path][grid_letter.corresponding_grid_index[i][j][0].in_x + 1], grid_letter.path_pos_by_perc[i][j][0].in_x),
-                          interpolatePoint(grid_con_1[path][grid_letter.corresponding_grid_index[i][j][0].in_x], grid_con_1[path][grid_letter.corresponding_grid_index[i][j][0].in_x + 1], grid_letter.path_pos_by_perc[i][j][0].in_x),
+                          interpolatePoint(grid_con_2[path][grid_letter.corresponding_grid_index[i][j][0].in_x + n], grid_con_2[path][grid_letter.corresponding_grid_index[i][j][0].in_x + 1 + n], grid_letter.path_pos_by_perc[i][j][0].in_x),
+                          interpolatePoint(grid_con_1[path][grid_letter.corresponding_grid_index[i][j][0].in_x + n], grid_con_1[path][grid_letter.corresponding_grid_index[i][j][0].in_x + 1 + n], grid_letter.path_pos_by_perc[i][j][0].in_x),
                           grid_letter.path_pos_by_perc[i][j][0].in_y
                         ).x,
                         interpolatePoint(
-                          interpolatePoint(grid_con_2[path][grid_letter.corresponding_grid_index[i][j][0].in_x], grid_con_2[path][grid_letter.corresponding_grid_index[i][j][0].in_x + 1], grid_letter.path_pos_by_perc[i][j][0].in_x),
-                          interpolatePoint(grid_con_1[path][grid_letter.corresponding_grid_index[i][j][0].in_x], grid_con_1[path][grid_letter.corresponding_grid_index[i][j][0].in_x + 1], grid_letter.path_pos_by_perc[i][j][0].in_x),
+                          interpolatePoint(grid_con_2[path][grid_letter.corresponding_grid_index[i][j][0].in_x + n], grid_con_2[path][grid_letter.corresponding_grid_index[i][j][0].in_x + 1 + n], grid_letter.path_pos_by_perc[i][j][0].in_x),
+                          interpolatePoint(grid_con_1[path][grid_letter.corresponding_grid_index[i][j][0].in_x + n], grid_con_1[path][grid_letter.corresponding_grid_index[i][j][0].in_x + 1 + n], grid_letter.path_pos_by_perc[i][j][0].in_x),
                           grid_letter.path_pos_by_perc[i][j][0].in_y
                         ).y,
 
                         interpolatePoint(
-                          interpolatePoint(grid_con_2[path][grid_letter.corresponding_grid_index[i][j][0].x], grid_con_2[path][grid_letter.corresponding_grid_index[i][j][0].x + 1], grid_letter.path_pos_by_perc[i][j][0].x),
-                          interpolatePoint(grid_con_1[path][grid_letter.corresponding_grid_index[i][j][0].x], grid_con_1[path][grid_letter.corresponding_grid_index[i][j][0].x + 1], grid_letter.path_pos_by_perc[i][j][0].x),
+                          interpolatePoint(grid_con_2[path][grid_letter.corresponding_grid_index[i][j][0].x + n], grid_con_2[path][grid_letter.corresponding_grid_index[i][j][0].x + 1 + n], grid_letter.path_pos_by_perc[i][j][0].x),
+                          interpolatePoint(grid_con_1[path][grid_letter.corresponding_grid_index[i][j][0].x + n], grid_con_1[path][grid_letter.corresponding_grid_index[i][j][0].x + 1 + n], grid_letter.path_pos_by_perc[i][j][0].x),
                           grid_letter.path_pos_by_perc[i][j][0].y
                         ).x,
                         interpolatePoint(
-                          interpolatePoint(grid_con_2[path][grid_letter.corresponding_grid_index[i][j][0].x], grid_con_2[path][grid_letter.corresponding_grid_index[i][j][0].x + 1], grid_letter.path_pos_by_perc[i][j][0].x),
-                          interpolatePoint(grid_con_1[path][grid_letter.corresponding_grid_index[i][j][0].x], grid_con_1[path][grid_letter.corresponding_grid_index[i][j][0].x + 1], grid_letter.path_pos_by_perc[i][j][0].x),
+                          interpolatePoint(grid_con_2[path][grid_letter.corresponding_grid_index[i][j][0].x + n], grid_con_2[path][grid_letter.corresponding_grid_index[i][j][0].x + 1 + n], grid_letter.path_pos_by_perc[i][j][0].x),
+                          interpolatePoint(grid_con_1[path][grid_letter.corresponding_grid_index[i][j][0].x + n], grid_con_1[path][grid_letter.corresponding_grid_index[i][j][0].x + 1 + n], grid_letter.path_pos_by_perc[i][j][0].x),
                           grid_letter.path_pos_by_perc[i][j][0].y
                         ).y,
 
@@ -438,13 +425,13 @@ let path = 0;
 
                       ctx.lineTo(
                         interpolatePoint(
-                          interpolatePoint(grid_con_2[path][grid_letter.corresponding_grid_index[i][j][0].x], grid_con_2[path][grid_letter.corresponding_grid_index[i][j][0].x + 1], grid_letter.path_pos_by_perc[i][j][0].x),
-                          interpolatePoint(grid_con_1[path][grid_letter.corresponding_grid_index[i][j][0].x], grid_con_1[path][grid_letter.corresponding_grid_index[i][j][0].x + 1], grid_letter.path_pos_by_perc[i][j][0].x),
+                          interpolatePoint(grid_con_2[path][grid_letter.corresponding_grid_index[i][j][0].x + n], grid_con_2[path][grid_letter.corresponding_grid_index[i][j][0].x + 1 + n], grid_letter.path_pos_by_perc[i][j][0].x),
+                          interpolatePoint(grid_con_1[path][grid_letter.corresponding_grid_index[i][j][0].x + n], grid_con_1[path][grid_letter.corresponding_grid_index[i][j][0].x + 1 + n], grid_letter.path_pos_by_perc[i][j][0].x),
                           grid_letter.path_pos_by_perc[i][j][0].x
                         ).x,
                         interpolatePoint(
-                          interpolatePoint(grid_con_2[path][grid_letter.corresponding_grid_index[i][j][0].x], grid_con_2[path][grid_letter.corresponding_grid_index[i][j][0].x + 1], grid_letter.path_pos_by_perc[i][j][0].y),
-                          interpolatePoint(grid_con_1[path][grid_letter.corresponding_grid_index[i][j][0].x], grid_con_1[path][grid_letter.corresponding_grid_index[i][j][0].x + 1], grid_letter.path_pos_by_perc[i][j][0].y),
+                          interpolatePoint(grid_con_2[path][grid_letter.corresponding_grid_index[i][j][0].x + n], grid_con_2[path][grid_letter.corresponding_grid_index[i][j][0].x + 1 + n], grid_letter.path_pos_by_perc[i][j][0].y),
+                          interpolatePoint(grid_con_1[path][grid_letter.corresponding_grid_index[i][j][0].x + n], grid_con_1[path][grid_letter.corresponding_grid_index[i][j][0].x + 1 + n], grid_letter.path_pos_by_perc[i][j][0].y),
                           grid_letter.path_pos_by_perc[i][j][0].y
                         ).y
                       );
