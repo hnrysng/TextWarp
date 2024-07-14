@@ -231,7 +231,7 @@ function StaticSingleFontOnCanvas(typeface, letter, assets){
         this.position = assets.position;
         this.typeface_path_con = typeface_path_con;
         this.total_width = total_width;
-        this.min_max_x_val = {min: min_val, max: max_val};
+        this.extreme_val = {min: min_val, max: max_val};
         this.total_height = structure_con[0].point_2.y - structure_con[0].point_0.y;
         
         this.draw = function(){

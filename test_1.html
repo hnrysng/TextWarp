@@ -81,8 +81,8 @@
             }
 
 
-            if((canvas_letter.min_max_x_val.max - canvas_letter.position.x) > canvas_letter.total_width){
-                info.dist_btwn_points = (canvas_letter.min_max_x_val.max - canvas_letter.position.x) / info.num_of_points;
+            if((canvas_letter.extreme_val.max - canvas_letter.position.x) > canvas_letter.total_width){
+                info.dist_btwn_points = (canvas_letter.extreme_val.max - canvas_letter.position.x) / info.num_of_points;
             }else{
                 info.dist_btwn_points = canvas_letter.total_width / info.num_of_points;
             }
