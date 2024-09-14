@@ -127,6 +127,7 @@
     }
     
 
+    console.log(grid_con_a)
 
 
     function getPointFromAngleAndDistance(x, y, angle, length) {
@@ -161,9 +162,9 @@
 
     let letter_a_1 = new StaticSingleFontOnCanvas(Neue_Haas_Grotesk_Display_Pro_55_Roman, 'PassangersOnlyPlease', assets);
 
-console.log(letter_a_1)
+    console.log(letter_a_1)
 
-    function Get_Grid_based_Glyph(canvas_letter, num_of_points){
+    function Get_Grid_based_Glyph(canvas_letter, num_of_points, grid_shape){
       
       let grid_info = {
         num_of_points: num_of_points,
@@ -174,14 +175,14 @@ console.log(letter_a_1)
       }
 
 
-      //  Getting grid's dist_btwn_points
+      // Calculate the distance between grid points based on the letter's dimensions
       if((canvas_letter.extreme_val.max - canvas_letter.position.x) > canvas_letter.total_width){
           grid_info.dist_btwn_points = (canvas_letter.extreme_val.max - canvas_letter.position.x) / grid_info.num_of_points;
       }else{
           grid_info.dist_btwn_points = canvas_letter.total_width / grid_info.num_of_points;
       }
 
-      //  Populating points with x num of dist_btwn_points
+      // Populate the grid points with calculated distances
       for(let i = 0; i <= grid_info.num_of_points; i++){
           grid_info.point_con[i] = {x: grid_info.dist_btwn_points * i , y: 0};
       }
@@ -407,7 +408,7 @@ console.log(letter_a_1)
     }
 
     
-    let grid_letter = new Get_Grid_based_Glyph(letter_a_1, 800);
+    let grid_letter = new Get_Grid_based_Glyph(letter_a_1, 200);
 
 
 

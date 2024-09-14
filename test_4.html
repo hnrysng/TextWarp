@@ -405,7 +405,7 @@
 
       console.log(grid_info)
 
-        // return {grid_info, path_pos_by_perc, corresponding_grid_index}
+      // return {grid_info, path_pos_by_perc, corresponding_grid_index}
 
     }
 
@@ -688,10 +688,10 @@ Things to tackle
         ctx.fill();
         ctx.closePath();
         
-        n++;
+        // n = n + 2;
         
-        grid_letter.draw_grid(path);
-        grid_letter.draw_letter(path);
+        grid_letter.draw_grid(3);
+        grid_letter.draw_letter(3);
 
         window.requestAnimationFrame(anim);
 
