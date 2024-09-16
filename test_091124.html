@@ -128,11 +128,6 @@
       }
     }
 
-    console.log(shape_con.grid_points_con)
-
-
-
-
 
 
     function getPointFromAngleAndDistance(x, y, angle, length) {
@@ -397,7 +392,6 @@
 
 
 
-
       function interpolatePoint(point1, point2, t) {
         const x = (1 - t) * point1.x + t * point2.x;
         const y = (1 - t) * point1.y + t * point2.y;
@@ -405,27 +399,26 @@
       }
 
 
-      // console.log(grid_info)
-
-        // return {grid_info, path_pos_by_perc, corresponding_grid_index}
 
     }
 
     
-    let grid_letter = new Get_Grid_based_Glyph(letter_a_1, 200);
-
+    let grid_letter = new Get_Grid_based_Glyph(letter_a_1, 100);
 
     
 
-    /*
 
-    Things to tackle
+    // Thoughts: would it be possible to loop?
+    // frameCount needs to be multiple, as many as the points
 
-    1. Creating grid_con should go in as one of Get_Grid_based_Glyph arguments => Get_Grid_based_Glyph(canvas_letter, grid_shape, num_of_points)
-    2. Clearly differentiate or merge SingleFontOnCanvas vs StaticSingleFontOnCanvas. I wonder if StaticSingleFontOnCanvas could be SingleFontOnCanvasToBeScanned
-    3. 
 
-    */
+    // What is the next step?
+    // make the snake tail!
+    // apply the head!
+    // the fun fearful but exciting stuff!
+
+    
+
 
 
     let path = 3;
