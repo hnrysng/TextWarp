@@ -33,15 +33,17 @@
 
     let shape_data_con = [shape_0, shape_1, shape_2, shape_3];
 
-
     // i think this is looping, it needs to add the initial path one additional time as the last path.
     for(let i = 0; i < shape_data_con.length; i++){
       let n = Object.assign({},shape_data_con[i].letters.path[2][0][0]);
       shape_data_con[i].letters.path[2][0].push(n)
     }
 
+    function Shape_container_arr(shapes, num_of_points, scale){
 
-    function Shape_container_arr(shapes, num_of_points){
+      if(scale == undefined){
+        scale = 1;
+      }
 
       let letter_canvas_path_con = [];
 
@@ -88,47 +90,48 @@
 
       }
 
-      return {points_position, points_angle}
-        
+
+
+      for(let i = 0; i < points_position.length; i++){
+        for(let j = 0; j < points_position[i].length; j++){
+          points_position[i][j].x = points_position[i][j].x * scale
+          points_position[i][j].y = points_position[i][j].y * scale
+        }
+      }
+
+
+    let grid_points_con = [];
+
+    for(let i = 0; i < points_position.length; i++){
+      grid_points_con[i] = {grid_a: structuredClone(points_position[i]), grid_b: structuredClone(points_position[i])};
     }
-
-
-    let shape_con = new Shape_container_arr(shape_data_con, 1000);
-
-
-    shape_con.grid_points_con = [];
-
-    for(let i = 0; i < shape_con.points_position.length; i++){
-      shape_con.grid_points_con[i] = {grid_a: structuredClone(shape_con.points_position[i]), grid_b: structuredClone(shape_con.points_position[i])};
-    }
-
-
-
-    let scale = 1.6;
-
 
     //changing the angles to be continuous tangent line
-    for(let i = 0; i < shape_con.points_angle[3].length; i++){
-        shape_con.points_angle[3][i] = shape_con.points_angle[3][i] * -1
+    for(let i = 0; i < points_angle[3].length; i++){
+        points_angle[3][i] = points_angle[3][i] * -1
     }
 
+    for(let i = 0; i < points_position.length; i++){
+      for(let j = 0; j < points_position[i].length; j++){
 
-
-    for(let i = 0; i < shape_con.points_position.length; i++){
-      for(let j = 0; j < shape_con.points_position[i].length; j++){
-
-        shape_con.grid_points_con[i].grid_a[j] = getPointFromAngleAndDistance(
-            shape_con.points_position[i][j].x * scale, shape_con.points_position[i][j].y * scale, shape_con.points_angle[i][j], 50
+        grid_points_con[i].grid_a[j] = getPointFromAngleAndDistance(
+            points_position[i][j].x, points_position[i][j].y, points_angle[i][j], 50
         );
 
-        shape_con.grid_points_con[i].grid_b[j] = getPointFromAngleAndDistance(
-            shape_con.points_position[i][j].x * scale, shape_con.points_position[i][j].y * scale, shape_con.points_angle[i][j], -50
+        grid_points_con[i].grid_b[j] = getPointFromAngleAndDistance(
+            points_position[i][j].x, points_position[i][j].y, points_angle[i][j], -50
         );
 
       }
     }
 
 
+
+      return {points_position, points_angle, grid_points_con}
+        
+    }
+
+    let shape_con = new Shape_container_arr(shape_data_con, 1000);
 
     function getPointFromAngleAndDistance(x, y, angle, length) {
         // Convert angle from degrees to radians
@@ -140,7 +143,6 @@
 
         return { x: newX, y: newY };
     }
-
 
     let assets = {
       position: {x: 100, y: 100},
@@ -159,19 +161,14 @@
       structure_style: undefined,
     }
 
-
     let letter_a_1 = new StaticSingleFontOnCanvas(Neue_Haas_Grotesk_Display_Pro_55_Roman, 'PassangersOnlyPlease', assets);
-
-    console.log(letter_a_1);
 
     function Get_Grid_based_Glyph(canvas_letter, num_of_points, grid_shape){
       
       let grid_info = {
         num_of_points: num_of_points,
         dist_btwn_points: null,
-        point_con: [],
-        // input_path_con: [],
-        // grid_path_con: [],
+        point_con: []
       }
 
 
@@ -250,7 +247,7 @@
         }
       }
 
-
+console.log(corresponding_grid_index)
 
 
         this.draw_grid = function(path){
@@ -272,6 +269,16 @@
         this.draw_letter = function(path, frameCount){
 
           ctx.beginPath();
+
+          // for(let i = 0; i < path_pos_by_perc.length; i++){
+          //   for(let j = 0; j < path_pos_by_perc[i].length; j++){
+          //     for(let k = 0; k < path_pos_by_perc[i][j].length - 1; k++){
+          //       corresponding_grid_index[i][j][k].x = corresponding_grid_index[i][j][k].x + frameCount;
+          //       corresponding_grid_index[i][j][k].out_x = corresponding_grid_index[i][j][k].out_x + frameCount;
+          //       corresponding_grid_index[i][j][k].in_x = corresponding_grid_index[i][j][k].in_x + frameCount;
+          //     }
+          //   }
+          // }
 
           for(let i = 0; i < path_pos_by_perc.length; i++){
             for(let j = 0; j < path_pos_by_perc[i].length; j++){
@@ -391,7 +398,6 @@
         }
 
 
-
       function interpolatePoint(point1, point2, t) {
         const x = (1 - t) * point1.x + t * point2.x;
         const y = (1 - t) * point1.y + t * point2.y;
@@ -399,29 +405,22 @@
       }
 
 
-
     }
 
+    let grid_letter = new Get_Grid_based_Glyph(letter_a_1, 500);
     
-    let grid_letter = new Get_Grid_based_Glyph(letter_a_1, 100);
-
-    
-
-
     // Thoughts: would it be possible to loop?
     // frameCount needs to be multiple, as many as the points
-
 
     // What is the next step?
     // make the snake tail!
     // apply the head!
     // the fun fearful but exciting stuff!
-
+    // be able to enjoy the moment and have fun!!!
     
+console.log(shape_con.grid_points_con)
 
-
-
-    let path = 3;
+    let path = 1;
 
     let frameCount = 0;
 
@@ -430,14 +429,14 @@
         ctx.beginPath();
         ctx.rect(0,0,3000,3000)
         ctx.fillStyle = 'rgba(255,255,255,1)';
-        ctx.fillStyle = '#F5A92B';
+        ctx.fillStyle = '#EEEEEE';
         ctx.fill();
         ctx.closePath();
         
         frameCount++;
         
-        grid_letter.draw_grid(shape_con.grid_points_con[2]);
-        grid_letter.draw_letter(shape_con.grid_points_con[2], frameCount);
+        grid_letter.draw_grid(shape_con.grid_points_con[path]);
+        grid_letter.draw_letter(shape_con.grid_points_con[path], frameCount);
 
         window.requestAnimationFrame(anim);
 
