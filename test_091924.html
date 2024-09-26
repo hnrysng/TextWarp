@@ -262,7 +262,7 @@
 
         this.draw_grid = function(path){
           
-          for(let i = 0; i < path.grid_a.length; i++){                
+          for(let i = 0; i < path.grid_a.length; i++){
             // Start a new Path
             ctx.beginPath();
             ctx.moveTo(path.grid_a[i].x, path.grid_a[i].y);
@@ -276,7 +276,17 @@
         }
 
 
-let frameCount_con = [];
+        let frameCount_con = structuredClone(corresponding_grid_index);;
+
+        for(let i = 0; i < frameCount_con.length; i++){
+          for(let j = 0; j < frameCount_con[i].length; j++){
+            for(let k = 0; k < frameCount_con[i][j].length; k++){
+              frameCount_con[i][j][k].x = 0;
+              frameCount_con[i][j][k].in_x = 0;
+              frameCount_con[i][j][k].out_x = 0;
+            }
+          }
+        }
 
 
 
@@ -290,18 +300,28 @@ let frameCount_con = [];
           for(let i = 0; i < path_pos_by_perc.length; i++){
             for(let j = 0; j < path_pos_by_perc[i].length; j++){
               for(let k = 0; k < path_pos_by_perc[i][j].length; k++){
-                corresponding_grid_index_copy_for_frame[i][j][k].x = corresponding_grid_index[i][j][k].x + frameCount;
-                corresponding_grid_index_copy_for_frame[i][j][k].out_x = corresponding_grid_index[i][j][k].out_x + frameCount;
-                corresponding_grid_index_copy_for_frame[i][j][k].in_x = corresponding_grid_index[i][j][k].in_x + frameCount;
+                frameCount_con[i][j][k].x++;
+                frameCount_con[i][j][k].in_x++;
+                frameCount_con[i][j][k].out_x++;
 
-                if(corresponding_grid_index_copy_for_frame[i][j][k].x >= 400){
+                corresponding_grid_index_copy_for_frame[i][j][k].x = corresponding_grid_index[i][j][k].x + frameCount_con[i][j][k].x;
+                corresponding_grid_index_copy_for_frame[i][j][k].out_x = corresponding_grid_index[i][j][k].out_x + frameCount_con[i][j][k].out_x;
+                corresponding_grid_index_copy_for_frame[i][j][k].in_x = corresponding_grid_index[i][j][k].in_x + frameCount_con[i][j][k].in_x;
+
+                if(corresponding_grid_index_copy_for_frame[i][j][k].x >= 499){
                   corresponding_grid_index_copy_for_frame[i][j][k].x = 0;
+                  corresponding_grid_index[i][j][k].x = 0;
+                  frameCount_con[i][j][k].x = 0;
                 }
-                if(corresponding_grid_index_copy_for_frame[i][j][k].in_x >= 400){
+                if(corresponding_grid_index_copy_for_frame[i][j][k].in_x >= 499){
                   corresponding_grid_index_copy_for_frame[i][j][k].in_x = 0;
+                  corresponding_grid_index[i][j][k].in_x = 0;
+                  frameCount_con[i][j][k].in_x = 0;
                 }
-                if(corresponding_grid_index_copy_for_frame[i][j][k].out_x >= 400){
+                if(corresponding_grid_index_copy_for_frame[i][j][k].out_x >= 499){
                   corresponding_grid_index_copy_for_frame[i][j][k].out_x = 0;
+                  corresponding_grid_index[i][j][k].out_x = 0;
+                  frameCount_con[i][j][k].out_x = 0;
                 }
 
               }
