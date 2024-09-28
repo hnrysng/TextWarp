@@ -247,12 +247,12 @@
         }
       }
 
-      console.log('canvas_letter.typeface_path_con')
-      console.log(canvas_letter.typeface_path_con)
-      console.log('path_pos_by_perc')
-      console.log(path_pos_by_perc)
-      console.log('corresponding_grid_index')
-      console.log(corresponding_grid_index)
+      // console.log('canvas_letter.typeface_path_con')
+      // console.log(canvas_letter.typeface_path_con)
+      // console.log('path_pos_by_perc')
+      // console.log(path_pos_by_perc)
+      // console.log('corresponding_grid_index')
+      // console.log(corresponding_grid_index)
 
 
       // console.log(corresponding_grid_index[0][0])
@@ -433,10 +433,8 @@
 
     }
 
-    let grid_letter = new Get_Grid_based_Glyph(letter_a_1, 400);
+    let grid_letter = new Get_Grid_based_Glyph(letter_a_1, 300);
     
-    // Thoughts: would it be possible to loop?
-    // frameCount needs to be multiple, as many as the points
 
     // What is the next step?
     // make the snake tail!
@@ -444,12 +442,31 @@
     // the fun fearful but exciting stuff!
     // be able to enjoy the moment and have fun!!!
     
-console.log(shape_con.grid_points_con)
 
-    let path = 2;
+
+let test = structuredClone(shape_con.grid_points_con[0]);
+
+console.log(shape_con)
+console.log(shape_con.grid_points_con)
+console.log(test)
+
+    let next = 2;
+
+    let path = 1;
 
 
     function anim() {
+
+
+
+    for (let i = 0; i < test.grid_a.length; i++) {
+      test.grid_a[i].x = test.grid_a[i].x + (0.04 * (shape_con.grid_points_con[next].grid_a[i].x - test.grid_a[i].x));
+      test.grid_a[i].y = test.grid_a[i].y + (0.04 * (shape_con.grid_points_con[next].grid_a[i].y - test.grid_a[i].y));
+
+      test.grid_b[i].x = test.grid_b[i].x + (0.04 * (shape_con.grid_points_con[next].grid_b[i].x - test.grid_b[i].x));
+      test.grid_b[i].y = test.grid_b[i].y + (0.04 * (shape_con.grid_points_con[next].grid_b[i].y - test.grid_b[i].y));
+    }
+
 
         ctx.beginPath();
         ctx.rect(0,0,3000,3000)
@@ -460,7 +477,7 @@ console.log(shape_con.grid_points_con)
         
         
         // grid_letter.draw_grid(shape_con.grid_points_con[path]);
-        grid_letter.draw_letter(shape_con.grid_points_con[path]);
+        grid_letter.draw_letter(test);
 
         window.requestAnimationFrame(anim);
 
@@ -468,7 +485,18 @@ console.log(shape_con.grid_points_con)
 
     anim();
 
-
+    document.onkeypress = function (e) {
+      if(e.key == 0){
+        next = 0;
+      }else if(e.key == 1){
+        next = 1;
+      }else if(e.key == 2){
+        next = 2;
+      }else if(e.key == 3){
+        next = 3;
+      }
+      
+};
 
 
     </script>
