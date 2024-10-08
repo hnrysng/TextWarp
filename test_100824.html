@@ -161,7 +161,7 @@
       structure_style: undefined,
     }
 
-    let letter_a_1 = new StaticSingleFontOnCanvas(Neue_Haas_Grotesk_Display_Pro_55_Roman, 'PassangersOnlyPlease', assets);
+    let letter_a_1 = new StaticSingleFontOnCanvas(Neue_Haas_Grotesk_Display_Pro_55_Roman, 'Passsag', assets);
 
     function Get_Grid_based_Glyph(canvas_letter, num_of_points, grid_shape){
       
@@ -285,9 +285,9 @@
             for(let j = 0; j < path_pos_by_perc[i].length; j++){
               for(let k = 0; k < path_pos_by_perc[i][j].length; k++){
 
-                corresponding_grid_index[i][j][k].x = corresponding_grid_index[i][j][k].x + 1;
-                corresponding_grid_index[i][j][k].out_x = corresponding_grid_index[i][j][k].out_x + 1;
-                corresponding_grid_index[i][j][k].in_x = corresponding_grid_index[i][j][k].in_x + 1;
+                // corresponding_grid_index[i][j][k].x = corresponding_grid_index[i][j][k].x + 1;
+                // corresponding_grid_index[i][j][k].out_x = corresponding_grid_index[i][j][k].out_x + 1;
+                // corresponding_grid_index[i][j][k].in_x = corresponding_grid_index[i][j][k].in_x + 1;
 
                 if(corresponding_grid_index[i][j][k].x >= 499){
                   corresponding_grid_index[i][j][k].x = 0;
@@ -434,7 +434,7 @@
           if(point_a >= 499){
             point_a = 0;
           }
-          console.log(point_a)
+          // console.log(point_a)
 
           if(point_b >= 499){
             point_b = 0;
@@ -491,9 +491,9 @@
     console.log(shape_con.grid_points_con)
     console.log(test)
 
-    let next = 2;
+    let next = 3;
 
-    let path = 1;
+    let path = 3;
 
 
     function anim() {
@@ -518,7 +518,7 @@
         
 
         grid_letter.draw_grid(test);
-        grid_letter.draw_shape(test);
+        // grid_letter.draw_shape(test);
         grid_letter.draw_letter(test);
 
         window.requestAnimationFrame(anim);
