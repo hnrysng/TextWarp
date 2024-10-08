@@ -416,10 +416,39 @@
             }
           }
 
-          ctx.fillStyle = "#ff0000";
+          ctx.fillStyle = "#E5E4DE";
           ctx.fill();
           ctx.closePath();
 
+
+        }
+
+
+        this.draw_shape = function(path){
+
+          let point_a = 100;
+          let point_b = 200;
+
+          ctx.beginPath();
+            ctx.moveTo(path.grid_a[point_a].x, path.grid_a[point_a].y);
+
+          for(let i = point_a; i < point_b; i++){
+            // Start a new Path
+            ctx.lineTo(path.grid_a[i].x, path.grid_a[i].y);
+  
+          }
+
+          for(let i = point_b; i >= point_a; i--){
+            ctx.lineTo(path.grid_b[i].x, path.grid_b[i].y);
+          }
+
+          // ctx.lineTo(path.grid_a[path.grid_a.length - 1].x, path.grid_a[path.grid_a.length - 1].y);
+
+          ctx.lineTo(path.grid_a[point_a].x, path.grid_a[point_a].y);
+
+          ctx.fillStyle = "#000000";
+          ctx.fill();
+          ctx.closePath();
 
         }
 
@@ -471,12 +500,13 @@ console.log(test)
         ctx.beginPath();
         ctx.rect(0,0,3000,3000)
         ctx.fillStyle = 'rgba(255,255,255,1)';
-        ctx.fillStyle = '#EEEEEE';
+        ctx.fillStyle = '#E5E4DE';
         ctx.fill();
         ctx.closePath();
         
-        
-        // grid_letter.draw_grid(test);
+
+        grid_letter.draw_grid(test);
+        grid_letter.draw_shape(test);
         grid_letter.draw_letter(test);
 
         window.requestAnimationFrame(anim);
