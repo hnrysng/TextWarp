@@ -344,17 +344,18 @@
                 corresponding_grid_index[i][j][k].out_x = corresponding_grid_index[i][j][k].out_x + 1;
                 corresponding_grid_index[i][j][k].in_x = corresponding_grid_index[i][j][k].in_x + 1;
 
+                if(corresponding_grid_index[i][j][k].x >= total_grid_amount){
+                  corresponding_grid_index[i][j][k].x = 0;
+                }
+                if(corresponding_grid_index[i][j][k].in_x >= total_grid_amount){
+                  corresponding_grid_index[i][j][k].in_x = 0;
+                }
+                if(corresponding_grid_index[i][j][k].out_x >= total_grid_amount){
+                  corresponding_grid_index[i][j][k].out_x = 0;
+                }
 
-                if(corresponding_grid_index[i][j][k].x >= total_grid_amount - 1){
-                  // corresponding_grid_index[i][j][k].x = 0;
-                  corresponding_grid_index[i][j][k + 1].x = 0;
-                }
-                if(corresponding_grid_index[i][j][k].in_x >= total_grid_amount - 1){
-                  corresponding_grid_index[i][j][k + 1].in_x = 0;
-                }
-                if(corresponding_grid_index[i][j][k].out_x >= total_grid_amount - 1){
-                  corresponding_grid_index[i][j][k + 1].out_x = 0;
-                }
+
+                
 
               }
 
@@ -372,13 +373,9 @@
                   ctx.beginPath();
 
                   ctx.moveTo(path.grid_a[n].x, path.grid_a[n].y);
-                  
                   ctx.lineTo(path.grid_a[n + 1].x, path.grid_a[n + 1].y);
-
                   ctx.lineTo(path.grid_b[n + 1].x, path.grid_b[n + 1].y);
-
                   ctx.lineTo(path.grid_b[n].x, path.grid_b[n].y);
-
                   ctx.lineTo(path.grid_a[n].x, path.grid_a[n].y);
 
                   ctx.fillStyle = "#ff0000";
@@ -390,13 +387,9 @@
                   ctx.beginPath();
 
                   ctx.moveTo(path.grid_a[total_grid_amount - 1].x, path.grid_a[total_grid_amount - 1].y);
-                  
                   ctx.lineTo(path.grid_a[0].x, path.grid_a[0].y);
-
                   ctx.lineTo(path.grid_b[0].x, path.grid_b[0].y);
-
                   ctx.lineTo(path.grid_b[total_grid_amount - 1].x, path.grid_b[total_grid_amount - 1].y);
-
                   ctx.lineTo(path.grid_a[total_grid_amount - 1].x, path.grid_a[total_grid_amount - 1].y);
 
                   ctx.fillStyle = "#ff0000";
@@ -409,13 +402,9 @@
                   ctx.beginPath();
 
                   ctx.moveTo(path.grid_a[n].x, path.grid_a[n].y);
-                  
                   ctx.lineTo(path.grid_a[n + 1].x, path.grid_a[n + 1].y);
-
                   ctx.lineTo(path.grid_b[n + 1].x, path.grid_b[n + 1].y);
-
                   ctx.lineTo(path.grid_b[n].x, path.grid_b[n].y);
-
                   ctx.lineTo(path.grid_a[n].x, path.grid_a[n].y);
 
                   ctx.fillStyle = "#ff0000";
@@ -431,13 +420,9 @@
                   ctx.beginPath();
 
                   ctx.moveTo(path.grid_a[n].x, path.grid_a[n].y);
-                  
                   ctx.lineTo(path.grid_a[n + 1].x, path.grid_a[n + 1].y);
-
                   ctx.lineTo(path.grid_b[n + 1].x, path.grid_b[n + 1].y);
-
                   ctx.lineTo(path.grid_b[n].x, path.grid_b[n].y);
-
                   ctx.lineTo(path.grid_a[n].x, path.grid_a[n].y);
 
                   ctx.fillStyle = "#ff0000";
@@ -456,6 +441,8 @@
 
             ctx.beginPath();
             
+
+
             for(let j = 0; j < path_pos_by_perc[i].length; j++){
               
               ctx.moveTo(
@@ -578,6 +565,8 @@
 
 
 
+
+
         let point_a = 0;
         let point_b = 200;
 
@@ -619,6 +608,8 @@
         }
 
 
+
+        
       function interpolatePoint(point1, point2, t) {
         const x = (1 - t) * point1.x + t * point2.x;
         const y = (1 - t) * point1.y + t * point2.y;
