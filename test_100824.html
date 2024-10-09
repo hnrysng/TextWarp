@@ -39,10 +39,10 @@
       shape_data_con[i].letters.path[2][0].push(n)
     }
 
-    function Shape_container_arr(shapes, num_of_points, scale){
+    function Shape_container_arr(shapes, num_of_points, total_grid_amount){
 
-      if(scale == undefined){
-        scale = 1;
+      if(total_grid_amount == undefined){
+        total_grid_amount = 1;
       }
 
       let letter_canvas_path_con = [];
@@ -94,8 +94,8 @@
 
       for(let i = 0; i < points_position.length; i++){
         for(let j = 0; j < points_position[i].length; j++){
-          points_position[i][j].x = points_position[i][j].x * scale
-          points_position[i][j].y = points_position[i][j].y * scale
+          points_position[i][j].x = points_position[i][j].x * total_grid_amount
+          points_position[i][j].y = points_position[i][j].y * total_grid_amount
         }
       }
 
@@ -131,9 +131,9 @@
         
     }
 
-    let total_grid = 500;
+    let total_grid_amount = 500;
 
-    let shape_con = new Shape_container_arr(shape_data_con, 1500);
+    let shape_con = new Shape_container_arr(shape_data_con, total_grid_amount);
 
     function getPointFromAngleAndDistance(x, y, angle, length) {
 
@@ -259,7 +259,9 @@
 
         
 
-      let test = Find_min_max_grid_index_for_each_letter(corresponding_grid_index)
+      let grid_index_for_background = Find_min_max_grid_index_for_each_letter(corresponding_grid_index)
+
+
 
     function Find_min_max_grid_index_for_each_letter(grid_index){
 
@@ -314,43 +316,48 @@
         }
 
 
-        this.draw_letter = function(path){
+        this.draw_letter = function(path, total_grid_amount){
 
           ctx.beginPath();
           
           for(let i = 0; i < path_pos_by_perc.length; i++){
 
-            test[i].min = test[i].min + 1
-            test[i].max = test[i].max + 1
+            //animation value
+            grid_index_for_background[i].min = grid_index_for_background[i].min + 1
+            grid_index_for_background[i].max = grid_index_for_background[i].max + 1
 
-                if(test[i].max >= 1499){
-                  test[i].max = 0;
-                }
-                if(test[i].min >= 1499){
-                  test[i].min = 0;
-                }
+            if(grid_index_for_background[i].min >= total_grid_amount - 1){
+              grid_index_for_background[i].min = 0;
+            }
+            
+            if(grid_index_for_background[i].max >= total_grid_amount - 1){
+              grid_index_for_background[i].max = 0;
+            }
+            
                 
 
             for(let j = 0; j < path_pos_by_perc[i].length; j++){
               for(let k = 0; k < path_pos_by_perc[i][j].length; k++){
 
-                //animation start
+                //animation value
                 corresponding_grid_index[i][j][k].x = corresponding_grid_index[i][j][k].x + 1;
                 corresponding_grid_index[i][j][k].out_x = corresponding_grid_index[i][j][k].out_x + 1;
                 corresponding_grid_index[i][j][k].in_x = corresponding_grid_index[i][j][k].in_x + 1;
-                //animation start
 
-                if(corresponding_grid_index[i][j][k].x >= 1499){
-                  corresponding_grid_index[i][j][k].x = 0;
+
+                if(corresponding_grid_index[i][j][k].x >= total_grid_amount - 1){
+                  // corresponding_grid_index[i][j][k].x = 0;
+                  corresponding_grid_index[i][j][k + 1].x = 0;
                 }
-                if(corresponding_grid_index[i][j][k].in_x >= 1499){
-                  corresponding_grid_index[i][j][k].in_x = 0;
+                if(corresponding_grid_index[i][j][k].in_x >= total_grid_amount - 1){
+                  corresponding_grid_index[i][j][k + 1].in_x = 0;
                 }
-                if(corresponding_grid_index[i][j][k].out_x >= 1499){
-                  corresponding_grid_index[i][j][k].out_x = 0;
+                if(corresponding_grid_index[i][j][k].out_x >= total_grid_amount - 1){
+                  corresponding_grid_index[i][j][k + 1].out_x = 0;
                 }
 
               }
+
             }
           }
           
@@ -358,48 +365,93 @@
 
           for(let i = 0; i < path_pos_by_perc.length; i++){
 
-            for(let n = test[i].min; n <= test[i].max; n++){
+            if(grid_index_for_background[i].max < grid_index_for_background[i].min){
 
-              ctx.beginPath();
+                for(let n = grid_index_for_background[i].min; n < total_grid_amount - 1; n++){
 
-              ctx.moveTo(path.grid_a[n].x, path.grid_a[n].y);
+                  ctx.beginPath();
+
+                  ctx.moveTo(path.grid_a[n].x, path.grid_a[n].y);
+                  
+                  ctx.lineTo(path.grid_a[n + 1].x, path.grid_a[n + 1].y);
+
+                  ctx.lineTo(path.grid_b[n + 1].x, path.grid_b[n + 1].y);
+
+                  ctx.lineTo(path.grid_b[n].x, path.grid_b[n].y);
+
+                  ctx.lineTo(path.grid_a[n].x, path.grid_a[n].y);
+
+                  ctx.fillStyle = "#ff0000";
+                  ctx.fill();
+                  ctx.closePath();
+
+                }
+
+                  ctx.beginPath();
+
+                  ctx.moveTo(path.grid_a[total_grid_amount - 1].x, path.grid_a[total_grid_amount - 1].y);
+                  
+                  ctx.lineTo(path.grid_a[0].x, path.grid_a[0].y);
+
+                  ctx.lineTo(path.grid_b[0].x, path.grid_b[0].y);
+
+                  ctx.lineTo(path.grid_b[total_grid_amount - 1].x, path.grid_b[total_grid_amount - 1].y);
+
+                  ctx.lineTo(path.grid_a[total_grid_amount - 1].x, path.grid_a[total_grid_amount - 1].y);
+
+                  ctx.fillStyle = "#ff0000";
+                  ctx.fill();
+                  ctx.closePath();
+
+
+                for(let n = 0; n <= grid_index_for_background[i].max; n++){
+
+                  ctx.beginPath();
+
+                  ctx.moveTo(path.grid_a[n].x, path.grid_a[n].y);
+                  
+                  ctx.lineTo(path.grid_a[n + 1].x, path.grid_a[n + 1].y);
+
+                  ctx.lineTo(path.grid_b[n + 1].x, path.grid_b[n + 1].y);
+
+                  ctx.lineTo(path.grid_b[n].x, path.grid_b[n].y);
+
+                  ctx.lineTo(path.grid_a[n].x, path.grid_a[n].y);
+
+                  ctx.fillStyle = "#ff0000";
+                  ctx.fill();
+                  ctx.closePath();
+
+                }
+
+              }else{
+
+                for(let n = grid_index_for_background[i].min; n <= grid_index_for_background[i].max; n++){
+
+                  ctx.beginPath();
+
+                  ctx.moveTo(path.grid_a[n].x, path.grid_a[n].y);
+                  
+                  ctx.lineTo(path.grid_a[n + 1].x, path.grid_a[n + 1].y);
+
+                  ctx.lineTo(path.grid_b[n + 1].x, path.grid_b[n + 1].y);
+
+                  ctx.lineTo(path.grid_b[n].x, path.grid_b[n].y);
+
+                  ctx.lineTo(path.grid_a[n].x, path.grid_a[n].y);
+
+                  ctx.fillStyle = "#ff0000";
+                  ctx.fill();
+                  ctx.closePath();
+
+                }
+
+              }
+
+
+
               
-              ctx.lineTo(path.grid_a[n + 1].x, path.grid_a[n + 1].y);
-
-              ctx.lineTo(path.grid_b[n + 1].x, path.grid_b[n + 1].y);
-
-              ctx.lineTo(path.grid_b[n].x, path.grid_b[n].y);
-
-              ctx.lineTo(path.grid_a[n].x, path.grid_a[n].y);
-
-              ctx.fillStyle = "#ff0000";
-              // ctx.stroke();
-              ctx.fill();
-              ctx.closePath();
-
-            }
-
-            // ctx.beginPath();
-
-            // ctx.moveTo(path.grid_a[test[i].min].x, path.grid_a[test[i].min].y);
             
-            // for(let a = test[i].min; a <= test[i].max; a++){
-            //   ctx.lineTo(path.grid_a[a].x, path.grid_a[a].y);
-            // }
-
-            // ctx.lineTo(path.grid_b[test[i].max].x, path.grid_b[test[i].max].y);
-
-            // for(let a = test[i].max; a >= test[i].min; a--){
-            //   ctx.lineTo(path.grid_b[a].x, path.grid_b[a].y);
-            // }
-
-            // ctx.lineTo(path.grid_a[test[i].min].x, path.grid_a[test[i].min].y);
-
-            // ctx.fillStyle = "#ff0000";
-            // ctx.fill();
-            // ctx.closePath();
-            
-
 
 
             ctx.beginPath();
@@ -513,6 +565,7 @@
             }
 
             ctx.fillStyle = "#E5E4DE";
+            ctx.fillStyle = "#000000";
               ctx.fill();
               ctx.closePath();
 
@@ -575,7 +628,7 @@
 
     }
 
-    let grid_letter = new Get_Grid_based_Glyph(letter_a_1, 400);
+    let grid_letter = new Get_Grid_based_Glyph(letter_a_1, 480);
     
 
     // What is the next step?
@@ -622,7 +675,7 @@
 
         // grid_letter.draw_grid(test);
         // grid_letter.draw_shape(test);
-        grid_letter.draw_letter(test);
+        grid_letter.draw_letter(test, total_grid_amount);
 
         window.requestAnimationFrame(anim);
 
