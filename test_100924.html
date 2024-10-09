@@ -1,0 +1,777 @@
+<html>
+  <head>
+    <link rel="stylesheet" href="orbit/assets/css/style.css">
+  </head>
+
+  <body>
+    
+
+    <canvas id="canvas" width="3000" height="3000"></canvas>
+    <script src="orbit/assets/data/data_obj.js"></script>
+    <script src="orbit/assets/data/shope_0.js"></script>
+    <script src="orbit/assets/data/shope_1.js"></script>
+    <script src="orbit/assets/data/shope_2.js"></script>
+    <script src="orbit/assets/data/shope_3.js"></script>
+
+
+    <script src="beziertools.js"></script>
+    <script src="SingleFontOnCanvas/SingleFontOnCanvas.js"></script>
+    <script src="assets/font_data/GlyphToCanvas/Neue Haas Grotesk Display Pro 55 Roman_data.js"></script>
+
+
+    
+    <script>
+      
+    let canvas = document.getElementById("canvas");
+    let ctx = canvas.getContext("2d");
+    ctx.imageSmoothingEnabled = true;
+    ctx.webkitImageSmoothingEnabled = true;
+    ctx.mozImageSmoothingEnabled = true;
+    ctx.msImageSmoothingEnabled = true;
+    ctx.oImageSmoothingEnabled = true;
+
+
+    let shape_data_con = [shape_0, shape_1, shape_2, shape_3];
+
+    // i think this is looping, it needs to add the initial path one additional time as the last path.
+    for(let i = 0; i < shape_data_con.length; i++){
+      let n = Object.assign({},shape_data_con[i].letters.path[2][0][0]);
+      shape_data_con[i].letters.path[2][0].push(n)
+    }
+
+    function Shape_container_arr(shapes, num_of_points, total_grid_amount){
+
+      if(total_grid_amount == undefined){
+        total_grid_amount = 1;
+      }
+
+      let letter_canvas_path_con = [];
+
+      let bezier_points_con = [];
+
+      let bezier_length = [];
+
+      let divided_length_array_index = [];
+
+      let points_position = [];
+
+      let derivative_angle_con = [];
+
+      let points_angle = [];
+      
+
+      for(let i = 0; i < shapes.length; i++){
+      
+        letter_canvas_path_con[i] = shapes[i].letters.path[2][0];
+
+        for(let a = 0; a < letter_canvas_path_con[i].length; a++){
+            letter_canvas_path_con[i][a].y = shapes[i].parameters.cap_height - letter_canvas_path_con[i][a].y;
+            letter_canvas_path_con[i][a].in_y = shapes[i].parameters.cap_height - letter_canvas_path_con[i][a].in_y;
+            letter_canvas_path_con[i][a].out_y = shapes[i].parameters.cap_height - letter_canvas_path_con[i][a].out_y;
+        }
+
+        // console.log(letter_canvas_path_con)
+
+        bezier_points_con[i] = get_bezier_points(letter_canvas_path_con[i]);
+
+        bezier_length[i] = get_bezier_length(bezier_points_con[i]);
+
+        divided_length_array_index[i] = equally_divide_length(bezier_length[i].total_length, bezier_length[i].each_point_length, num_of_points);
+
+        points_position[i] = get_points_position(bezier_points_con[i], divided_length_array_index[i]);
+
+        derivative_angle_con[i] = derivative(bezier_points_con[i]);
+
+        points_angle[i] = get_point_angle(derivative_angle_con[i], divided_length_array_index[i]);
+
+        points_angle[i].pop();
+
+        points_position[i].pop();
+
+      }
+
+
+
+      for(let i = 0; i < points_position.length; i++){
+        for(let j = 0; j < points_position[i].length; j++){
+          points_position[i][j].x = points_position[i][j].x * total_grid_amount
+          points_position[i][j].y = points_position[i][j].y * total_grid_amount
+        }
+      }
+
+
+    let grid_points_con = [];
+
+    for(let i = 0; i < points_position.length; i++){
+      grid_points_con[i] = {grid_a: structuredClone(points_position[i]), grid_b: structuredClone(points_position[i])};
+    }
+
+    //changing the angles to be continuous tangent line
+    for(let i = 0; i < points_angle[3].length; i++){
+        points_angle[3][i] = points_angle[3][i] * -1
+    }
+
+    for(let i = 0; i < points_position.length; i++){
+      for(let j = 0; j < points_position[i].length; j++){
+
+        grid_points_con[i].grid_a[j] = getPointFromAngleAndDistance(
+            points_position[i][j].x, points_position[i][j].y, points_angle[i][j], 50
+        );
+
+        grid_points_con[i].grid_b[j] = getPointFromAngleAndDistance(
+            points_position[i][j].x, points_position[i][j].y, points_angle[i][j], -50
+        );
+
+      }
+    }
+
+
+
+      return {points_position, points_angle, grid_points_con}
+        
+    }
+
+    let total_grid_amount = 1500;
+
+    let shape_con = new Shape_container_arr(shape_data_con, total_grid_amount);
+
+    function getPointFromAngleAndDistance(x, y, angle, length) {
+
+        // Convert angle from degrees to radians
+        let radians = angle * (Math.PI / 180);
+
+        // Calculate the new x and y positions
+        let newX = x + length * Math.cos(radians);
+        let newY = y + length * Math.sin(radians);
+
+        return { x: newX, y: newY };
+
+    }
+
+    let assets = {
+      position: {x: 100, y: 100},
+      weight: 1,
+      scale: 0.2,
+      alignment: 'left',
+      italic: false,
+      sticky: undefined,
+      color: undefined,
+      line_height: undefined,
+      tracking: undefined,
+      kerning: undefined,
+      stroke_width: 1,
+      stroke_style: undefined,
+      structure_width: 0,
+      structure_style: undefined,
+    }
+
+    let letter_a_1 = new StaticSingleFontOnCanvas(Neue_Haas_Grotesk_Display_Pro_55_Roman, 'PASSANGERS', assets);
+
+    function Get_Grid_based_Glyph(canvas_letter, num_of_points){
+
+      let grid_info = {
+        num_of_points: num_of_points,
+        dist_btwn_points: null,
+        point_con: []
+      }
+
+      // Calculate the distance between grid points based on the letter's dimensions
+      if((canvas_letter.extreme_val.max - canvas_letter.position.x) > canvas_letter.total_width){
+          grid_info.dist_btwn_points = (canvas_letter.extreme_val.max - canvas_letter.position.x) / grid_info.num_of_points;
+      }else{
+          grid_info.dist_btwn_points = canvas_letter.total_width / grid_info.num_of_points;
+      }
+
+      // Populate the grid points with calculated distances
+      for(let i = 0; i <= grid_info.num_of_points; i++){
+          grid_info.point_con[i] = {x: grid_info.dist_btwn_points * i , y: 0};
+      }
+
+
+      //  Finding points percentage within the grid for interpolation
+      let path_pos_by_perc = structuredClone(canvas_letter.typeface_path_con);
+
+      //  Finding which grid the points lies on
+      let corresponding_grid_index = structuredClone(canvas_letter.typeface_path_con);
+
+
+      for(let i = 0; i < canvas_letter.typeface_path_con.length; i++){
+        for(let j = 0; j < canvas_letter.typeface_path_con[i].length; j++){
+          for(let k = 0; k < canvas_letter.typeface_path_con[i][j].length; k++){
+
+            for(let n = 0; n < grid_info.point_con.length - 1; n++){
+
+              if(grid_info.point_con[n].x <= canvas_letter.typeface_path_con[i][j][k].x - canvas_letter.position.x && canvas_letter.typeface_path_con[i][j][k].x - canvas_letter.position.x < grid_info.point_con[n + 1].x){
+                path_pos_by_perc[i][j][k].x = ((canvas_letter.typeface_path_con[i][j][k].x - canvas_letter.position.x) - grid_info.point_con[n].x) / grid_info.dist_btwn_points
+                corresponding_grid_index[i][j][k].x = n;
+              }
+
+              if(grid_info.point_con[n].x <= canvas_letter.typeface_path_con[i][j][k].in_x - canvas_letter.position.x && canvas_letter.typeface_path_con[i][j][k].in_x - canvas_letter.position.x < grid_info.point_con[n + 1].x){
+                path_pos_by_perc[i][j][k].in_x = ((canvas_letter.typeface_path_con[i][j][k].in_x - canvas_letter.position.x) - grid_info.point_con[n].x) / grid_info.dist_btwn_points
+                corresponding_grid_index[i][j][k].in_x = n;
+              }
+
+              if(grid_info.point_con[n].x <= canvas_letter.typeface_path_con[i][j][k].out_x - canvas_letter.position.x && canvas_letter.typeface_path_con[i][j][k].out_x - canvas_letter.position.x < grid_info.point_con[n + 1].x){
+                path_pos_by_perc[i][j][k].out_x = ((canvas_letter.typeface_path_con[i][j][k].out_x - canvas_letter.position.x) - grid_info.point_con[n].x) / grid_info.dist_btwn_points
+                corresponding_grid_index[i][j][k].out_x = n;
+              }
+
+            }         
+
+
+            if(grid_info.point_con[grid_info.point_con.length - 1].x == canvas_letter.typeface_path_con[i][j][k].x - canvas_letter.position.x){
+              path_pos_by_perc[i][j][k].x = ((canvas_letter.typeface_path_con[i][j][k].x - canvas_letter.position.x) - grid_info.point_con[grid_info.point_con.length - 1].x) / grid_info.dist_btwn_points
+              corresponding_grid_index[i][j][k].x = grid_info.point_con.length - 1;
+            }
+
+            if(grid_info.point_con[grid_info.point_con.length - 1].x == canvas_letter.typeface_path_con[i][j][k].in_x - canvas_letter.position.x){
+              path_pos_by_perc[i][j][k].in_x = ((canvas_letter.typeface_path_con[i][j][k].in_x - canvas_letter.position.x) - grid_info.point_con[grid_info.point_con.length - 1].x) / grid_info.dist_btwn_points
+              corresponding_grid_index[i][j][k].in_x = grid_info.point_con.length - 1;
+            }
+
+            if(grid_info.point_con[grid_info.point_con.length - 1].x == canvas_letter.typeface_path_con[i][j][k].out_x - canvas_letter.position.x){
+              path_pos_by_perc[i][j][k].out_x = ((canvas_letter.typeface_path_con[i][j][k].out_x - canvas_letter.position.x) - grid_info.point_con[grid_info.point_con.length - 1].x) / grid_info.dist_btwn_points
+              corresponding_grid_index[i][j][k].out_x = grid_info.point_con.length - 1;
+            }
+
+
+            path_pos_by_perc[i][j][k].y = (path_pos_by_perc[i][j][k].y - canvas_letter.position.y) / canvas_letter.total_height
+            path_pos_by_perc[i][j][k].in_y = (path_pos_by_perc[i][j][k].in_y - canvas_letter.position.y) / canvas_letter.total_height
+            path_pos_by_perc[i][j][k].out_y = (path_pos_by_perc[i][j][k].out_y - canvas_letter.position.y) / canvas_letter.total_height
+        
+
+            // y index is not needed, since the grid is the vertical grid.
+            // keeping place holder for y to make the clone process simple, and potential future x&y grid text warp function
+            corresponding_grid_index[i][j][k].y = null;
+            corresponding_grid_index[i][j][k].in_y = null;
+            corresponding_grid_index[i][j][k].out_y = null;
+
+          }
+        }
+      }
+
+      console.log('canvas_letter.typeface_path_con')
+      console.log(canvas_letter.typeface_path_con)
+      console.log('path_pos_by_perc')
+      console.log(path_pos_by_perc)
+      console.log('corresponding_grid_index')
+      console.log(corresponding_grid_index)
+
+        
+
+      let corresponding_grid_index_test = structuredClone(corresponding_grid_index);
+
+
+      for(let i = 0 ; i < corresponding_grid_index_test.length; i++){
+        for(let j = 0 ; j < corresponding_grid_index_test[i].length; j++){
+          for(let k = 0 ; k < corresponding_grid_index_test[i][j].length; k++){
+
+            corresponding_grid_index_test[i][j][k].x = corresponding_grid_index_test[i][j][k].x + 1
+            corresponding_grid_index_test[i][j][k].in_x = corresponding_grid_index_test[i][j][k].in_x + 1
+            corresponding_grid_index_test[i][j][k].out_x = corresponding_grid_index_test[i][j][k].out_x + 1
+
+          }
+        }
+      }
+
+      console.log(corresponding_grid_index)
+      console.log(corresponding_grid_index_test)
+
+      let grid_index_for_background = Find_min_max_grid_index_for_each_letter(corresponding_grid_index)
+
+
+
+
+    function Find_min_max_grid_index_for_each_letter(grid_index){
+
+      let each_letter_index_con = [];
+
+      for(let i = 0; i < grid_index.length; i++){
+        each_letter_index_con[i] = {min: null, max: null};
+      }
+
+
+      for(let i = 0; i < grid_index.length; i++){
+          
+        let flattened = grid_index[i].flat();
+
+        let combinedValues = flattened.reduce((arr, item) => {
+            arr.push(item.x, item.in_x, item.out_x);
+            return arr;
+        }, []);
+
+        each_letter_index_con[i].min = Math.min(...combinedValues);
+        each_letter_index_con[i].max = Math.max(...combinedValues);
+
+      }
+
+
+      for(let i = 0; i < each_letter_index_con.length - 1; i++){
+        each_letter_index_con[i].max = each_letter_index_con[i+1].min - 1
+      }
+
+
+      return each_letter_index_con
+
+    }
+
+
+    
+
+
+        this.draw_grid = function(path){
+          
+          for(let i = 0; i < path.grid_a.length; i++){
+            // Start a new Path
+            ctx.beginPath();
+            ctx.moveTo(path.grid_a[i].x, path.grid_a[i].y);
+            ctx.lineTo(path.grid_b[i].x, path.grid_b[i].y);
+  
+            // Draw the Path
+            ctx.stroke();
+          }
+
+          
+        }
+
+
+        this.draw_letter = function(path, total_grid_amount){
+
+          ctx.beginPath();
+          
+          for(let x = 0; x < 3; x++){
+
+          for(let i = 0; i < path_pos_by_perc.length; i++){
+
+            //animation value
+            grid_index_for_background[i].min = grid_index_for_background[i].min + 1
+            grid_index_for_background[i].max = grid_index_for_background[i].max + 1
+
+            if(grid_index_for_background[i].min >= total_grid_amount){
+              grid_index_for_background[i].min = 0;
+            }
+            
+            if(grid_index_for_background[i].max >= total_grid_amount){
+              grid_index_for_background[i].max = 0;
+            }
+            
+                
+
+            for(let j = 0; j < path_pos_by_perc[i].length; j++){
+              for(let k = 0; k < path_pos_by_perc[i][j].length; k++){
+
+                //animation value
+
+                corresponding_grid_index_test[i][j][k].x = corresponding_grid_index_test[i][j][k].x + 1;
+                corresponding_grid_index_test[i][j][k].out_x = corresponding_grid_index_test[i][j][k].out_x + 1;
+                corresponding_grid_index_test[i][j][k].in_x = corresponding_grid_index_test[i][j][k].in_x + 1;
+
+
+
+                if(corresponding_grid_index_test[i][j][k].x >= total_grid_amount){
+                  corresponding_grid_index_test[i][j][k].x = 0;
+                }
+                if(corresponding_grid_index_test[i][j][k].in_x >= total_grid_amount){
+                  corresponding_grid_index_test[i][j][k].in_x = 0;
+                }
+                if(corresponding_grid_index_test[i][j][k].out_x >= total_grid_amount){
+                  corresponding_grid_index_test[i][j][k].out_x = 0;
+                }
+
+
+                
+                corresponding_grid_index[i][j][k].x = corresponding_grid_index[i][j][k].x + 1;
+                corresponding_grid_index[i][j][k].out_x = corresponding_grid_index[i][j][k].out_x + 1;
+                corresponding_grid_index[i][j][k].in_x = corresponding_grid_index[i][j][k].in_x + 1;
+
+
+                if(corresponding_grid_index[i][j][k].x >= total_grid_amount){
+                  corresponding_grid_index[i][j][k].x = 0;
+                }
+                if(corresponding_grid_index[i][j][k].in_x >= total_grid_amount){
+                  corresponding_grid_index[i][j][k].in_x = 0;
+                }
+                if(corresponding_grid_index[i][j][k].out_x >= total_grid_amount){
+                  corresponding_grid_index[i][j][k].out_x = 0;
+                }
+
+
+              }
+
+            }
+          }
+        }
+          
+
+
+          
+          for(let i = 0; i < path_pos_by_perc.length; i++){
+
+           if(grid_index_for_background[i].max >= total_grid_amount - 1){
+                for(let n = grid_index_for_background[i].min; n < total_grid_amount - 1; n++){
+
+                  ctx.beginPath();
+
+                  ctx.moveTo(path.grid_a[n].x, path.grid_a[n].y);
+                  ctx.lineTo(path.grid_a[n + 1].x, path.grid_a[n + 1].y);
+                  ctx.lineTo(path.grid_b[n + 1].x, path.grid_b[n + 1].y);
+                  ctx.lineTo(path.grid_b[n].x, path.grid_b[n].y);
+                  ctx.lineTo(path.grid_a[n].x, path.grid_a[n].y);
+
+                  ctx.fillStyle = "#ff0000";
+                  ctx.fillStyle = "#000000";
+                  
+                  ctx.fill();
+                  ctx.closePath();
+
+                }
+
+                  ctx.beginPath();
+
+                  ctx.moveTo(path.grid_a[total_grid_amount - 1].x, path.grid_a[total_grid_amount - 1].y);
+                  ctx.lineTo(path.grid_a[0].x, path.grid_a[0].y);
+                  ctx.lineTo(path.grid_b[0].x, path.grid_b[0].y);
+                  ctx.lineTo(path.grid_b[total_grid_amount - 1].x, path.grid_b[total_grid_amount - 1].y);
+                  ctx.lineTo(path.grid_a[total_grid_amount - 1].x, path.grid_a[total_grid_amount - 1].y);
+
+                  ctx.fillStyle = "#ff0000";
+                  ctx.fillStyle = "#000000";
+                  
+                  ctx.fill();
+                  ctx.closePath();
+
+              }else if(grid_index_for_background[i].max < grid_index_for_background[i].min){
+
+                for(let n = grid_index_for_background[i].min; n < total_grid_amount - 1; n++){
+
+                  ctx.beginPath();
+
+                  ctx.moveTo(path.grid_a[n].x, path.grid_a[n].y);
+                  ctx.lineTo(path.grid_a[n + 1].x, path.grid_a[n + 1].y);
+                  ctx.lineTo(path.grid_b[n + 1].x, path.grid_b[n + 1].y);
+                  ctx.lineTo(path.grid_b[n].x, path.grid_b[n].y);
+                  ctx.lineTo(path.grid_a[n].x, path.grid_a[n].y);
+
+                  ctx.fillStyle = "#ff0000";
+                  ctx.fillStyle = "#000000";
+                  
+                  ctx.fill();
+                  ctx.closePath();
+
+                }
+
+                  ctx.beginPath();
+
+                  ctx.moveTo(path.grid_a[total_grid_amount - 1].x, path.grid_a[total_grid_amount - 1].y);
+                  ctx.lineTo(path.grid_a[0].x, path.grid_a[0].y);
+                  ctx.lineTo(path.grid_b[0].x, path.grid_b[0].y);
+                  ctx.lineTo(path.grid_b[total_grid_amount - 1].x, path.grid_b[total_grid_amount - 1].y);
+                  ctx.lineTo(path.grid_a[total_grid_amount - 1].x, path.grid_a[total_grid_amount - 1].y);
+
+                  ctx.fillStyle = "#ff0000";
+                  ctx.fillStyle = "#000000";
+                  
+                  ctx.fill();
+                  ctx.closePath();
+
+
+                for(let n = 0; n <= grid_index_for_background[i].max; n++){
+
+                  ctx.beginPath();
+
+                  ctx.moveTo(path.grid_a[n].x, path.grid_a[n].y);
+                  ctx.lineTo(path.grid_a[n + 1].x, path.grid_a[n + 1].y);
+                  ctx.lineTo(path.grid_b[n + 1].x, path.grid_b[n + 1].y);
+                  ctx.lineTo(path.grid_b[n].x, path.grid_b[n].y);
+                  ctx.lineTo(path.grid_a[n].x, path.grid_a[n].y);
+
+                  ctx.fillStyle = "#ff0000";
+                  ctx.fillStyle = "#000000";
+                  
+                  ctx.fill();
+                  ctx.closePath();
+
+                }
+
+              }else{
+
+                for(let n = grid_index_for_background[i].min; n <= grid_index_for_background[i].max; n++){
+
+                  ctx.beginPath();
+
+                  ctx.moveTo(path.grid_a[n].x, path.grid_a[n].y);
+                  ctx.lineTo(path.grid_a[n + 1].x, path.grid_a[n + 1].y);
+                  ctx.lineTo(path.grid_b[n + 1].x, path.grid_b[n + 1].y);
+                  ctx.lineTo(path.grid_b[n].x, path.grid_b[n].y);
+                  ctx.lineTo(path.grid_a[n].x, path.grid_a[n].y);
+
+                  ctx.fillStyle = "#ff0000";
+                  ctx.fillStyle = "#000000";
+                  ctx.fill();
+
+                  // ctx.stroke();
+                  ctx.closePath();
+                  
+
+                }
+
+              }
+
+
+
+              
+            
+
+
+            ctx.beginPath();
+
+            for(let j = 0; j < path_pos_by_perc[i].length; j++){
+              
+              ctx.moveTo(
+                interpolatePoint(
+                  interpolatePoint(path.grid_b[corresponding_grid_index[i][j][0].x], path.grid_b[corresponding_grid_index_test[i][j][0].x], path_pos_by_perc[i][j][0].x),
+                  interpolatePoint(path.grid_a[corresponding_grid_index[i][j][0].x], path.grid_a[corresponding_grid_index_test[i][j][0].x], path_pos_by_perc[i][j][0].x),
+                  path_pos_by_perc[i][j][0].y
+                ).x,
+                interpolatePoint(
+                  interpolatePoint(path.grid_b[corresponding_grid_index[i][j][0].x], path.grid_b[corresponding_grid_index_test[i][j][0].x], path_pos_by_perc[i][j][0].x),
+                  interpolatePoint(path.grid_a[corresponding_grid_index[i][j][0].x], path.grid_a[corresponding_grid_index_test[i][j][0].x], path_pos_by_perc[i][j][0].x),
+                  path_pos_by_perc[i][j][0].y
+                ).y
+              );
+
+              for(let k = 0; k < path_pos_by_perc[i][j].length - 1; k++){
+
+                ctx.bezierCurveTo(
+                  interpolatePoint(
+                    interpolatePoint(path.grid_b[corresponding_grid_index[i][j][k].out_x], path.grid_b[corresponding_grid_index_test[i][j][k].out_x], path_pos_by_perc[i][j][k].out_x),
+                    interpolatePoint(path.grid_a[corresponding_grid_index[i][j][k].out_x], path.grid_a[corresponding_grid_index_test[i][j][k].out_x], path_pos_by_perc[i][j][k].out_x),
+                    path_pos_by_perc[i][j][k].out_y
+                  ).x,
+                  interpolatePoint(
+                    interpolatePoint(path.  grid_b[corresponding_grid_index[i][j][k].out_x], path.grid_b[corresponding_grid_index_test[i][j][k].out_x], path_pos_by_perc[i][j][k].out_x),
+                    interpolatePoint(path.grid_a[corresponding_grid_index[i][j][k].out_x], path.grid_a[corresponding_grid_index_test[i][j][k].out_x], path_pos_by_perc[i][j][k].out_x),
+                    path_pos_by_perc[i][j][k].out_y
+                  ).y,
+
+                  interpolatePoint(
+                    interpolatePoint(path.grid_b[corresponding_grid_index[i][j][k + 1].in_x], path.grid_b[corresponding_grid_index_test[i][j][k + 1].in_x], path_pos_by_perc[i][j][k + 1].in_x),
+                    interpolatePoint(path.grid_a[corresponding_grid_index[i][j][k + 1].in_x], path.grid_a[corresponding_grid_index_test[i][j][k + 1].in_x], path_pos_by_perc[i][j][k + 1].in_x),
+                    path_pos_by_perc[i][j][k + 1].in_y
+                  ).x,
+                  interpolatePoint(
+                    interpolatePoint(path.grid_b[corresponding_grid_index[i][j][k + 1].in_x], path.grid_b[corresponding_grid_index_test[i][j][k + 1].in_x], path_pos_by_perc[i][j][k + 1].in_x),
+                    interpolatePoint(path.grid_a[corresponding_grid_index[i][j][k + 1].in_x], path.grid_a[corresponding_grid_index_test[i][j][k + 1].in_x], path_pos_by_perc[i][j][k + 1].in_x),
+                    path_pos_by_perc[i][j][k + 1].in_y
+                  ).y,
+
+                  interpolatePoint(
+                    interpolatePoint(path.grid_b[corresponding_grid_index[i][j][k + 1].x], path.grid_b[corresponding_grid_index_test[i][j][k + 1].x], path_pos_by_perc[i][j][k + 1].x),
+                    interpolatePoint(path.grid_a[corresponding_grid_index[i][j][k + 1].x], path.grid_a[corresponding_grid_index_test[i][j][k + 1].x], path_pos_by_perc[i][j][k + 1].x),
+                    path_pos_by_perc[i][j][k + 1].y
+                  ).x,
+                  interpolatePoint(
+                    interpolatePoint(path.grid_b[corresponding_grid_index[i][j][k + 1].x], path.grid_b[corresponding_grid_index_test[i][j][k + 1].x], path_pos_by_perc[i][j][k + 1].x),
+                    interpolatePoint(path.grid_a[corresponding_grid_index[i][j][k + 1].x], path.grid_a[corresponding_grid_index_test[i][j][k + 1].x], path_pos_by_perc[i][j][k + 1].x),
+                    path_pos_by_perc[i][j][k + 1].y
+                  ).y,
+                );
+
+              }
+
+              ctx.bezierCurveTo(
+
+                interpolatePoint(
+                  interpolatePoint(path.grid_b[corresponding_grid_index[i][j][corresponding_grid_index[i][j].length - 1].out_x], path.grid_b[corresponding_grid_index_test[i][j][corresponding_grid_index[i][j].length - 1].out_x], path_pos_by_perc[i][j][path_pos_by_perc[i][j].length - 1].out_x),
+                  interpolatePoint(path.grid_a[corresponding_grid_index[i][j][corresponding_grid_index[i][j].length - 1].out_x], path.grid_a[corresponding_grid_index_test[i][j][corresponding_grid_index[i][j].length - 1].out_x], path_pos_by_perc[i][j][path_pos_by_perc[i][j].length - 1].out_x),
+                  path_pos_by_perc[i][j][path_pos_by_perc[i][j].length - 1].out_y
+                ).x,
+                interpolatePoint(
+                  interpolatePoint(path.grid_b[corresponding_grid_index[i][j][corresponding_grid_index[i][j].length - 1].out_x], path.grid_b[corresponding_grid_index_test[i][j][corresponding_grid_index[i][j].length - 1].out_x], path_pos_by_perc[i][j][path_pos_by_perc[i][j].length - 1].out_x),
+                  interpolatePoint(path.grid_a[corresponding_grid_index[i][j][corresponding_grid_index[i][j].length - 1].out_x], path.grid_a[corresponding_grid_index_test[i][j][corresponding_grid_index[i][j].length - 1].out_x], path_pos_by_perc[i][j][path_pos_by_perc[i][j].length - 1].out_x),
+                  path_pos_by_perc[i][j][path_pos_by_perc[i][j].length - 1].out_y
+                ).y,
+
+                interpolatePoint(
+                  interpolatePoint(path.grid_b[corresponding_grid_index[i][j][0].in_x], path.grid_b[corresponding_grid_index_test[i][j][0].in_x], path_pos_by_perc[i][j][0].in_x),
+                  interpolatePoint(path.grid_a[corresponding_grid_index[i][j][0].in_x], path.grid_a[corresponding_grid_index_test[i][j][0].in_x], path_pos_by_perc[i][j][0].in_x),
+                  path_pos_by_perc[i][j][0].in_y
+                ).x,
+                interpolatePoint(
+                  interpolatePoint(path.grid_b[corresponding_grid_index[i][j][0].in_x], path.grid_b[corresponding_grid_index_test[i][j][0].in_x], path_pos_by_perc[i][j][0].in_x),
+                  interpolatePoint(path.grid_a[corresponding_grid_index[i][j][0].in_x], path.grid_a[corresponding_grid_index_test[i][j][0].in_x], path_pos_by_perc[i][j][0].in_x),
+                  path_pos_by_perc[i][j][0].in_y
+                ).y,
+
+                interpolatePoint(
+                  interpolatePoint(path.grid_b[corresponding_grid_index[i][j][0].x], path.grid_b[corresponding_grid_index_test[i][j][0].x], path_pos_by_perc[i][j][0].x),
+                  interpolatePoint(path.grid_a[corresponding_grid_index[i][j][0].x], path.grid_a[corresponding_grid_index_test[i][j][0].x], path_pos_by_perc[i][j][0].x),
+                  path_pos_by_perc[i][j][0].y
+                ).x,
+                interpolatePoint(
+                  interpolatePoint(path.grid_b[corresponding_grid_index[i][j][0].x], path.grid_b[corresponding_grid_index_test[i][j][0].x], path_pos_by_perc[i][j][0].x),
+                  interpolatePoint(path.grid_a[corresponding_grid_index[i][j][0].x], path.grid_a[corresponding_grid_index_test[i][j][0].x], path_pos_by_perc[i][j][0].x),
+                  path_pos_by_perc[i][j][0].y
+                ).y,
+
+              );
+
+
+              ctx.lineTo(
+              interpolatePoint(
+                  interpolatePoint(path.grid_b[corresponding_grid_index[i][j][0].x], path.grid_b[corresponding_grid_index_test[i][j][0].x], path_pos_by_perc[i][j][0].x),
+                  interpolatePoint(path.grid_a[corresponding_grid_index[i][j][0].x], path.grid_a[corresponding_grid_index_test[i][j][0].x], path_pos_by_perc[i][j][0].x),
+                  path_pos_by_perc[i][j][0].y
+                ).x,
+                interpolatePoint(
+                  interpolatePoint(path.grid_b[corresponding_grid_index[i][j][0].x], path.grid_b[corresponding_grid_index_test[i][j][0].x], path_pos_by_perc[i][j][0].x),
+                  interpolatePoint(path.grid_a[corresponding_grid_index[i][j][0].x], path.grid_a[corresponding_grid_index_test[i][j][0].x], path_pos_by_perc[i][j][0].x),
+                  path_pos_by_perc[i][j][0].y
+                ).y
+              );
+
+
+            }
+
+            ctx.fillStyle = "#E5E4DE";
+            // ctx.fillStyle = "#000000";
+              ctx.fill();
+              ctx.closePath();
+
+
+
+          }
+
+
+        }
+
+
+
+
+
+        let point_a = 0;
+        let point_b = 200;
+
+        this.draw_shape = function(path){
+
+          point_a++
+          point_b++
+
+          if(point_a >= 499){
+            point_a = 0;
+          }
+          // console.log(point_a)
+
+          if(point_b >= 499){
+            point_b = 0;
+          }
+
+          ctx.beginPath();
+            ctx.moveTo(path.grid_a[point_a].x, path.grid_a[point_a].y);
+
+          for(let i = point_a; i < point_b; i++){
+            // Start a new Path
+            ctx.lineTo(path.grid_a[i].x, path.grid_a[i].y);
+  
+          }
+
+          for(let i = point_b; i >= point_a; i--){
+            ctx.lineTo(path.grid_b[i].x, path.grid_b[i].y);
+          }
+
+          // ctx.lineTo(path.grid_a[path.grid_a.length - 1].x, path.grid_a[path.grid_a.length - 1].y);
+
+          ctx.lineTo(path.grid_a[point_a].x, path.grid_a[point_a].y);
+
+          ctx.fillStyle = "#000000";
+          ctx.fill();
+          ctx.closePath();
+
+        }
+
+
+
+        
+      function interpolatePoint(point1, point2, t) {
+        const x = (1 - t) * point1.x + t * point2.x;
+        const y = (1 - t) * point1.y + t * point2.y;
+        return {x: x, y: y};
+      }
+
+
+    }
+
+    let grid_letter = new Get_Grid_based_Glyph(letter_a_1, 500);
+    
+
+    // What is the next step?
+    // make the snake tail!
+    // apply the head!
+    // the fun fearful but exciting stuff!
+    // be able to enjoy the moment and have fun!!!
+    
+
+    let default_path = 3;
+
+    let test = structuredClone(shape_con.grid_points_con[default_path]);
+
+    let next = 3;
+    
+    // console.log(shape_con)
+    // console.log(shape_con.grid_points_con)
+    // console.log(test)
+
+
+    
+
+
+    function anim() {
+
+
+
+        for (let i = 0; i < test.grid_a.length; i++) {
+          test.grid_a[i].x = test.grid_a[i].x + (0.04 * (shape_con.grid_points_con[next].grid_a[i].x - test.grid_a[i].x));
+          test.grid_a[i].y = test.grid_a[i].y + (0.04 * (shape_con.grid_points_con[next].grid_a[i].y - test.grid_a[i].y));
+
+          test.grid_b[i].x = test.grid_b[i].x + (0.04 * (shape_con.grid_points_con[next].grid_b[i].x - test.grid_b[i].x));
+          test.grid_b[i].y = test.grid_b[i].y + (0.04 * (shape_con.grid_points_con[next].grid_b[i].y - test.grid_b[i].y));
+        }
+
+
+        ctx.beginPath();
+        ctx.rect(0,0,3000,3000)
+        ctx.fillStyle = 'rgba(255,255,255,1)';
+        ctx.fillStyle = '#E5E4DE';
+        ctx.fill();
+        ctx.closePath();
+        
+        
+        // grid_letter.draw_grid(test);
+        // grid_letter.draw_shape(test);
+        grid_letter.draw_letter(test, total_grid_amount);
+
+
+        window.requestAnimationFrame(anim);
+
+    }
+
+    anim();
+
+    document.onkeypress = function (e) {
+      if(e.key == 0){
+        next = 0;
+      }else if(e.key == 1){
+        next = 1;
+      }else if(e.key == 2){
+        next = 2;
+      }else if(e.key == 3){
+        next = 3;
+      }
+      
+};
+
+
+    </script>
+    
+  </body>
+</html>
