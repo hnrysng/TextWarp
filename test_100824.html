@@ -165,7 +165,7 @@
       structure_style: undefined,
     }
 
-    let letter_a_1 = new StaticSingleFontOnCanvas(Neue_Haas_Grotesk_Display_Pro_55_Roman, 'PassangersOnlyPlease', assets);
+    let letter_a_1 = new StaticSingleFontOnCanvas(Neue_Haas_Grotesk_Display_Pro_55_Roman, 'PASSANGERS', assets);
 
     function Get_Grid_based_Glyph(canvas_letter, num_of_points){
 
@@ -403,7 +403,36 @@
 
           for(let i = 0; i < path_pos_by_perc.length; i++){
 
-            if(grid_index_for_background[i].max < grid_index_for_background[i].min){
+           if(grid_index_for_background[i].max >= total_grid_amount - 1){
+                for(let n = grid_index_for_background[i].min; n < total_grid_amount - 1; n++){
+
+                  ctx.beginPath();
+
+                  ctx.moveTo(path.grid_a[n].x, path.grid_a[n].y);
+                  ctx.lineTo(path.grid_a[n + 1].x, path.grid_a[n + 1].y);
+                  ctx.lineTo(path.grid_b[n + 1].x, path.grid_b[n + 1].y);
+                  ctx.lineTo(path.grid_b[n].x, path.grid_b[n].y);
+                  ctx.lineTo(path.grid_a[n].x, path.grid_a[n].y);
+
+                  ctx.fillStyle = "#ff0000";
+                  ctx.fill();
+                  ctx.closePath();
+
+                }
+
+                  ctx.beginPath();
+
+                  ctx.moveTo(path.grid_a[total_grid_amount - 1].x, path.grid_a[total_grid_amount - 1].y);
+                  ctx.lineTo(path.grid_a[0].x, path.grid_a[0].y);
+                  ctx.lineTo(path.grid_b[0].x, path.grid_b[0].y);
+                  ctx.lineTo(path.grid_b[total_grid_amount - 1].x, path.grid_b[total_grid_amount - 1].y);
+                  ctx.lineTo(path.grid_a[total_grid_amount - 1].x, path.grid_a[total_grid_amount - 1].y);
+
+                  ctx.fillStyle = "#ff0000";
+                  ctx.fill();
+                  ctx.closePath();
+
+              }else if(grid_index_for_background[i].max < grid_index_for_background[i].min){
 
                 for(let n = grid_index_for_background[i].min; n < total_grid_amount - 1; n++){
 
