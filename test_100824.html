@@ -131,7 +131,7 @@
         
     }
 
-    let total_grid_amount = 500;
+    let total_grid_amount = 1500;
 
     let shape_con = new Shape_container_arr(shape_data_con, total_grid_amount);
 
@@ -307,7 +307,7 @@
 
 
       for(let i = 0; i < each_letter_index_con.length - 1; i++){
-        each_letter_index_con[i].max = each_letter_index_con[i+1].max
+        each_letter_index_con[i].max = each_letter_index_con[i+1].min - 1
       }
 
 
@@ -339,6 +339,8 @@
 
           ctx.beginPath();
           
+          for(let x = 0; x < 3; x++){
+
           for(let i = 0; i < path_pos_by_perc.length; i++){
 
             //animation value
@@ -398,9 +400,11 @@
 
             }
           }
+        }
           
 
 
+          
           for(let i = 0; i < path_pos_by_perc.length; i++){
 
            if(grid_index_for_background[i].max >= total_grid_amount - 1){
@@ -415,6 +419,8 @@
                   ctx.lineTo(path.grid_a[n].x, path.grid_a[n].y);
 
                   ctx.fillStyle = "#ff0000";
+                  ctx.fillStyle = "#000000";
+                  
                   ctx.fill();
                   ctx.closePath();
 
@@ -429,6 +435,8 @@
                   ctx.lineTo(path.grid_a[total_grid_amount - 1].x, path.grid_a[total_grid_amount - 1].y);
 
                   ctx.fillStyle = "#ff0000";
+                  ctx.fillStyle = "#000000";
+                  
                   ctx.fill();
                   ctx.closePath();
 
@@ -445,6 +453,8 @@
                   ctx.lineTo(path.grid_a[n].x, path.grid_a[n].y);
 
                   ctx.fillStyle = "#ff0000";
+                  ctx.fillStyle = "#000000";
+                  
                   ctx.fill();
                   ctx.closePath();
 
@@ -459,6 +469,8 @@
                   ctx.lineTo(path.grid_a[total_grid_amount - 1].x, path.grid_a[total_grid_amount - 1].y);
 
                   ctx.fillStyle = "#ff0000";
+                  ctx.fillStyle = "#000000";
+                  
                   ctx.fill();
                   ctx.closePath();
 
@@ -474,6 +486,8 @@
                   ctx.lineTo(path.grid_a[n].x, path.grid_a[n].y);
 
                   ctx.fillStyle = "#ff0000";
+                  ctx.fillStyle = "#000000";
+                  
                   ctx.fill();
                   ctx.closePath();
 
@@ -492,8 +506,12 @@
                   ctx.lineTo(path.grid_a[n].x, path.grid_a[n].y);
 
                   ctx.fillStyle = "#ff0000";
+                  ctx.fillStyle = "#000000";
                   ctx.fill();
+
+                  // ctx.stroke();
                   ctx.closePath();
+                  
 
                 }
 
@@ -531,7 +549,7 @@
                     path_pos_by_perc[i][j][k].out_y
                   ).x,
                   interpolatePoint(
-                    interpolatePoint(path.grid_b[corresponding_grid_index[i][j][k].out_x], path.grid_b[corresponding_grid_index_test[i][j][k].out_x], path_pos_by_perc[i][j][k].out_x),
+                    interpolatePoint(path.  grid_b[corresponding_grid_index[i][j][k].out_x], path.grid_b[corresponding_grid_index_test[i][j][k].out_x], path_pos_by_perc[i][j][k].out_x),
                     interpolatePoint(path.grid_a[corresponding_grid_index[i][j][k].out_x], path.grid_a[corresponding_grid_index_test[i][j][k].out_x], path_pos_by_perc[i][j][k].out_x),
                     path_pos_by_perc[i][j][k].out_y
                   ).y,
@@ -616,7 +634,7 @@
             }
 
             ctx.fillStyle = "#E5E4DE";
-            ctx.fillStyle = "#000000";
+            // ctx.fillStyle = "#000000";
               ctx.fill();
               ctx.closePath();
 
@@ -683,7 +701,7 @@
 
     }
 
-    let grid_letter = new Get_Grid_based_Glyph(letter_a_1, 480);
+    let grid_letter = new Get_Grid_based_Glyph(letter_a_1, 500);
     
 
     // What is the next step?
@@ -727,10 +745,11 @@
         ctx.fill();
         ctx.closePath();
         
-
+        
         // grid_letter.draw_grid(test);
         // grid_letter.draw_shape(test);
         grid_letter.draw_letter(test, total_grid_amount);
+
 
         window.requestAnimationFrame(anim);
 
