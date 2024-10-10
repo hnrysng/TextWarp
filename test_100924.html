@@ -18,8 +18,6 @@
     <script src="SingleFontOnCanvas/SingleFontOnCanvas.js"></script>
     <script src="assets/font_data/GlyphToCanvas/Neue Haas Grotesk Display Pro 55 Roman_data.js"></script>
 
-
-    
     <script>
       
     let canvas = document.getElementById("canvas");
@@ -124,8 +122,6 @@
 
       }
     }
-
-
 
       return {points_position, points_angle, grid_points_con}
         
@@ -266,9 +262,9 @@
         for(let j = 0 ; j < corresponding_grid_index_test[i].length; j++){
           for(let k = 0 ; k < corresponding_grid_index_test[i][j].length; k++){
 
-            corresponding_grid_index_test[i][j][k].x = corresponding_grid_index_test[i][j][k].x + 1
-            corresponding_grid_index_test[i][j][k].in_x = corresponding_grid_index_test[i][j][k].in_x + 1
-            corresponding_grid_index_test[i][j][k].out_x = corresponding_grid_index_test[i][j][k].out_x + 1
+            corresponding_grid_index_test[i][j][k].x = corresponding_grid_index_test[i][j][k].x + 1;
+            corresponding_grid_index_test[i][j][k].in_x = corresponding_grid_index_test[i][j][k].in_x + 1;
+            corresponding_grid_index_test[i][j][k].out_x = corresponding_grid_index_test[i][j][k].out_x + 1;
 
           }
         }
@@ -407,7 +403,48 @@
           
           for(let i = 0; i < path_pos_by_perc.length; i++){
 
-           if(grid_index_for_background[i].max >= total_grid_amount - 1){
+            //if it hits the second last point or 1 before hits 0
+           if(grid_index_for_background[i].max >= total_grid_amount - 2){
+
+                for(let n = grid_index_for_background[i].min; n < total_grid_amount - 2; n++){
+
+                  ctx.beginPath();
+                  ctx.moveTo(path.grid_a[n].x, path.grid_a[n].y);
+                  ctx.lineTo(path.grid_a[n + 1].x, path.grid_a[n + 1].y);
+                  ctx.lineTo(path.grid_a[n + 2].x, path.grid_a[n + 2].y);
+                  ctx.lineTo(path.grid_b[n + 2].x, path.grid_b[n + 2].y);
+                  ctx.lineTo(path.grid_b[n + 1].x, path.grid_b[n + 1].y);
+                  ctx.lineTo(path.grid_b[n].x, path.grid_b[n].y);
+                  ctx.lineTo(path.grid_a[n].x, path.grid_a[n].y);
+
+                  ctx.fillStyle = "#ff0000";
+                  ctx.fillStyle = "#000000";
+                  
+                  ctx.fill();
+                  ctx.closePath();
+
+                }
+
+                  ctx.beginPath();
+
+                  ctx.moveTo(path.grid_a[total_grid_amount - 2].x, path.grid_a[total_grid_amount - 2].y);
+                  ctx.lineTo(path.grid_a[total_grid_amount - 1].x, path.grid_a[total_grid_amount - 1].y);
+                  ctx.lineTo(path.grid_a[0].x, path.grid_a[0].y);
+                  ctx.lineTo(path.grid_b[0].x, path.grid_b[0].y);
+                  ctx.lineTo(path.grid_b[total_grid_amount - 1].x, path.grid_b[total_grid_amount - 1].y);
+                  ctx.lineTo(path.grid_b[total_grid_amount - 2].x, path.grid_b[total_grid_amount - 2].y);
+                  ctx.lineTo(path.grid_a[total_grid_amount - 2].x, path.grid_a[total_grid_amount - 1].y);
+
+                  ctx.fillStyle = "#ff0000";
+                  ctx.fillStyle = "#000000";
+                  
+                  ctx.fill();
+                  ctx.closePath();
+
+              }else if(grid_index_for_background[i].max >= total_grid_amount - 1){
+
+                console.log('hello')
+
                 for(let n = grid_index_for_background[i].min; n < total_grid_amount - 1; n++){
 
                   ctx.beginPath();
@@ -428,11 +465,13 @@
 
                   ctx.beginPath();
 
-                  ctx.moveTo(path.grid_a[total_grid_amount - 1].x, path.grid_a[total_grid_amount - 1].y);
+                  ctx.moveTo(path.grid_a[total_grid_amount - 2].x, path.grid_a[total_grid_amount - 2].y);
+                  ctx.lineTo(path.grid_a[total_grid_amount - 1].x, path.grid_a[total_grid_amount - 1].y);
                   ctx.lineTo(path.grid_a[0].x, path.grid_a[0].y);
                   ctx.lineTo(path.grid_b[0].x, path.grid_b[0].y);
                   ctx.lineTo(path.grid_b[total_grid_amount - 1].x, path.grid_b[total_grid_amount - 1].y);
-                  ctx.lineTo(path.grid_a[total_grid_amount - 1].x, path.grid_a[total_grid_amount - 1].y);
+                  ctx.lineTo(path.grid_b[total_grid_amount - 2].x, path.grid_b[total_grid_amount - 2].y);
+                  ctx.lineTo(path.grid_a[total_grid_amount - 2].x, path.grid_a[total_grid_amount - 1].y);
 
                   ctx.fillStyle = "#ff0000";
                   ctx.fillStyle = "#000000";
@@ -442,12 +481,16 @@
 
               }else if(grid_index_for_background[i].max < grid_index_for_background[i].min){
 
-                for(let n = grid_index_for_background[i].min; n < total_grid_amount - 1; n++){
+                console.log('hi')
+
+                for(let n = grid_index_for_background[i].min; n < total_grid_amount - 2; n++){
 
                   ctx.beginPath();
 
                   ctx.moveTo(path.grid_a[n].x, path.grid_a[n].y);
                   ctx.lineTo(path.grid_a[n + 1].x, path.grid_a[n + 1].y);
+                  ctx.lineTo(path.grid_a[n + 2].x, path.grid_a[n + 2].y);
+                  ctx.lineTo(path.grid_b[n + 2].x, path.grid_b[n + 2].y);
                   ctx.lineTo(path.grid_b[n + 1].x, path.grid_b[n + 1].y);
                   ctx.lineTo(path.grid_b[n].x, path.grid_b[n].y);
                   ctx.lineTo(path.grid_a[n].x, path.grid_a[n].y);
@@ -462,11 +505,13 @@
 
                   ctx.beginPath();
 
-                  ctx.moveTo(path.grid_a[total_grid_amount - 1].x, path.grid_a[total_grid_amount - 1].y);
+                  ctx.moveTo(path.grid_a[total_grid_amount - 2].x, path.grid_a[total_grid_amount - 2].y);
+                  ctx.lineTo(path.grid_a[total_grid_amount - 1].x, path.grid_a[total_grid_amount - 1].y);
                   ctx.lineTo(path.grid_a[0].x, path.grid_a[0].y);
                   ctx.lineTo(path.grid_b[0].x, path.grid_b[0].y);
                   ctx.lineTo(path.grid_b[total_grid_amount - 1].x, path.grid_b[total_grid_amount - 1].y);
-                  ctx.lineTo(path.grid_a[total_grid_amount - 1].x, path.grid_a[total_grid_amount - 1].y);
+                  ctx.lineTo(path.grid_b[total_grid_amount - 2].x, path.grid_b[total_grid_amount - 2].y);
+                  ctx.lineTo(path.grid_a[total_grid_amount - 2].x, path.grid_a[total_grid_amount - 1].y);
 
                   ctx.fillStyle = "#ff0000";
                   ctx.fillStyle = "#000000";
@@ -481,6 +526,8 @@
 
                   ctx.moveTo(path.grid_a[n].x, path.grid_a[n].y);
                   ctx.lineTo(path.grid_a[n + 1].x, path.grid_a[n + 1].y);
+                  ctx.lineTo(path.grid_a[n + 2].x, path.grid_a[n + 2].y);
+                  ctx.lineTo(path.grid_b[n + 2].x, path.grid_b[n + 2].y);
                   ctx.lineTo(path.grid_b[n + 1].x, path.grid_b[n + 1].y);
                   ctx.lineTo(path.grid_b[n].x, path.grid_b[n].y);
                   ctx.lineTo(path.grid_a[n].x, path.grid_a[n].y);
@@ -501,9 +548,17 @@
 
                   ctx.moveTo(path.grid_a[n].x, path.grid_a[n].y);
                   ctx.lineTo(path.grid_a[n + 1].x, path.grid_a[n + 1].y);
+                  ctx.lineTo(path.grid_a[n + 2].x, path.grid_a[n + 2].y);
+                  ctx.lineTo(path.grid_b[n + 2].x, path.grid_b[n + 2].y);
                   ctx.lineTo(path.grid_b[n + 1].x, path.grid_b[n + 1].y);
                   ctx.lineTo(path.grid_b[n].x, path.grid_b[n].y);
                   ctx.lineTo(path.grid_a[n].x, path.grid_a[n].y);
+                  
+                  // ctx.moveTo(path.grid_a[n].x, path.grid_a[n].y);
+                  // ctx.lineTo(path.grid_a[n + 1].x, path.grid_a[n + 1].y);
+                  // ctx.lineTo(path.grid_b[n + 1].x, path.grid_b[n + 1].y);
+                  // ctx.lineTo(path.grid_b[n].x, path.grid_b[n].y);
+                  // ctx.lineTo(path.grid_a[n].x, path.grid_a[n].y);
 
                   ctx.fillStyle = "#ff0000";
                   ctx.fillStyle = "#000000";
