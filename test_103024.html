@@ -160,6 +160,7 @@
       structure_width: 0,
       structure_style: undefined,
     }
+    
 
     let letter_a_1 = new StaticSingleFontOnCanvas(Neue_Haas_Grotesk_Display_Pro_55_Roman, 'PASSANGERSONLYPLEASEPASSANGERSONLYPLEASE', assets);
 
@@ -741,40 +742,8 @@
 
     let grid_letter = new Get_Grid_based_Glyph(letter_a_1, 400);
 
-    
-
-    let default_path = 3;
-
-    let test = structuredClone(shape_con.grid_points_con[default_path]);
-
-    let next = 3;
-    
-    
-    
-    let test_1 = structuredClone(shape_con.grid_points_con[default_path]);
-
-    let next_1 = 2;
 
     function anim() {
-
-
-
-        for (let i = 0; i < test.grid_a.length; i++) {
-          test.grid_a[i].x = test.grid_a[i].x + (0.04 * (shape_con.grid_points_con[next].grid_a[i].x - test.grid_a[i].x));
-          test.grid_a[i].y = test.grid_a[i].y + (0.04 * (shape_con.grid_points_con[next].grid_a[i].y - test.grid_a[i].y));
-
-          test.grid_b[i].x = test.grid_b[i].x + (0.04 * (shape_con.grid_points_con[next].grid_b[i].x - test.grid_b[i].x));
-          test.grid_b[i].y = test.grid_b[i].y + (0.04 * (shape_con.grid_points_con[next].grid_b[i].y - test.grid_b[i].y));
-        }
-
-        for (let i = 0; i < test_1.grid_a.length; i++) {
-          test_1.grid_a[i].x = test_1.grid_a[i].x + (0.04 * (shape_con.grid_points_con[next_1].grid_a[i].x - test_1.grid_a[i].x));
-          test_1.grid_a[i].y = test_1.grid_a[i].y + (0.04 * (shape_con.grid_points_con[next_1].grid_a[i].y - test_1.grid_a[i].y));
-
-          test_1.grid_b[i].x = test_1.grid_b[i].x + (0.04 * (shape_con.grid_points_con[next_1].grid_b[i].x - test_1.grid_b[i].x));
-          test_1.grid_b[i].y = test_1.grid_b[i].y + (0.04 * (shape_con.grid_points_con[next_1].grid_b[i].y - test_1.grid_b[i].y));
-        }
-
 
 
         ctx.beginPath();
@@ -785,9 +754,7 @@
         ctx.closePath();
         
         
-        // grid_letter.draw_grid(test);
-        // grid_letter.draw_shape(test);
-        grid_letter.draw_letter(test, total_grid_amount, 'red', 'black');
+        grid_letter.draw_letter(shape_con.grid_points_con[0], total_grid_amount, 'red', 'black');
 
 
         window.requestAnimationFrame(anim);
