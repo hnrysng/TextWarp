@@ -17,6 +17,10 @@ function StaticSingleFontOnCanvas(typeface, letter, assets){
     };
 
     
+    if (assets === undefined) {
+        assets = defaults;
+    }
+
     for (const prop in defaults) {
         if (assets[prop] === undefined) {
             assets[prop] = defaults[prop];

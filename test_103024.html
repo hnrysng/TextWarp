@@ -27,8 +27,8 @@
     ctx.oImageSmoothingEnabled = true;
 
 
-    // let shape_data_con = [shape_0, shape_1, shape_2, shape_3];
 
+    
     let shape_data_con = [snake_path_0, snake_path_1, snake_path_2, snake_path_3];
 
     // i think this is looping, it needs to add the initial path one additional time as the last path.
@@ -145,24 +145,12 @@
     }
 
     let assets = {
-      position: {x: 300, y: 300},
-      weight: 1,
-      scale: 0.9,
-      alignment: 'left',
-      italic: false,
-      sticky: undefined,
-      color: undefined,
-      line_height: undefined,
-      tracking: undefined,
-      kerning: undefined,
-      stroke_width: 1,
-      stroke_style: undefined,
-      structure_width: 0,
-      structure_style: undefined,
+      position: {x: 900, y: 900},
+      scale: 4.9,
     }
-    
 
-    let letter_a_1 = new StaticSingleFontOnCanvas(Neue_Haas_Grotesk_Display_Pro_55_Roman, 'PASSANGERSONLYPLEASEPASSANGERSONLYPLEASE', assets);
+
+    let letter_a_1 = new StaticSingleFontOnCanvas(Neue_Haas_Grotesk_Display_Pro_55_Roman, 'PASSANGERSONLYPLEASEPASSANGERSONLYPLEASE');
 
 
 
@@ -174,7 +162,7 @@
         point_con: []
       }
 
-      // Calculate the distance between grid points based on the letter's dimensions
+      // Calculate the distance between grid points based on the letter's dimensions(width)
       if((canvas_letter.extreme_val.max - canvas_letter.position.x) > canvas_letter.total_width){
           grid_info.dist_btwn_points = (canvas_letter.extreme_val.max - canvas_letter.position.x) / grid_info.num_of_points;
       }else{
