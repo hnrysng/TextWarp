@@ -104,20 +104,56 @@
       grid_points_con[i] = {grid_a: structuredClone(points_position[i]), grid_b: structuredClone(points_position[i])};
     }
 
+
+    //this is where you can adjust the angle of path
     //changing the angles to be continuous tangent line
     for(let i = 0; i < points_angle[3].length; i++){
         points_angle[3][i] = points_angle[3][i] * -1
     }
 
+    for(let i = 500; i < 900; i++){
+      if(points_angle[3][i] == 0){
+        points_angle[3][i] = 90
+      }
+    }
+
+    for(let i = 0; i < points_angle[0].length; i++){
+        points_angle[0][i] = points_angle[0][i] * -1
+        points_angle[1][i] = points_angle[1][i] * -1
+        points_angle[2][i] = points_angle[2][i] * -1
+    }
+
+
+    for(let i = 100; i < 500; i++){
+      if(points_angle[0][i] == 0){
+        points_angle[0][i] = 90
+      }
+    }
+
+    for(let i = 0; i < 130; i++){
+      if(points_angle[1][i] == 0){
+        points_angle[1][i] = 90
+      }
+    }
+
+    for(let i = 900; i < 1500; i++){
+      if(points_angle[2][i] == 0){
+        points_angle[2][i] = 90
+      }
+    }
+
+
+
+    //path width
     for(let i = 0; i < points_position.length; i++){
       for(let j = 0; j < points_position[i].length; j++){
 
         grid_points_con[i].grid_a[j] = getPointFromAngleAndDistance(
-            points_position[i][j].x, points_position[i][j].y, points_angle[i][j], 50
+            points_position[i][j].x, points_position[i][j].y, points_angle[i][j], 30
         );
 
         grid_points_con[i].grid_b[j] = getPointFromAngleAndDistance(
-            points_position[i][j].x, points_position[i][j].y, points_angle[i][j], -50
+            points_position[i][j].x, points_position[i][j].y, points_angle[i][j], -30
         );
 
       }
@@ -129,7 +165,7 @@
 
     let total_grid_amount = 1500;
 
-    let shape_con = new Shape_container_arr(shape_data_con, total_grid_amount);
+    let shape_con = new Shape_container_arr(shape_data_con, total_grid_amount, 1);
 
     function getPointFromAngleAndDistance(x, y, angle, length) {
 
@@ -150,7 +186,7 @@
     }
 
 
-    let letter_a_1 = new StaticSingleFontOnCanvas(Neue_Haas_Grotesk_Display_Pro_55_Roman, 'PASSANGERSONLYPLEASEPASSANGERSONLYPLEASE');
+    let letter_a_1 = new StaticSingleFontOnCanvas(Neue_Haas_Grotesk_Display_Pro_55_Roman, 'ASDFASDF');
 
 
 
@@ -728,7 +764,14 @@
 
     }
 
-    let grid_letter = new Get_Grid_based_Glyph(letter_a_1, 400);
+    let grid_letter = new Get_Grid_based_Glyph(letter_a_1, 200);
+
+    let grid_letter_1 = new Get_Grid_based_Glyph(letter_a_1, 200);
+
+    let grid_letter_2 = new Get_Grid_based_Glyph(letter_a_1, 200);
+
+    let grid_letter_3 = new Get_Grid_based_Glyph(letter_a_1, 200);
+
 
 
     function anim() {
@@ -743,6 +786,9 @@
         
         
         grid_letter.draw_letter(shape_con.grid_points_con[0], total_grid_amount, 'red', 'black');
+        grid_letter_1.draw_letter(shape_con.grid_points_con[1], total_grid_amount, 'red', 'black');
+        grid_letter_2.draw_letter(shape_con.grid_points_con[2], total_grid_amount, 'red', 'black');
+        grid_letter_3.draw_letter(shape_con.grid_points_con[3], total_grid_amount, 'red', 'black');
 
 
         window.requestAnimationFrame(anim);
