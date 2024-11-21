@@ -187,10 +187,45 @@
 
 
     let letter_a_1 = new StaticSingleFontOnCanvas(Neue_Haas_Grotesk_Display_Pro_55_Roman, 'ASDF');
-console.log(letter_a_1)
+
+    console.log(letter_a_1);
+    console.log(Neue_Haas_Grotesk_Display_Pro_55_Roman.letters.path[0]);
+
+
+    console.log(get_bezier_points(Neue_Haas_Grotesk_Display_Pro_55_Roman.letters.path[0][0]));
+    console.log(get_bezier_points(letter_a_1.typeface_path_con[0][0]));
+
 
 
     function Get_Grid_based_Glyph(canvas_letter, num_of_points){
+
+
+
+      canvas_letter.typeface_path_more_points_con = []
+
+
+      for(let i = 0; i < canvas_letter.typeface_path_con.length; i++){
+
+        canvas_letter.typeface_path_more_points_con[i] = [];
+
+        for(let j = 0; j < canvas_letter.typeface_path_con[i].length; j++){
+          canvas_letter.typeface_path_more_points_con[i][j] = [];
+        }
+
+      }
+
+      for(let i = 0; i < canvas_letter.typeface_path_con.length; i++){
+
+        for(let j = 0; j < canvas_letter.typeface_path_con[i].length; j++){
+          canvas_letter.typeface_path_more_points_con[i][j] = [{x: 0, y: 0}];
+        }
+
+      }
+    
+      get_bezier_points()
+      console.log(canvas_letter)
+
+
 
       let grid_info = {
         num_of_points: num_of_points,
@@ -273,12 +308,12 @@ console.log(letter_a_1)
         }
       }
 
-      console.log('canvas_letter.typeface_path_con')
-      console.log(canvas_letter.typeface_path_con)
-      console.log('path_pos_by_perc')
-      console.log(path_pos_by_perc)
-      console.log('corresponding_grid_index')
-      console.log(corresponding_grid_index)
+      // console.log('canvas_letter.typeface_path_con')
+      // console.log(canvas_letter.typeface_path_con)
+      // console.log('path_pos_by_perc')
+      // console.log(path_pos_by_perc)
+      // console.log('corresponding_grid_index')
+      // console.log(corresponding_grid_index)
 
         
 
@@ -297,8 +332,8 @@ console.log(letter_a_1)
         }
       }
 
-      console.log(corresponding_grid_index)
-      console.log(corresponding_grid_index_ahead)
+      // console.log(corresponding_grid_index)
+      // console.log(corresponding_grid_index_ahead)
 
       let grid_index_for_background = Find_min_max_grid_index_for_each_letter(corresponding_grid_index)
 
