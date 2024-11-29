@@ -1,6 +1,11 @@
 <html>
   <head>
     <link rel="stylesheet" href="orbit/assets/css/style.css">
+    <style>
+      html, body{
+        background-color: rgba(0,0,0,1);
+      }
+    </style>
   </head>
 
   <body>
@@ -188,44 +193,29 @@
 
     let letter_a_1 = new StaticSingleFontOnCanvas(Neue_Haas_Grotesk_Display_Pro_55_Roman, 'ASDF');
 
-    console.log(letter_a_1);
-    console.log(Neue_Haas_Grotesk_Display_Pro_55_Roman.letters.path[0]);
 
-
-    console.log(get_bezier_points(Neue_Haas_Grotesk_Display_Pro_55_Roman.letters.path[0][0]));
-    console.log(get_bezier_points(letter_a_1.typeface_path_con[0][0]));
-
-
-
-    function Get_Grid_based_Glyph(canvas_letter, num_of_points){
-
-
-
-      canvas_letter.typeface_path_more_points_con = []
-
-
-      for(let i = 0; i < canvas_letter.typeface_path_con.length; i++){
-
-        canvas_letter.typeface_path_more_points_con[i] = [];
-
-        for(let j = 0; j < canvas_letter.typeface_path_con[i].length; j++){
-          canvas_letter.typeface_path_more_points_con[i][j] = [];
-        }
-
-      }
-
-      for(let i = 0; i < canvas_letter.typeface_path_con.length; i++){
-
-        for(let j = 0; j < canvas_letter.typeface_path_con[i].length; j++){
-          canvas_letter.typeface_path_more_points_con[i][j] = [{x: 0, y: 0}];
-        }
-
-      }
     
-      get_bezier_points()
-      console.log(canvas_letter)
+
+    let test = structuredClone(letter_a_1.typeface_path_con);
+
+    console.log(get_bezier_points(test[0][0]));
+
+    for(let i = 0; i < test.length; i++){
+      for(let j = 0; j < test[i].length; j++){
+        letter_a_1.typeface_path_con[i][j] = get_bezier_points_1(test[i][j]);
+      }
+    }
 
 
+
+    console.log(letter_a_1.typeface_path_con[0]);
+
+
+    
+    
+    function Get_Grid_based_Glyph(canvas_letter, num_of_points){
+      
+    
 
       let grid_info = {
         num_of_points: num_of_points,
@@ -246,6 +236,9 @@
       }
 
 
+      // -------------------------------------------------------------------------------------------------------- 
+
+
       //  Finding points percentage within the grid for interpolation
       let path_pos_by_perc = structuredClone(canvas_letter.typeface_path_con);
 
@@ -253,56 +246,40 @@
       let corresponding_grid_index = structuredClone(canvas_letter.typeface_path_con);
 
 
+      console.log(canvas_letter.typeface_path_con[0][0].s0_x)
+      console.log(canvas_letter.typeface_path_con[0][0].s0_x[0][0])
+      console.log(canvas_letter.typeface_path_con[0][0].s0_x.length)
+      // console.log(canvas_letter.typeface_path_con[0][0].length)
+
+      console.log(grid_info.point_con[0].x)
+      console.log(path_pos_by_perc)
+
       for(let i = 0; i < canvas_letter.typeface_path_con.length; i++){
         for(let j = 0; j < canvas_letter.typeface_path_con[i].length; j++){
-          for(let k = 0; k < canvas_letter.typeface_path_con[i][j].length; k++){
+          for(let k = 0; k < canvas_letter.typeface_path_con[i][j].s0_x.length; k++){
 
-            for(let n = 0; n < grid_info.point_con.length - 1; n++){
-
-              if(grid_info.point_con[n].x <= canvas_letter.typeface_path_con[i][j][k].x - canvas_letter.position.x && canvas_letter.typeface_path_con[i][j][k].x - canvas_letter.position.x < grid_info.point_con[n + 1].x){
-                path_pos_by_perc[i][j][k].x = ((canvas_letter.typeface_path_con[i][j][k].x - canvas_letter.position.x) - grid_info.point_con[n].x) / grid_info.dist_btwn_points
-                corresponding_grid_index[i][j][k].x = n;
+            for(let l = 0; l < canvas_letter.typeface_path_con[i][j].s0_x[k].length; l++){
+                    
+              for(let n = 0; n < grid_info.point_con.length - 1; n++){
+                if(grid_info.point_con[n].x <= canvas_letter.typeface_path_con[i][j].s0_x[k][l] - canvas_letter.position.x && canvas_letter.typeface_path_con[i][j].s0_x[k][l] - canvas_letter.position.x < grid_info.point_con[n + 1].x){
+                  path_pos_by_perc[i][j].s0_x[k][l] = ((canvas_letter.typeface_path_con[i][j].s0_x[k][l] - canvas_letter.position.x) - grid_info.point_con[n].x) / grid_info.dist_btwn_points
+                  corresponding_grid_index[i][j].s0_x[k][l] = n;
+                }
               }
 
-              if(grid_info.point_con[n].x <= canvas_letter.typeface_path_con[i][j][k].in_x - canvas_letter.position.x && canvas_letter.typeface_path_con[i][j][k].in_x - canvas_letter.position.x < grid_info.point_con[n + 1].x){
-                path_pos_by_perc[i][j][k].in_x = ((canvas_letter.typeface_path_con[i][j][k].in_x - canvas_letter.position.x) - grid_info.point_con[n].x) / grid_info.dist_btwn_points
-                corresponding_grid_index[i][j][k].in_x = n;
+
+              if(grid_info.point_con[grid_info.point_con.length - 1].x == canvas_letter.typeface_path_con[i][j].s0_x[k][l] - canvas_letter.position.x){
+                path_pos_by_perc[i][j].s0_x[k][l] = ((canvas_letter.typeface_path_con[i][j].s0_x[k][l] - canvas_letter.position.x) - grid_info.point_con[grid_info.point_con.length - 1].x) / grid_info.dist_btwn_points
+                corresponding_grid_index[i][j].s0_x[k][l] = grid_info.point_con.length - 1;
               }
 
-              if(grid_info.point_con[n].x <= canvas_letter.typeface_path_con[i][j][k].out_x - canvas_letter.position.x && canvas_letter.typeface_path_con[i][j][k].out_x - canvas_letter.position.x < grid_info.point_con[n + 1].x){
-                path_pos_by_perc[i][j][k].out_x = ((canvas_letter.typeface_path_con[i][j][k].out_x - canvas_letter.position.x) - grid_info.point_con[n].x) / grid_info.dist_btwn_points
-                corresponding_grid_index[i][j][k].out_x = n;
-              }
-
-            }         
-
-
-            if(grid_info.point_con[grid_info.point_con.length - 1].x == canvas_letter.typeface_path_con[i][j][k].x - canvas_letter.position.x){
-              path_pos_by_perc[i][j][k].x = ((canvas_letter.typeface_path_con[i][j][k].x - canvas_letter.position.x) - grid_info.point_con[grid_info.point_con.length - 1].x) / grid_info.dist_btwn_points
-              corresponding_grid_index[i][j][k].x = grid_info.point_con.length - 1;
+              path_pos_by_perc[i][j].s0_y[k][l] = (path_pos_by_perc[i][j].s0_y[k][l] - canvas_letter.position.y) / canvas_letter.total_height
+              
+              // y index is not needed, since the grid is the vertical grid.
+              // keeping place holder for y to make the clone process simple, and potential future x&y grid text warp function
+              corresponding_grid_index[i][j].s0_y[k][l] = null;
+          
             }
-
-            if(grid_info.point_con[grid_info.point_con.length - 1].x == canvas_letter.typeface_path_con[i][j][k].in_x - canvas_letter.position.x){
-              path_pos_by_perc[i][j][k].in_x = ((canvas_letter.typeface_path_con[i][j][k].in_x - canvas_letter.position.x) - grid_info.point_con[grid_info.point_con.length - 1].x) / grid_info.dist_btwn_points
-              corresponding_grid_index[i][j][k].in_x = grid_info.point_con.length - 1;
-            }
-
-            if(grid_info.point_con[grid_info.point_con.length - 1].x == canvas_letter.typeface_path_con[i][j][k].out_x - canvas_letter.position.x){
-              path_pos_by_perc[i][j][k].out_x = ((canvas_letter.typeface_path_con[i][j][k].out_x - canvas_letter.position.x) - grid_info.point_con[grid_info.point_con.length - 1].x) / grid_info.dist_btwn_points
-              corresponding_grid_index[i][j][k].out_x = grid_info.point_con.length - 1;
-            }
-
-
-            path_pos_by_perc[i][j][k].y = (path_pos_by_perc[i][j][k].y - canvas_letter.position.y) / canvas_letter.total_height
-            path_pos_by_perc[i][j][k].in_y = (path_pos_by_perc[i][j][k].in_y - canvas_letter.position.y) / canvas_letter.total_height
-            path_pos_by_perc[i][j][k].out_y = (path_pos_by_perc[i][j][k].out_y - canvas_letter.position.y) / canvas_letter.total_height
-        
-
-            // y index is not needed, since the grid is the vertical grid.
-            // keeping place holder for y to make the clone process simple, and potential future x&y grid text warp function
-            corresponding_grid_index[i][j][k].y = null;
-            corresponding_grid_index[i][j][k].in_y = null;
-            corresponding_grid_index[i][j][k].out_y = null;
 
           }
         }
@@ -313,9 +290,8 @@
       // console.log('path_pos_by_perc')
       // console.log(path_pos_by_perc)
       // console.log('corresponding_grid_index')
-      // console.log(corresponding_grid_index)
+      console.log(corresponding_grid_index);
 
-        
 
       let corresponding_grid_index_ahead = structuredClone(corresponding_grid_index);
 
@@ -323,19 +299,18 @@
       for(let i = 0 ; i < corresponding_grid_index_ahead.length; i++){
         for(let j = 0 ; j < corresponding_grid_index_ahead[i].length; j++){
           for(let k = 0 ; k < corresponding_grid_index_ahead[i][j].length; k++){
+            for(let l = 0; l < canvas_letter.typeface_path_con[i][j].s0_x[k].length; l++){
 
-            corresponding_grid_index_ahead[i][j][k].x = corresponding_grid_index_ahead[i][j][k].x + 1;
-            corresponding_grid_index_ahead[i][j][k].in_x = corresponding_grid_index_ahead[i][j][k].in_x + 1;
-            corresponding_grid_index_ahead[i][j][k].out_x = corresponding_grid_index_ahead[i][j][k].out_x + 1;
+              corresponding_grid_index_ahead[i][j].s0_x[k][l] = corresponding_grid_index_ahead[i][j].s0_x[k][l] + 1;
 
+            }
           }
         }
       }
 
-      // console.log(corresponding_grid_index)
-      // console.log(corresponding_grid_index_ahead)
 
-      let grid_index_for_background = Find_min_max_grid_index_for_each_letter(corresponding_grid_index)
+      let grid_index_for_background = Find_min_max_grid_index_for_each_letter(corresponding_grid_index);
+
 
 
     function Find_min_max_grid_index_for_each_letter(grid_index){
@@ -801,11 +776,11 @@
 
     let grid_letter = new Get_Grid_based_Glyph(letter_a_1, 200);
 
-    let grid_letter_1 = new Get_Grid_based_Glyph(letter_a_1, 200);
+    // let grid_letter_1 = new Get_Grid_based_Glyph(letter_a_1, 200);
 
-    let grid_letter_2 = new Get_Grid_based_Glyph(letter_a_1, 200);
+    // let grid_letter_2 = new Get_Grid_based_Glyph(letter_a_1, 200);
 
-    let grid_letter_3 = new Get_Grid_based_Glyph(letter_a_1, 200);
+    // let grid_letter_3 = new Get_Grid_based_Glyph(letter_a_1, 200);
 
 
 
@@ -816,6 +791,7 @@
         ctx.rect(0,0,3000,3000)
         ctx.fillStyle = 'rgba(255,255,255,1)';
         ctx.fillStyle = '#E5E4DE';
+        ctx.fillStyle = '#111111';
         ctx.fill();
         ctx.closePath();
         
@@ -824,9 +800,9 @@
         // grid_letter.draw_grid(test);
         // grid_letter.draw_shape(shape_con.grid_points_con[0]);
         grid_letter.draw_letter(shape_con.grid_points_con[0], total_grid_amount, 'black', 'red');
-        grid_letter_1.draw_letter(shape_con.grid_points_con[1], total_grid_amount, 'black', 'red');
-        grid_letter_2.draw_letter(shape_con.grid_points_con[2], total_grid_amount, 'black', 'red');
-        grid_letter_3.draw_letter(shape_con.grid_points_con[3], total_grid_amount, 'black', 'red');
+        // grid_letter_1.draw_letter(shape_con.grid_points_con[1], total_grid_amount, 'black', 'red');
+        // grid_letter_2.draw_letter(shape_con.grid_points_con[2], total_grid_amount, 'black', 'red');
+        // grid_letter_3.draw_letter(shape_con.grid_points_con[3], total_grid_amount, 'black', 'red');
 
 
         window.requestAnimationFrame(anim);

@@ -66,8 +66,82 @@ function get_bezier_points(letter_canvas_path_con) {
         s0_y
     }
 
+
     return s0_points;
 }
+
+function get_bezier_points_1(letter_canvas_path_con) {
+    let q0_x = [],
+        q0_y = [],
+        q1_x = [],
+        q1_y = [],
+        q2_x = [],
+        q2_y = [],
+        r0_x = [],
+        r0_y = [],
+        r1_x = [],
+        r1_y = [],
+        s0_x = [],
+        s0_y = [];
+
+    let number_of_points = 1000;
+    let s_point_container = [];
+
+    let time = [];
+
+    for (let i = 0; i <= number_of_points; i++) {
+        time[i] = i * (1 / number_of_points)
+    }
+    
+    for (let i = 0; i < letter_canvas_path_con.length - 1; i++) {
+        q0_x[i] = [];
+        q0_y[i] = [];
+        q1_x[i] = [];
+        q1_y[i] = [];
+        q2_x[i] = [];
+        q2_y[i] = [];
+
+        r0_x[i] = [];
+        r0_y[i] = [];
+        r1_x[i] = [];
+        r1_y[i] = [];
+
+        s0_x[i] = [];
+        s0_y[i] = [];
+    }
+
+    for (let i = 0; i < letter_canvas_path_con.length - 1; i = i + 1) {
+        for (let a = 0; a <= number_of_points; a = a + 1) {
+            q0_x[i][a] = (1 - time[a]) * (letter_canvas_path_con[i].x) + time[a] * (letter_canvas_path_con[i].out_x);
+            q0_y[i][a] = (1 - time[a]) * (letter_canvas_path_con[i].y) + time[a] * (letter_canvas_path_con[i].out_y);
+
+            q1_x[i][a] = (1 - time[a]) * (letter_canvas_path_con[i].out_x) + time[a] * (letter_canvas_path_con[i + 1].in_x);
+            q1_y[i][a] = (1 - time[a]) * (letter_canvas_path_con[i].out_y) + time[a] * (letter_canvas_path_con[i + 1].in_y);
+
+            q2_x[i][a] = (1 - time[a]) * (letter_canvas_path_con[i + 1].in_x) + time[a] * (letter_canvas_path_con[i + 1].x);
+            q2_y[i][a] = (1 - time[a]) * (letter_canvas_path_con[i + 1].in_y) + time[a] * (letter_canvas_path_con[i + 1].y);
+
+            r0_x[i][a] = (1 - time[a]) * (q0_x[i][a]) + time[a] * (q1_x[i][a]);
+            r0_y[i][a] = (1 - time[a]) * (q0_y[i][a]) + time[a] * (q1_y[i][a]);
+
+            r1_x[i][a] = (1 - time[a]) * (q1_x[i][a]) + time[a] * (q2_x[i][a]);
+            r1_y[i][a] = (1 - time[a]) * (q1_y[i][a]) + time[a] * (q2_y[i][a]);
+
+            s0_x[i][a] = ((1 - time[a]) * (r0_x[i][a]) + time[a] * (r1_x[i][a]));
+            s0_y[i][a] = ((1 - time[a]) * (r0_y[i][a]) + time[a] * (r1_y[i][a]));
+        }
+    }
+
+
+    let s0_points = {
+        s0_x,
+        s0_y
+    }
+
+
+    return s0_points;
+}
+
 
 
 function get_bezier_length(bezier_path) {
