@@ -272,8 +272,6 @@
       // console.log(total_grid_amount)
 
 
-      console.log(points_position)
-
     let grid_points_con = [];
 
     for(let i = 0; i < points_position.length; i++){
@@ -295,16 +293,27 @@
       }
     }
 
-    console.log(points_angle)
-
 
     //this is where you can adjust the angle of path
     //changing the angles to be continuous tangent line
-    // for(let i = 0; i < points_angle.length; i++){
-    //   for(let j = 0; j < points_angle.length; j++){
-    //     points_angle[i][j] = points_angle[i][j] * -1
-    //   }
-    // }
+
+    for(let i = 0; i < points_angle.length; i++){
+      for(let j = 0; j < points_angle[i].length; j++){
+        for(let k = 0; k < points_angle[i][j].length; k++){
+          points_angle[i][j][k] = points_angle[i][j][k] * -1
+        }
+      }
+    }
+
+    for(let i = 0; i < points_angle.length; i++){
+      for(let j = 0; j < points_angle[i].length; j++){
+        for(let k = 0; k < points_angle[i][j].length; k++){
+          if(points_angle[i][j][k] == 0){
+            points_angle[i][j][k] = 90
+          }
+        }
+      }
+    }
 
     // for(let i = 0; i < points_angle.length; i++){
     //   for(let j = 500; j < 900; j++){
@@ -340,9 +349,6 @@
     // }
 
 
-    console.log(grid_points_con[0][0].grid_a[0])
-    console.log(points_position[0][0][0])
-    console.log(points_angle[0][0][0])
 
     //path width
     for(let i = 0; i < grid_points_con.length; i++){
@@ -372,11 +378,11 @@
 
     let shape_con = new Shape_container_arr(shape_data_con, num_of_points, 1);
 
-    let shape_con_1 = new Shape_container_arr_1(closed_snake_path_0, num_of_points, 1, snake_path_0);
+    let shape_con_0 = new Shape_container_arr_1(closed_snake_path_0, num_of_points, 1, snake_path_0);
+    let shape_con_1 = new Shape_container_arr_1(closed_snake_path_1, num_of_points, 1, snake_path_0);
+    let shape_con_2 = new Shape_container_arr_1(closed_snake_path_2, num_of_points, 1, snake_path_0);
+    let shape_con_3 = new Shape_container_arr_1(closed_snake_path_3, num_of_points, 1, snake_path_0);
 
-
-console.log(shape_con)
-console.log(shape_con_1)
 
     function getPointFromAngleAndDistance(x, y, angle, length) {
 
@@ -392,6 +398,8 @@ console.log(shape_con_1)
     }
 
     let letter_a_1 = new StaticSingleFontOnCanvas(Neue_Haas_Grotesk_Display_Pro_55_Roman, 'asdfasdfasdfasdf');
+
+
 
 
     function Get_Grid_based_Glyph(canvas_letter, num_of_points){
@@ -477,12 +485,12 @@ console.log(shape_con_1)
         }
       }
 
-      console.log('canvas_letter.typeface_path_con')
-      console.log(canvas_letter.typeface_path_con)
-      console.log('path_pos_by_perc')
-      console.log(path_pos_by_perc)
-      console.log('corresponding_grid_index')
-      console.log(corresponding_grid_index)
+      // console.log('canvas_letter.typeface_path_con')
+      // console.log(canvas_letter.typeface_path_con)
+      // console.log('path_pos_by_perc')
+      // console.log(path_pos_by_perc)
+      // console.log('corresponding_grid_index')
+      // console.log(corresponding_grid_index)
 
         
 
@@ -501,8 +509,8 @@ console.log(shape_con_1)
         }
       }
 
-      console.log(corresponding_grid_index)
-      console.log(corresponding_grid_index_ahead)
+      // console.log(corresponding_grid_index)
+      // console.log(corresponding_grid_index_ahead)
 
       let grid_index_for_background = Find_min_max_grid_index_for_each_letter(corresponding_grid_index)
 
@@ -912,10 +920,6 @@ console.log(shape_con_1)
 
         }
 
-
-
-
-
         let point_a = 0;
         let point_b = 200;
 
@@ -956,8 +960,6 @@ console.log(shape_con_1)
 
         }
 
-
-
         
       function interpolatePoint(point1, point2, t) {
         const x = (1 - t) * point1.x + t * point2.x;
@@ -968,10 +970,13 @@ console.log(shape_con_1)
 
     }
 
-    let grid_letter = new Get_Grid_based_Glyph(letter_a_1, 200);
+    let grid_letter = new Get_Grid_based_Glyph(letter_a_1, 400);
     
+    let total_grid_amount = 4000
 
+console.log(shape_con.grid_points_con)
 
+console.log(shape_con_0.grid_points_con[2][0])
 
     function anim() {
 
@@ -987,7 +992,7 @@ console.log(shape_con_1)
 
         // grid_letter.draw_grid(test);
         // grid_letter.draw_shape(shape_con.grid_points_con[0]);
-        grid_letter.draw_letter(shape_con.grid_points_con[0], total_grid_amount, 'black', 'red');
+        grid_letter.draw_letter(shape_con_2.grid_points_con[2][0], total_grid_amount, 'black', 'red');
 
 
         window.requestAnimationFrame(anim);
