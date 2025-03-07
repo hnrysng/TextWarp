@@ -189,7 +189,7 @@
 
 
 
-    function Shape_container_arr_1(shape, num_of_points, total_grid_amount, path){
+    function Shape_container_arr_1(shape, num_of_points, total_grid_amount){
 
       if(total_grid_amount == undefined){
         total_grid_amount = 1;
@@ -228,99 +228,136 @@
 
         bezier_length[i] = [];
 
+        divided_length_array_index[i] = [];
+
+        points_position[i] = [];
+
+        derivative_angle_con[i] = [];
+
+        points_angle[i] = [];
+
+
         for(let a = 0; a < letter_canvas_path_con[i].length; a++){
 
           bezier_points_con[i][a] = get_bezier_points(letter_canvas_path_con[i][a]);
 
           bezier_length[i][a] = get_bezier_length(bezier_points_con[i][a]);
 
-          // divided_length_array_index[i][a] = equally_divide_length(bezier_length[i][a].total_length, bezier_length[i][a].each_point_length, num_of_points);
+          divided_length_array_index[i][a] = equally_divide_length(bezier_length[i][a].total_length, bezier_length[i][a].each_point_length, num_of_points);
+
+          points_position[i][a] = get_points_position(bezier_points_con[i][a], divided_length_array_index[i][a]);
+
+          derivative_angle_con[i][a] = derivative(bezier_points_con[i][a]);
+
+          points_angle[i][a] = get_point_angle(derivative_angle_con[i][a], divided_length_array_index[i][a]);
+
+          points_angle[i][a].pop();
+
+          points_position[i][a].pop();
 
         }
       }
 
+      
+      // for(let i = 0; i < points_position.length; i++){
+      //   for(let j = 0; j < points_position[i].length; j++){
+      //     for(let k = 0; k < points_position[i][j].length; k++){
+      //       points_position[i][j][k].x = points_position[i][j][k].x * total_grid_amount
+      //       points_position[i][j][k].y = points_position[i][j][k].y * total_grid_amount
+      //     }
+      //   }
+      // }
 
-        // points_position[i] = get_points_position(bezier_points_con, divided_length_array_index);
-
-        // derivative_angle_con[i] = derivative(bezier_points_con);
-
-        // points_angle[i] = get_point_angle(derivative_angle_con, divided_length_array_index);
-
-        // points_angle.pop();
-
-        // points_position.pop();
-
-        console.log(letter_canvas_path_con)
-console.log(bezier_length)
-
+      // console.log(points_position[0][0][0])
+      // console.log(total_grid_amount)
 
 
-      for(let i = 0; i < points_position.length; i++){
-        for(let j = 0; j < points_position[i].length; j++){
-          points_position[i][j].x = points_position[i][j].x * total_grid_amount
-          points_position[i][j].y = points_position[i][j].y * total_grid_amount
-        }
-      }
-
+      console.log(points_position)
 
     let grid_points_con = [];
 
     for(let i = 0; i < points_position.length; i++){
-      grid_points_con[i] = {grid_a: structuredClone(points_position[i]), grid_b: structuredClone(points_position[i])};
+      grid_points_con[i] = [];
+      for(let j = 0; j < points_position[i].length; j++){
+        grid_points_con[i][j] = [];
+        // for(let k = 0; k < points_position[i][j].length; k++){
+        //   grid_points_con[i][j][k] = [];
+        // }
+      }
     }
+
+
+    for(let i = 0; i < points_position.length; i++){
+      for(let j = 0; j < points_position[i].length; j++){
+          // for(let k = 0; k < points_position[i][j].length; k++){
+            grid_points_con[i][j] = {grid_a: structuredClone(points_position[i][j]), grid_b: structuredClone(points_position[i][j])};
+          // }
+      }
+    }
+
+    console.log(points_angle)
 
 
     //this is where you can adjust the angle of path
     //changing the angles to be continuous tangent line
-    for(let i = 0; i < points_angle[3].length; i++){
-        points_angle[3][i] = points_angle[3][i] * -1
-    }
+    // for(let i = 0; i < points_angle.length; i++){
+    //   for(let j = 0; j < points_angle.length; j++){
+    //     points_angle[i][j] = points_angle[i][j] * -1
+    //   }
+    // }
 
-    for(let i = 500; i < 900; i++){
-      if(points_angle[3][i] == 0){
-        points_angle[3][i] = 90
-      }
-    }
+    // for(let i = 0; i < points_angle.length; i++){
+    //   for(let j = 500; j < 900; j++){
+    //     if(points_angle[i][j] == 0){
+    //       points_angle[i][j] = 90
+    //     }
+    //   }
+    // }
 
-    for(let i = 0; i < points_angle[0].length; i++){
-        points_angle[0][i] = points_angle[0][i] * -1
-        points_angle[1][i] = points_angle[1][i] * -1
-        points_angle[2][i] = points_angle[2][i] * -1
-    }
-
-
-    for(let i = 100; i < 500; i++){
-      if(points_angle[0][i] == 0){
-        points_angle[0][i] = 90
-      }
-    }
-
-    for(let i = 0; i < 130; i++){
-      if(points_angle[1][i] == 0){
-        points_angle[1][i] = 90
-      }
-    }
-
-    for(let i = 900; i < 1500; i++){
-      if(points_angle[2][i] == 0){
-        points_angle[2][i] = 90
-      }
-    }
+    // for(let i = 0; i < points_angle[0].length; i++){
+    //     points_angle[0][i] = points_angle[0][i] * -1
+    //     points_angle[1][i] = points_angle[1][i] * -1
+    //     points_angle[2][i] = points_angle[2][i] * -1
+    // }
 
 
+    // for(let i = 100; i < 500; i++){
+    //   if(points_angle[0][i] == 0){
+    //     points_angle[0][i] = 90
+    //   }
+    // }
+
+    // for(let i = 0; i < 130; i++){
+    //   if(points_angle[1][i] == 0){
+    //     points_angle[1][i] = 90
+    //   }
+    // }
+
+    // for(let i = 900; i < 1500; i++){
+    //   if(points_angle[2][i] == 0){
+    //     points_angle[2][i] = 90
+    //   }
+    // }
+
+
+    console.log(grid_points_con[0][0].grid_a[0])
+    console.log(points_position[0][0][0])
+    console.log(points_angle[0][0][0])
 
     //path width
-    for(let i = 0; i < points_position.length; i++){
-      for(let j = 0; j < points_position[i].length; j++){
+    for(let i = 0; i < grid_points_con.length; i++){
+      for(let j = 0; j < grid_points_con[i].length; j++){
+        for(let k = 0; k < grid_points_con[i][j].length; k++){
 
-        grid_points_con[i].grid_a[j] = getPointFromAngleAndDistance(
-            points_position[i][j].x, points_position[i][j].y, points_angle[i][j], 30
-        );
+          grid_points_con[i][j].grid_a[k] = getPointFromAngleAndDistance(
+              points_position[i][j][k].x, points_position[i][j][k].y, points_angle[i][j][k], 30
+          );
 
-        grid_points_con[i].grid_b[j] = getPointFromAngleAndDistance(
-            points_position[i][j].x, points_position[i][j].y, points_angle[i][j], -30
-        );
+          grid_points_con[i][j].grid_b[k] = getPointFromAngleAndDistance(
+              points_position[i][j][k].x, points_position[i][j][k].y, points_angle[i][j][k], -30
+          );
 
+        }
       }
     }
 
@@ -331,13 +368,15 @@ console.log(bezier_length)
 
 
 
-    let total_grid_amount = 1500;
+    let num_of_points = 1500;
 
-    let shape_con = new Shape_container_arr(shape_data_con, total_grid_amount, 1);
+    let shape_con = new Shape_container_arr(shape_data_con, num_of_points, 1);
 
-    let shape_con_1 = new Shape_container_arr_1(closed_snake_path_0, total_grid_amount, 1, snake_path_0);
+    let shape_con_1 = new Shape_container_arr_1(closed_snake_path_0, num_of_points, 1, snake_path_0);
+
 
 console.log(shape_con)
+console.log(shape_con_1)
 
     function getPointFromAngleAndDistance(x, y, angle, length) {
 
