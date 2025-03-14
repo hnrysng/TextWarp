@@ -74,6 +74,7 @@
 
     function Shape_container_arr(shapes, num_of_points, total_grid_amount){
 
+
       if(total_grid_amount == undefined){
         total_grid_amount = 1;
       }
@@ -193,7 +194,9 @@
 
       }
     }
-
+console.log(grid_points_con)
+console.log(points_angle)
+console.log(grid_points_con)
       return {points_position, points_angle, grid_points_con}
         
     }
@@ -409,7 +412,7 @@
 
     }
 
-    let letter_a_1 = new StaticSingleFontOnCanvas(Neue_Haas_Grotesk_Display_Pro_55_Roman, 'asdfasdfasdfasdf');
+    let letter_a_1 = new StaticSingleFontOnCanvas(Neue_Haas_Grotesk_Display_Pro_55_Roman, 'asd');
 
 
 
@@ -984,9 +987,9 @@
 
     }
 
-    let grid_letter = new Get_Grid_based_Glyph(letter_a_1, 1200);
+    let grid_letter = new Get_Grid_based_Glyph(letter_a_1, 100);
     
-    let total_grid_amount = 4000
+    let total_grid_amount = 1500
 
 console.log(shape_con.grid_points_con[0])
 
@@ -1004,7 +1007,7 @@ console.log(shape_con_0.grid_points_con[2][0])
         
         
 
-        // grid_letter.draw_grid(test);
+        grid_letter.draw_grid(shape_con.grid_points_con[0]);
         // grid_letter.draw_shape(shape_con.grid_points_con[0]);
         grid_letter.draw_letter(shape_con.grid_points_con[0], total_grid_amount, 'black', 'red');
 

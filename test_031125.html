@@ -117,7 +117,7 @@
         }
       }
 
-      
+      console.log(derivative_angle_con)
       // for(let i = 0; i < points_position.length; i++){
       //   for(let j = 0; j < points_position[i].length; j++){
       //     for(let k = 0; k < points_position[i][j].length; k++){
@@ -148,7 +148,6 @@
           // }
       }
     }
-
 
     //this is where you can adjust the angle of path
     //changing the angles to be continuous tangent line
@@ -209,7 +208,7 @@
     //path width
     for(let i = 0; i < grid_points_con.length; i++){
       for(let j = 0; j < grid_points_con[i].length; j++){
-        for(let k = 0; k < grid_points_con[i][j].length; k++){
+        for(let k = 0; k < grid_points_con[i][j].grid_a.length; k++){
 
           grid_points_con[i][j].grid_a[k] = getPointFromAngleAndDistance(
               points_position[i][j][k].x, points_position[i][j][k].y, points_angle[i][j][k], 30
@@ -223,6 +222,7 @@
       }
     }
 
+    
       return {points_position, points_angle, grid_points_con}
         
     }
@@ -233,9 +233,9 @@
     let num_of_points = 1500;
 
     let shape_con_0 = new Shape_container_arr(closed_snake_path_0, num_of_points, 1, snake_path_0);
-    let shape_con_1 = new Shape_container_arr(closed_snake_path_1, num_of_points, 1, snake_path_0);
-    let shape_con_2 = new Shape_container_arr(closed_snake_path_2, num_of_points, 1, snake_path_0);
-    let shape_con_3 = new Shape_container_arr(closed_snake_path_3, num_of_points, 1, snake_path_0);
+    // let shape_con_1 = new Shape_container_arr(closed_snake_path_1, num_of_points, 1, snake_path_0);
+    // let shape_con_2 = new Shape_container_arr(closed_snake_path_2, num_of_points, 1, snake_path_0);
+    // let shape_con_3 = new Shape_container_arr(closed_snake_path_3, num_of_points, 1, snake_path_0);
 
 
 
@@ -252,7 +252,7 @@
 
     }
 
-    let letter_a_1 = new StaticSingleFontOnCanvas(Neue_Haas_Grotesk_Display_Pro_55_Roman, 'RS');
+    let letter_a_1 = new StaticSingleFontOnCanvas(Neue_Haas_Grotesk_Display_Pro_55_Roman, 'asd');
 
 
 
@@ -827,9 +827,9 @@
 
     }
 
-    let grid_letter = new Get_Grid_based_Glyph(letter_a_1, 200);
+    let grid_letter = new Get_Grid_based_Glyph(letter_a_1, 100);
     
-    let total_grid_amount = 1500
+    let total_grid_amount = 1400
 
 
     
@@ -850,8 +850,8 @@ console.log(shape_con_0)
 
         // grid_letter.draw_letter(shape_con.grid_points_con[0], total_grid_amount, 'black', 'red');
         
-        // grid_letter.draw_grid(test);
-        // grid_letter.draw_shape(shape_con.grid_points_con[0]);
+        grid_letter.draw_grid(shape_con_0.grid_points_con[2][0]);
+        // grid_letter.draw_shape(shape_con_0.grid_points_con[2][0]);
         grid_letter.draw_letter(shape_con_0.grid_points_con[2][0], total_grid_amount, 'black', 'red');
 
 
