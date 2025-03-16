@@ -153,20 +153,20 @@
     //this is where you can adjust the angle of path
     //changing the angles to be continuous tangent line
 
-    for(let i = 0; i < points_angle.length; i++){
-      for(let j = 0; j < points_angle[i].length; j++){
-        for(let k = 0; k < points_angle[i][j].length; k++){
-          points_angle[i][j][k] = points_angle[i][j][k] * -1
-        }
-      }
-    }
+    // for(let i = 0; i < points_angle.length; i++){
+    //   for(let j = 0; j < points_angle[i].length; j++){
+    //     for(let k = 0; k < points_angle[i][j].length; k++){
+    //       points_angle[i][j][k] = points_angle[i][j][k] * -1
+    //     }
+    //   }
+    // }
 
     for(let i = 0; i < points_angle.length; i++){
       for(let j = 0; j < points_angle[i].length; j++){
         for(let k = 0; k < points_angle[i][j].length; k++){
-          if(points_angle[i][j][k] == 0){
-            points_angle[i][j][k] = 90
-          }
+          // if(points_angle[i][j][k] == 0){
+            points_angle[i][j][k] = 45
+          // }
         }
       }
     }
@@ -179,15 +179,15 @@
     //   }
     // }
 
-    for(let i = 0; i < points_angle.length; i++){
-      for(let j = 0; j < points_angle[i].length; j++){
-        for(let k = 0; k < 400; k++){
-          if(points_angle[i][j][k] == 0){
-            points_angle[i][j][k] = 90
-          }
-        }
-      }
-    }
+    // for(let i = 0; i < points_angle.length; i++){
+    //   for(let j = 0; j < points_angle[i].length; j++){
+    //     for(let k = 0; k < 400; k++){
+    //       if(points_angle[i][j][k] == 0){
+    //         points_angle[i][j][k] = 90
+    //       }
+    //     }
+    //   }
+    // }
 
 
     // for(let i = 0; i < points_angle[0].length; i++){

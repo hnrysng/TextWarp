@@ -13,7 +13,7 @@
     <script src="path_data/snake_path_3_data.js"></script>
 
     <script src="beziertools.js"></script>
-    <script src="SingleFontOnCanvas/SingleFontOnCanvas.js"></script>
+    <script src="SingleFontOnCanvas/SingleFontOnCanvas_update_for_warp.js"></script>
     <script src="assets/font_data/GlyphToCanvas/Neue Haas Grotesk Display Pro 55 Roman_data.js"></script>
 
     <script>
@@ -27,26 +27,12 @@
     ctx.oImageSmoothingEnabled = true;
 
 
-
-    function Close_path(shape){
-
-      for(let i = 0; i < shape.letters.path.length; i++){
-        for(let a = 0; a < shape.letters.path[i].length; a++){
-          shape.letters.path[i][a].push(shape.letters.path[i][a][0])
-        }
-      }
-      
-      return shape
-
-    }
-
     let closed_snake_path_0 = Close_path(snake_path_0);
     let closed_snake_path_1 = Close_path(snake_path_1);
     let closed_snake_path_2 = Close_path(snake_path_2);
     let closed_snake_path_3 = Close_path(snake_path_3);
     
     let shape_data_con = [closed_snake_path_0, closed_snake_path_1, closed_snake_path_2, closed_snake_path_3];
-
 
 
     function Shape_container_arr(shape, num_of_points, total_grid_amount){
@@ -118,7 +104,7 @@
         }
       }
 
-      console.log(derivative_angle_con)
+      // console.log(derivative_angle_con)
       // for(let i = 0; i < points_position.length; i++){
       //   for(let j = 0; j < points_position[i].length; j++){
       //     for(let k = 0; k < points_position[i][j].length; k++){
@@ -153,20 +139,20 @@
     //this is where you can adjust the angle of path
     //changing the angles to be continuous tangent line
 
-    for(let i = 0; i < points_angle.length; i++){
-      for(let j = 0; j < points_angle[i].length; j++){
-        for(let k = 0; k < points_angle[i][j].length; k++){
-          points_angle[i][j][k] = points_angle[i][j][k] * -1
-        }
-      }
-    }
+    // for(let i = 0; i < points_angle.length; i++){
+    //   for(let j = 0; j < points_angle[i].length; j++){
+    //     for(let k = 0; k < points_angle[i][j].length; k++){
+    //       points_angle[i][j][k] = points_angle[i][j][k] * -1
+    //     }
+    //   }
+    // }
 
     for(let i = 0; i < points_angle.length; i++){
       for(let j = 0; j < points_angle[i].length; j++){
         for(let k = 0; k < points_angle[i][j].length; k++){
-          if(points_angle[i][j][k] == 0){
-            points_angle[i][j][k] = 90
-          }
+          // if(points_angle[i][j][k] == 0){
+            points_angle[i][j][k] = 45
+          // }
         }
       }
     }
@@ -179,15 +165,15 @@
     //   }
     // }
 
-    for(let i = 0; i < points_angle.length; i++){
-      for(let j = 0; j < points_angle[i].length; j++){
-        for(let k = 0; k < 400; k++){
-          if(points_angle[i][j][k] == 0){
-            points_angle[i][j][k] = 90
-          }
-        }
-      }
-    }
+    // for(let i = 0; i < points_angle.length; i++){
+    //   for(let j = 0; j < points_angle[i].length; j++){
+    //     for(let k = 0; k < 400; k++){
+    //       if(points_angle[i][j][k] == 0){
+    //         points_angle[i][j][k] = 90
+    //       }
+    //     }
+    //   }
+    // }
 
 
     // for(let i = 0; i < points_angle[0].length; i++){
@@ -243,9 +229,6 @@
     let num_of_points = 1500;
 
     let shape_con_0 = new Shape_container_arr(closed_snake_path_0, num_of_points, 1, snake_path_0);
-    // let shape_con_1 = new Shape_container_arr(closed_snake_path_1, num_of_points, 1, snake_path_0);
-    // let shape_con_2 = new Shape_container_arr(closed_snake_path_2, num_of_points, 1, snake_path_0);
-    // let shape_con_3 = new Shape_container_arr(closed_snake_path_3, num_of_points, 1, snake_path_0);
 
 
     function getPointFromAngleAndDistance(x, y, angle, length) {
@@ -265,11 +248,34 @@
     let letter_a_1 = new StaticSingleFontOnCanvas(Neue_Haas_Grotesk_Display_Pro_55_Roman, 'HENRYSONG');
 
 
+    console.log(snake_path_0)
+    console.log(Neue_Haas_Grotesk_Display_Pro_55_Roman)
+    console.log(letter_a_1)
 
-    let letter_a_2 = Close_path_1(letter_a_1);
+    function Close_path(shape){
+      
+      let path;
+      if (typeof shape.letters !== 'undefined') {
+        path = shape.letters.path;
+      }else{
+        path = shape.path;
+      }
+      
+      for(let i = 0; i < path.length; i++){
+        for(let a = 0; a < path[i].length; a++){
+          path[i][a].push(path[i][a][0])
+        }
+      }
+      
+      return shape
+
+    }
+
+// letter_a_1를 Neue_Haas_Grotesk_Display_Pro_55_Roman의 structure를 따라만들어야 효율적일거같아 -> SingleFontOnCanvas function을 업데이트해야해
+
+    let letter_a_2 = Close_path(letter_a_1);
 
     let path_swap = Shape_container_arr_1(letter_a_2, 500, 1)
-    console.log(path_swap)
 
     letter_a_2.typeface_path_con = structuredClone(path_swap.points_position);
 
@@ -281,14 +287,14 @@
       }
 
 
-      let letter_canvas_path_con = structuredClone(shape.typeface_path_con)
+      let letter_canvas_path_con = structuredClone(shape.path)
 
-        for(let i = 0; i < shape.typeface_path_con.length; i++){
-          for(let a = 0; a < shape.typeface_path_con[i].length; a++){
-            for(let n = 0; n < shape.typeface_path_con[i][a].length; n++){
-              letter_canvas_path_con[i][a][n].y = shape.total_height - shape.typeface_path_con[i][a][n].y;
-              letter_canvas_path_con[i][a][n].in_y = shape.total_height - shape.typeface_path_con[i][a][n].in_y;
-              letter_canvas_path_con[i][a][n].out_y = shape.total_height - shape.typeface_path_con[i][a][n].out_y;
+        for(let i = 0; i < shape.path.length; i++){
+          for(let a = 0; a < shape.path[i].length; a++){
+            for(let n = 0; n < shape.path[i][a].length; n++){
+              letter_canvas_path_con[i][a][n].y = shape.total_height - shape.path[i][a][n].y;
+              letter_canvas_path_con[i][a][n].in_y = shape.total_height - shape.path[i][a][n].in_y;
+              letter_canvas_path_con[i][a][n].out_y = shape.total_height - shape.path[i][a][n].out_y;
             }
           }
         }
@@ -984,14 +990,11 @@
     
     let total_grid_amount = 1400;
     
-    console.log(letter_a_2);
-
-    console.log(snake_path_0)
-
+    
     
     function Get_Grid_based_Glyph_1(canvas_letter, num_of_points){
 
-      console.log(canvas_letter)
+      // console.log(canvas_letter)
 
       let grid_info = {
         num_of_points: num_of_points,
@@ -1074,12 +1077,12 @@
         }
       }
 
-      console.log('canvas_letter.typeface_path_con')
-      console.log(canvas_letter.typeface_path_con)
-      console.log('path_pos_by_perc')
-      console.log(path_pos_by_perc)
-      console.log('corresponding_grid_index')
-      console.log(corresponding_grid_index)
+      // console.log('canvas_letter.typeface_path_con')
+      // console.log(canvas_letter.typeface_path_con)
+      // console.log('path_pos_by_perc')
+      // console.log(path_pos_by_perc)
+      // console.log('corresponding_grid_index')
+      // console.log(corresponding_grid_index)
 
         
 
@@ -1513,17 +1516,6 @@
 
 
 
-    function Close_path_1(shape){
-
-      for(let i = 0; i < shape.typeface_path_con.length; i++){
-        for(let a = 0; a < shape.typeface_path_con[i].length; a++){
-          shape.typeface_path_con[i][a].push(shape.typeface_path_con[i][a][0])
-        }
-      }
-      
-      return shape
-
-    }
 
 
     function anim() {
@@ -1537,7 +1529,7 @@
         
         // grid_letter.draw_letter(shape_con.grid_points_con[0], total_grid_amount, 'black', 'red');
         
-        grid_letter.draw_grid(shape_con_0.grid_points_con[2][0]);
+        // grid_letter.draw_grid(shape_con_0.grid_points_con[2][0]);
         // grid_letter.draw_shape(shape_con_0.grid_points_con[2][0]);
         grid_letter.draw_letter(shape_con_0.grid_points_con[2][0], total_grid_amount, 'black', 'red');
 
