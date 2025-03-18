@@ -238,7 +238,17 @@ function StaticSingleFontOnCanvas(typeface, letter, assets){
         this.extreme_val = {min: min_val, max: max_val};
         this.total_height = structure_con[0].point_2.y - structure_con[0].point_0.y;
         
-        
+
+
+        this.parameters = structuredClone(typeface.parameters);
+
+        let extreme_val = {min: min_val, max: max_val};
+        let total_height = structure_con[0].point_2.y - structure_con[0].point_0.y;
+
+        this.letters = {path};
+        this.assets = {...assets, total_width, total_height, extreme_val}
+
+
         this.draw = function(){
 
             
