@@ -271,10 +271,10 @@
       }
 
       // Calculate the distance between grid points based on the letter's dimensions(width)
-      if((canvas_letter.assets.extreme_val.max - canvas_letter.assets.position.x) > canvas_letter.total_width){
+      if((canvas_letter.assets.extreme_val.max - canvas_letter.assets.position.x) > canvas_letter.assets.total_width){
           grid_info.dist_btwn_points = (canvas_letter.assets.extreme_val.max - canvas_letter.assets.position.x) / grid_info.num_of_points;
       }else{
-          grid_info.dist_btwn_points = canvas_letter.total_width / grid_info.num_of_points;
+          grid_info.dist_btwn_points = canvas_letter.assets.total_width / grid_info.num_of_points;
       }
 
       // Populate the grid points with calculated distances
@@ -330,9 +330,9 @@
             }
 
 
-            path_pos_by_perc[i][j][k].y = (path_pos_by_perc[i][j][k].y - canvas_letter.assets.position.y) / canvas_letter.total_height
-            path_pos_by_perc[i][j][k].in_y = (path_pos_by_perc[i][j][k].in_y - canvas_letter.assets.position.y) / canvas_letter.total_height
-            path_pos_by_perc[i][j][k].out_y = (path_pos_by_perc[i][j][k].out_y - canvas_letter.assets.position.y) / canvas_letter.total_height
+            path_pos_by_perc[i][j][k].y = (path_pos_by_perc[i][j][k].y - canvas_letter.assets.position.y) / canvas_letter.assets.total_height
+            path_pos_by_perc[i][j][k].in_y = (path_pos_by_perc[i][j][k].in_y - canvas_letter.assets.position.y) / canvas_letter.assets.total_height
+            path_pos_by_perc[i][j][k].out_y = (path_pos_by_perc[i][j][k].out_y - canvas_letter.assets.position.y) / canvas_letter.assets.total_height
         
 
             // y index is not needed, since the grid is the vertical grid.
@@ -687,7 +687,7 @@
                     path_pos_by_perc[i][j][k].out_y
                   ).x,
                   interpolatePoint(
-                    interpolatePoint(path.  grid_b[corresponding_grid_index[i][j][k].out_x], path.grid_b[corresponding_grid_index_ahead[i][j][k].out_x], path_pos_by_perc[i][j][k].out_x),
+                    interpolatePoint(path.grid_b[corresponding_grid_index[i][j][k].out_x], path.grid_b[corresponding_grid_index_ahead[i][j][k].out_x], path_pos_by_perc[i][j][k].out_x),
                     interpolatePoint(path.grid_a[corresponding_grid_index[i][j][k].out_x], path.grid_a[corresponding_grid_index_ahead[i][j][k].out_x], path_pos_by_perc[i][j][k].out_x),
                     path_pos_by_perc[i][j][k].out_y
                   ).y,
@@ -840,17 +840,34 @@
 
     let letter_a_1 = new StaticSingleFontOnCanvas(Neue_Haas_Grotesk_Display_Pro_55_Roman, 'HENRYSONG');
 
+    function deepClone(obj) {
+      return Object.fromEntries(
+        Object.entries(obj).map(([key, value]) => 
+          [key, typeof value === "function" ? value : structuredClone(value)]
+        )
+      );
+    }
+
+
     // console.log(letter_a_1);
-    // let letter_a_2 = Close_path(letter_a_1);
+    let letter_a_2 = deepClone(letter_a_1);
     
     // console.log(letter_a_2);
-    // let path_swap = Shape_container_arr(letter_a_2, 100, 1);
-    // console.log(path_swap);
-    // letter_a_2.typeface_path_con = structuredClone(path_swap.points_position);
+    let path_swap = Shape_container_arr(letter_a_2, 1000, 1);
 
-    // let grid_letter = new Get_Grid_based_Glyph(letter_a_2, 300);
 
-    let grid_letter = new Get_Grid_based_Glyph(letter_a_1, 200);
+// letter_a_2 의 포인트가 많으면 bezier curve를 render 하는게 아니고 moveto lineto로만 레터를 그려야해. draw_letter function을 맞게 수정해야해.
+
+    letter_a_2.path = structuredClone(path_swap.points_position);
+
+    letter_a_2.letters.path = path_swap.points_position
+
+console.log(letter_a_2.letters.path)
+console.log(path_swap.points_position)
+
+    let grid_letter = new Get_Grid_based_Glyph(letter_a_2, 1200);
+
+    // let grid_letter = new Get_Grid_based_Glyph(letter_a_1, 300);
     
     let total_grid_amount = 1400;
     
@@ -869,7 +886,7 @@
         
         // grid_letter.draw_grid(shape_con.grid_points_con[2][0]);
         // grid_letter.draw_shape(shape_con.grid_points_con[2][0]);
-        grid_letter.draw_letter(shape_con.grid_points_con[2][0], total_grid_amount, 'black', 'yellow');
+        grid_letter.draw_letter(shape_con.grid_points_con[2][0], total_grid_amount, 'red', 'yellow');
 
         window.requestAnimationFrame(anim);
 
