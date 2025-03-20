@@ -232,11 +232,11 @@ function StaticSingleFontOnCanvas(typeface, letter, assets){
         }
 
 
-        this.position = assets.position;
-        this.path = path;
-        this.total_width = total_width;
-        this.extreme_val = {min: min_val, max: max_val};
-        this.total_height = structure_con[0].point_2.y - structure_con[0].point_0.y;
+        // this.position = assets.position;
+        // this.path = path;
+        // this.total_width = total_width;
+        // this.extreme_val = {min: min_val, max: max_val};
+        // this.total_height = structure_con[0].point_2.y - structure_con[0].point_0.y;
         
 
 
