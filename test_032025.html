@@ -228,7 +228,15 @@
 
     function Get_Grid_based_Glyph(canvas_letter, num_of_points){
 
-      // console.log(canvas_letter)
+      console.log(canvas_letter.letters.path)
+
+      for(let i = 0; i < canvas_letter.letters.path.length; i++){
+        if(canvas_letter.letters.path[i].length == 0){
+          canvas_letter.letters.path.splice(i, 1)
+        }
+      }
+
+      console.log(canvas_letter.letters.path)
       // console.log(canvas_letter.assets)
 
       // canvas_letter.assets.total_height = 700;
@@ -290,7 +298,6 @@
         }
       }
 
-      
         
 
       let corresponding_grid_index_ahead = structuredClone(corresponding_grid_index);
@@ -312,6 +319,7 @@
       let grid_index_for_background = Find_min_max_grid_index_for_each_letter(corresponding_grid_index)
 // console.log(corresponding_grid_index)
 
+// console.log(grid_index_for_background)
       function Find_min_max_grid_index_for_each_letter(grid_index){
 
       let each_letter_index_con = [];
@@ -366,6 +374,7 @@
 
 
         this.draw_letter = function(path, total_grid_amount, color, background_color){
+
 
           ctx.beginPath();
           
@@ -708,7 +717,9 @@
 
 
     // let letter_a_1 = new StaticSingleFontOnCanvas(Neue_Haas_Grotesk_Display_Pro_55_Roman, 'ASDFASDFASDFASDFASDFASDFASDFASDFASDFASDFASDFASDFASDFASDFASDFASDFASDFASDFASDFASDFASDFASDFASDFASDFASDFASDFASDFASDFASDFASDFASDF');
-    let letter_a_1 = new StaticSingleFontOnCanvas(Neue_Haas_Grotesk_Display_Pro_55_Roman, 'ITS NEVER THAT');
+    let letter_a_1 = new StaticSingleFontOnCanvas(Neue_Haas_Grotesk_Display_Pro_55_Roman, 'I TS NEVER THAT');
+
+console.log(letter_a_1)
 
     orient_to_canvas_path(test_glyph_Regular);
 
@@ -732,21 +743,24 @@
 
     let letter_a_3 = Close_path(letter_a_1);
 
-    let path_swap = new Shape_container_arr(letter_a_3, 100, 1);
+    let path_swap = new Shape_container_arr(letter_a_3, 1000, 1);
 
     // console.log(closed_snake_path_0)
     // console.log(Neue_Haas_Grotesk_Display_Pro_55_Roman)
 
     // letter_a_2.path = structuredClone(path_swap.points_position);
 
-    // console.log(letter_a_2.letters.path)
+    // console.log(letter_a_2.letters.path);
+
     letter_a_2.letters.path = path_swap.points_position;
 
 
     // console.log(letter_a_2.letters.path)
     // console.log(path_swap)
 
-    let grid_letter = new Get_Grid_based_Glyph(letter_a_2, 2500);
+    let grid_letter = new Get_Grid_based_Glyph(letter_a_2, 500);
+
+    console.log(letter_a_2)
     
     let total_grid_amount = 2500;
     

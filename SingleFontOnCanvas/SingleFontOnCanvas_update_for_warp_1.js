@@ -184,51 +184,36 @@ function StaticSingleFontOnCanvas(typeface, letter, assets){
         }
 
 
-        console.log(typeface.letters.info[1].name)
-        console.log(typeface.letters.info[index_con[3]].advanceWidth)
-        console.log(index_con)
-        console.log(path)
+        // console.log(typeface.letters.info[1].name)
+        // console.log(typeface.letters.info[index_con[3]].advanceWidth)
+        // console.log(index_con)
+        // console.log(path)
 
 
         let space_con = [];
-        console.log(path)
+        // console.log(path)
 
         for(let i = 0; i < path.length; i++){
-            
-        }
-
-        for(let i = 0; i < index_con.length; i++){
-            if(typeface.letters.info[index_con[i]].name == 'space'){
-                // console.log('asdfasdf')
-                // console.log(i)
-                space_con.push(i)
+            if(path[i].length == 0){
+                // console.log(i);
                 for(let j = i; j < path.length; j++){
                     for(let k = 0; k < path[j].length; k++){
                         for(let l = 0; l < path[j][k].length; l++){
-                            path[j][k][l].x = path[j][k][l].x + 300
-                            path[j][k][l].in_x = path[j][k][l].in_x + 300
-                            path[j][k][l].out_x = path[j][k][l].out_x + 300
+                            // path[j][k][l].x = path[j][k][l].x + 300
+                            // path[j][k][l].in_x = path[j][k][l].in_x + 300
+                            // path[j][k][l].out_x = path[j][k][l].out_x + 300
                         }
                     }
                 }
-
+                // path[i] = structuredClone(path[i-1])
+                // space_con.push(i)
             }
         }
 
+        
+        // console.log(path)
+        // console.log(typeface_info_con)
 
-        // for(let i = 0; i < space_con.length; i++){
-        //     for(let j = space_con[i]; j < path.length; j++){
-        //         for(let k = 0; k < path[j].length; k++){
-        //             for(let l = 0; l < path[j][k].length; l++){
-        //                 path[j][k][l].x = path[j][k][l].x - 300
-        //                 path[j][k][l].in_x = path[j][k][l].in_x - 300
-        //                 path[j][k][l].out_x = path[j][k][l].out_x - 300
-        //             }
-        //         }
-        //     }
-        // }
-        
-        
 
         let max_val = 0;
 
@@ -273,7 +258,7 @@ function StaticSingleFontOnCanvas(typeface, letter, assets){
             }
         }
 
-
+console.log(min_val, max_val)
         // this.position = assets.position;
         // this.path = path;
         // this.total_width = total_width;
@@ -328,28 +313,28 @@ function StaticSingleFontOnCanvas(typeface, letter, assets){
 
 
         ctx.beginPath();
-
+            
 
         for(let i = 0; i < letter.length; i++){
             for(let j = 0; j < path[i].length; j++){
 
-                    ctx.moveTo(path[i][j][0].x, path[i][j][0].y); 
+                    ctx.moveTo(path[i][j][0].x * 0.05, path[i][j][0].y * 0.05); 
 
                     for(let k = 0; k < path[i][j].length - 1; k++){
                         ctx.bezierCurveTo(
-                            path[i][j][k].out_x, path[i][j][k].out_y,
-                            path[i][j][k + 1].in_x, path[i][j][k + 1].in_y,
-                            path[i][j][k + 1].x, path[i][j][k + 1].y
+                            path[i][j][k].out_x * 0.05, path[i][j][k].out_y * 0.05,
+                            path[i][j][k + 1].in_x * 0.05, path[i][j][k + 1].in_y * 0.05,
+                            path[i][j][k + 1].x * 0.05, path[i][j][k + 1].y * 0.05
                         );
                     }
 
                     ctx.bezierCurveTo(
-                        path[i][j][path[i][j].length - 1].out_x, path[i][j][path[i][j].length - 1].out_y,
-                        path[i][j][0].in_x, path[i][j][0].in_y,
-                        path[i][j][0].x, path[i][j][0].y
+                        path[i][j][path[i][j].length - 1].out_x * 0.05, path[i][j][path[i][j].length - 1].out_y * 0.05,
+                        path[i][j][0].in_x * 0.05, path[i][j][0].in_y * 0.05,
+                        path[i][j][0].x * 0.05, path[i][j][0].y * 0.05
                     );
 
-                    ctx.lineTo(path[i][j][0].x, path[i][j][0].y);
+                    ctx.lineTo(path[i][j][0].x * 0.05, path[i][j][0].y * 0.05);
 
             }
         }
