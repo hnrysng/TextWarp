@@ -40,7 +40,7 @@ function StaticSingleFontOnCanvas(typeface, letter, assets){
             }
         }
     }
-
+    
 
 
     //  Organizing the info
@@ -184,11 +184,53 @@ function StaticSingleFontOnCanvas(typeface, letter, assets){
         }
 
 
+        console.log(typeface.letters.info[1].name)
+        console.log(typeface.letters.info[index_con[3]].advanceWidth)
+        console.log(index_con)
+        console.log(path)
 
 
+        let space_con = [];
+        console.log(path)
+
+        for(let i = 0; i < path.length; i++){
+            
+        }
+
+        for(let i = 0; i < index_con.length; i++){
+            if(typeface.letters.info[index_con[i]].name == 'space'){
+                // console.log('asdfasdf')
+                // console.log(i)
+                space_con.push(i)
+                for(let j = i; j < path.length; j++){
+                    for(let k = 0; k < path[j].length; k++){
+                        for(let l = 0; l < path[j][k].length; l++){
+                            path[j][k][l].x = path[j][k][l].x + 300
+                            path[j][k][l].in_x = path[j][k][l].in_x + 300
+                            path[j][k][l].out_x = path[j][k][l].out_x + 300
+                        }
+                    }
+                }
+
+            }
+        }
+
+
+        // for(let i = 0; i < space_con.length; i++){
+        //     for(let j = space_con[i]; j < path.length; j++){
+        //         for(let k = 0; k < path[j].length; k++){
+        //             for(let l = 0; l < path[j][k].length; l++){
+        //                 path[j][k][l].x = path[j][k][l].x - 300
+        //                 path[j][k][l].in_x = path[j][k][l].in_x - 300
+        //                 path[j][k][l].out_x = path[j][k][l].out_x - 300
+        //             }
+        //         }
+        //     }
+        // }
+        
+        
 
         let max_val = 0;
-
 
         for(let i = 0; i < path.length; i++){
             for(let j = 0; j < path[i].length; j++){
@@ -249,9 +291,10 @@ function StaticSingleFontOnCanvas(typeface, letter, assets){
         this.assets = {...assets, total_width, total_height, extreme_val}
 
 
+
+
         this.draw = function(){
 
-            
             if(assets.structure_width !== 0){
                 for(let i = 0; i < letter.length; i++){
 

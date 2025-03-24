@@ -15,10 +15,12 @@
     <script src="beziertools.js"></script>
     <script src="SingleFontOnCanvas/SingleFontOnCanvas_update_for_warp_1.js"></script>
     <script src="assets/font_data/GlyphToCanvas/Neue Haas Grotesk Display Pro 55 Roman_data.js"></script>
+    <script src="assets/font_data/test_glyph_Regular_data.js"></script>
 
     <script>
       
     let canvas = document.getElementById("canvas");
+    
     let ctx = canvas.getContext("2d");
     ctx.imageSmoothingEnabled = true;
     ctx.webkitImageSmoothingEnabled = true;
@@ -27,31 +29,50 @@
     ctx.oImageSmoothingEnabled = true;
 
 
+    // snake_path_0.letters.path[2][0][0].x = 9000;
+
     let closed_snake_path_0 = Close_path(snake_path_0);
     let closed_snake_path_1 = Close_path(snake_path_1);
     let closed_snake_path_2 = Close_path(snake_path_2);
     let closed_snake_path_3 = Close_path(snake_path_3);
     
+    function orient_to_canvas_path(shape){
 
+      let letter_canvas_path_con = structuredClone(shape.letters.path)
+
+      for(let i = 0; i < shape.letters.path.length; i++){
+          for(let a = 0; a < shape.letters.path[i].length; a++){
+            for(let n = 0; n < shape.letters.path[i][a].length; n++){
+              shape.letters.path[i][a][n].y = shape.parameters.ascender - shape.letters.path[i][a][n].y;
+              shape.letters.path[i][a][n].in_y = shape.parameters.ascender - shape.letters.path[i][a][n].in_y;
+              shape.letters.path[i][a][n].out_y = shape.parameters.ascender - shape.letters.path[i][a][n].out_y;
+            }
+          }
+        }
+        
+
+        return shape
+
+    }
 
     function Shape_container_arr(shape, num_of_points, total_grid_amount){
 
       if(total_grid_amount == undefined){
         total_grid_amount = 1;
       }
-console.log(shape)
+
 
       let letter_canvas_path_con = structuredClone(shape.letters.path)
 
-        for(let i = 0; i < shape.letters.path.length; i++){
-          for(let a = 0; a < shape.letters.path[i].length; a++){
-            for(let n = 0; n < shape.letters.path[i][a].length; n++){
-              letter_canvas_path_con[i][a][n].y = shape.parameters.cap_height - shape.letters.path[i][a][n].y;
-              letter_canvas_path_con[i][a][n].in_y = shape.parameters.cap_height - shape.letters.path[i][a][n].in_y;
-              letter_canvas_path_con[i][a][n].out_y = shape.parameters.cap_height - shape.letters.path[i][a][n].out_y;
-            }
-          }
-        }
+        // for(let i = 0; i < shape.letters.path.length; i++){
+        //   for(let a = 0; a < shape.letters.path[i].length; a++){
+        //     for(let n = 0; n < shape.letters.path[i][a].length; n++){
+        //       letter_canvas_path_con[i][a][n].y = shape.parameters.cap_height - shape.letters.path[i][a][n].y;
+        //       letter_canvas_path_con[i][a][n].in_y = shape.parameters.cap_height - shape.letters.path[i][a][n].in_y;
+        //       letter_canvas_path_con[i][a][n].out_y = shape.parameters.cap_height - shape.letters.path[i][a][n].out_y;
+        //     }
+        //   }
+        // }
 
 
       let bezier_points_con = [];
@@ -140,7 +161,7 @@ console.log(shape)
       for(let j = 0; j < points_angle[i].length; j++){
         for(let k = 350; k < 470; k++){
           // if(points_angle[i][j][k] == 0){
-            points_angle[i][j][k] = -95
+            // points_angle[i][j][k] = -95
           // }
         }
       }
@@ -154,11 +175,11 @@ console.log(shape)
         for(let k = 0; k < grid_points_con[i][j].grid_a.length; k++){
 
           grid_points_con[i][j].grid_a[k] = getPointFromAngleAndDistance(
-              points_position[i][j][k].x, points_position[i][j][k].y, points_angle[i][j][k], 40
+              points_position[i][j][k].x, points_position[i][j][k].y, points_angle[i][j][k], 30
           );
 
           grid_points_con[i][j].grid_b[k] = getPointFromAngleAndDistance(
-              points_position[i][j][k].x, points_position[i][j][k].y, points_angle[i][j][k], -40
+              points_position[i][j][k].x, points_position[i][j][k].y, points_angle[i][j][k], -30
           );
 
         }
@@ -207,8 +228,8 @@ console.log(shape)
 
     function Get_Grid_based_Glyph(canvas_letter, num_of_points){
 
-      console.log(canvas_letter)
-      console.log(canvas_letter.assets)
+      // console.log(canvas_letter)
+      // console.log(canvas_letter.assets)
 
       // canvas_letter.assets.total_height = 700;
 
@@ -289,7 +310,7 @@ console.log(shape)
 
       
       let grid_index_for_background = Find_min_max_grid_index_for_each_letter(corresponding_grid_index)
-console.log(corresponding_grid_index)
+// console.log(corresponding_grid_index)
 
       function Find_min_max_grid_index_for_each_letter(grid_index){
 
@@ -683,12 +704,19 @@ console.log(corresponding_grid_index)
     }
 
 
-    let num_of_points = 1500;
+    let num_of_points = 2500;
 
-    let shape_con = new Shape_container_arr(closed_snake_path_0, num_of_points, 1);
 
-    let letter_a_1 = new StaticSingleFontOnCanvas(Neue_Haas_Grotesk_Display_Pro_55_Roman, 'ASDFASDFASDFASDF');
+    // let letter_a_1 = new StaticSingleFontOnCanvas(Neue_Haas_Grotesk_Display_Pro_55_Roman, 'ASDFASDFASDFASDFASDFASDFASDFASDFASDFASDFASDFASDFASDFASDFASDFASDFASDFASDFASDFASDFASDFASDFASDFASDFASDFASDFASDFASDFASDFASDFASDF');
+    let letter_a_1 = new StaticSingleFontOnCanvas(Neue_Haas_Grotesk_Display_Pro_55_Roman, 'ITS NEVER THAT');
 
+    orient_to_canvas_path(test_glyph_Regular);
+
+    let closed_shape = Close_path(test_glyph_Regular);
+
+    let shape_con = new Shape_container_arr(closed_shape, num_of_points, 1);
+
+    // console.log(shape_con)
     function deepClone(obj) {
       return Object.fromEntries(
         Object.entries(obj).map(([key, value]) => 
@@ -697,6 +725,7 @@ console.log(corresponding_grid_index)
       );
     }
 
+    // console.log(letter_a_1)
 
     // console.log(letter_a_1);
     let letter_a_2 = deepClone(letter_a_1);
@@ -705,21 +734,21 @@ console.log(corresponding_grid_index)
 
     let path_swap = new Shape_container_arr(letter_a_3, 100, 1);
 
-    console.log(closed_snake_path_0)
-    console.log(Neue_Haas_Grotesk_Display_Pro_55_Roman)
+    // console.log(closed_snake_path_0)
+    // console.log(Neue_Haas_Grotesk_Display_Pro_55_Roman)
 
     // letter_a_2.path = structuredClone(path_swap.points_position);
 
-    console.log(letter_a_2.letters.path)
+    // console.log(letter_a_2.letters.path)
     letter_a_2.letters.path = path_swap.points_position;
 
 
-    console.log(letter_a_2.letters.path)
-    console.log(path_swap)
+    // console.log(letter_a_2.letters.path)
+    // console.log(path_swap)
 
-    let grid_letter = new Get_Grid_based_Glyph(letter_a_2, 400);
+    let grid_letter = new Get_Grid_based_Glyph(letter_a_2, 2500);
     
-    let total_grid_amount = 1400;
+    let total_grid_amount = 2500;
     
 
 
@@ -733,10 +762,11 @@ console.log(corresponding_grid_index)
         ctx.closePath();
         
         
-        grid_letter.draw_grid(shape_con.grid_points_con[2][0]);
+        grid_letter.draw_grid(shape_con.grid_points_con[3][0]);
         // grid_letter.draw_shape(shape_con.grid_points_con[2][0]);
-        grid_letter.draw_letter(shape_con.grid_points_con[2][0], total_grid_amount, 'black', 'pink');
+        grid_letter.draw_letter(shape_con.grid_points_con[3][0], total_grid_amount, 'black', 'pink');
 
+        letter_a_1.draw()
         window.requestAnimationFrame(anim);
 
     }
