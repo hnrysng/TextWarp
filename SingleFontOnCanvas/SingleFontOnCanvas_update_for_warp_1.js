@@ -1,5 +1,5 @@
 function StaticSingleFontOnCanvas(typeface, letter, assets){
-
+console.log(typeface)
     let defaults = {
         position: { x: 0, y: 0 },
         weight: 0,
@@ -42,6 +42,10 @@ function StaticSingleFontOnCanvas(typeface, letter, assets){
     }
     
 
+    function getKerning(leftGlyphIndex, rightGlyphIndex) {
+        return typeface.letters.kern[`${leftGlyphIndex}_${rightGlyphIndex}`] || 0;
+    }
+
 
     //  Organizing the info
     //  path contains ALL nodes or points {x: 285, y: 715, in_x: 285, in_y: 715, out_x: 285, …}
@@ -58,7 +62,9 @@ function StaticSingleFontOnCanvas(typeface, letter, assets){
             path[i] = structuredClone(typeface.letters.path[index_con[i]]);
             typeface_info_con[i] = structuredClone(typeface.letters.info[index_con[i]]);
     }
+
     
+
 
     //  Similar to path, letter_path_con containers points but ONLY for the selected letters
     let letter_path_con = [];
@@ -151,9 +157,34 @@ function StaticSingleFontOnCanvas(typeface, letter, assets){
             updated_width_con[i + 1] = cumulativeSum;
         }
 
-
-
         
+
+        let kern_con = [];
+
+        for (let i = 0; i < index_con.length - 1; i++) {
+
+            kern_con[i] = getKerning(index_con[i], index_con[i + 1]);
+                
+        }
+
+        kern_con.unshift(0);
+        
+        
+
+        // applying kerning
+        for(let n = 0; n < kern_con.length; n++){
+            for(let i = n; i < path.length; i++){
+                for(let j = 0; j < path[i].length; j++){
+                    for(let k = 0; k < path[i][j].length; k++){
+                        path[i][j][k].x = path[i][j][k].x + kern_con[n];
+                        path[i][j][k].in_x = path[i][j][k].in_x + kern_con[n];
+                        path[i][j][k].out_x = path[i][j][k].out_x + kern_con[n];
+                    }
+                }
+            }
+        }
+        // applying kerning
+
         for(let i = 0; i < path.length; i++){
             for(let j = 0; j < path[i].length; j++){
                 for(let k = 0; k < path[i][j].length; k++){
@@ -183,36 +214,6 @@ function StaticSingleFontOnCanvas(typeface, letter, assets){
             structure_con[i].base_1.y = (structure_con[i].base_1.y * assets.scale) + assets.position.y + pos_y_align[i];
         }
 
-
-        // console.log(typeface.letters.info[1].name)
-        // console.log(typeface.letters.info[index_con[3]].advanceWidth)
-        // console.log(index_con)
-        // console.log(path)
-
-
-        let space_con = [];
-        // console.log(path)
-
-        for(let i = 0; i < path.length; i++){
-            if(path[i].length == 0){
-                // console.log(i);
-                for(let j = i; j < path.length; j++){
-                    for(let k = 0; k < path[j].length; k++){
-                        for(let l = 0; l < path[j][k].length; l++){
-                            // path[j][k][l].x = path[j][k][l].x + 300
-                            // path[j][k][l].in_x = path[j][k][l].in_x + 300
-                            // path[j][k][l].out_x = path[j][k][l].out_x + 300
-                        }
-                    }
-                }
-                // path[i] = structuredClone(path[i-1])
-                // space_con.push(i)
-            }
-        }
-
-        
-        // console.log(path)
-        // console.log(typeface_info_con)
 
 
         let max_val = 0;
@@ -258,14 +259,6 @@ function StaticSingleFontOnCanvas(typeface, letter, assets){
             }
         }
 
-console.log(min_val, max_val)
-        // this.position = assets.position;
-        // this.path = path;
-        // this.total_width = total_width;
-        // this.extreme_val = {min: min_val, max: max_val};
-        // this.total_height = structure_con[0].point_2.y - structure_con[0].point_0.y;
-        
-
 
         this.parameters = structuredClone(typeface.parameters);
 
@@ -275,7 +268,7 @@ console.log(min_val, max_val)
         this.letters = {path};
         this.assets = {...assets, total_width, total_height, extreme_val}
 
-
+            
 
 
         this.draw = function(){
@@ -315,38 +308,53 @@ console.log(min_val, max_val)
         ctx.beginPath();
             
 
-        for(let i = 0; i < letter.length; i++){
+        for(let i = 0; i < path.length; i++){
             for(let j = 0; j < path[i].length; j++){
 
-                    ctx.moveTo(path[i][j][0].x * 0.05, path[i][j][0].y * 0.05); 
+                    ctx.moveTo(path[i][j][0].x, path[i][j][0].y);
 
                     for(let k = 0; k < path[i][j].length - 1; k++){
                         ctx.bezierCurveTo(
-                            path[i][j][k].out_x * 0.05, path[i][j][k].out_y * 0.05,
-                            path[i][j][k + 1].in_x * 0.05, path[i][j][k + 1].in_y * 0.05,
-                            path[i][j][k + 1].x * 0.05, path[i][j][k + 1].y * 0.05
+                            path[i][j][k].out_x, path[i][j][k].out_y,
+                            path[i][j][k + 1].in_x, path[i][j][k + 1].in_y,
+                            path[i][j][k + 1].x, path[i][j][k + 1].y
                         );
                     }
 
-                    ctx.bezierCurveTo(
-                        path[i][j][path[i][j].length - 1].out_x * 0.05, path[i][j][path[i][j].length - 1].out_y * 0.05,
-                        path[i][j][0].in_x * 0.05, path[i][j][0].in_y * 0.05,
-                        path[i][j][0].x * 0.05, path[i][j][0].y * 0.05
-                    );
+                    // ctx.bezierCurveTo(
+                    //     path[i][j][path[i][j].length - 2].out_x, path[i][j][path[i][j].length - 2].out_y,
+                    //     path[i][j][path[i][j].length - 1].in_x, path[i][j][path[i][j].length - 1].in_y,
+                    //     path[i][j][path[i][j].length - 1].x, path[i][j][path[i][j].length - 1].y
+                    // );
 
-                    ctx.lineTo(path[i][j][0].x * 0.05, path[i][j][0].y * 0.05);
+                    // ctx.bezierCurveTo(
+                    //     path[i][j][path[i][j].length - 1].out_x, path[i][j][path[i][j].length - 1].out_y,
+                    //     path[i][j][0].in_x, path[i][j][0].in_y,
+                    //     path[i][j][0].x, path[i][j][0].y
+                    // );
 
+
+                    // ctx.lineTo(path[i][j][path[i][j].length - 2].x, path[i][j][path[i][j].length - 2].y);
+                    // ctx.lineTo(path[i][j][path[i][j].length - 1].x, path[i][j][path[i][j].length - 1].y);
+                    // ctx.lineTo(path[i][j][0].x, path[i][j][0].y);
+
+                    // ctx.beginPath();
+                    ctx.rect(path[i][j][0].x, path[i][j][0].y, 20, 20);
+                    // ctx.stroke();
             }
         }
-
+// console.log(path[0][0])
+// asdf
 
 
         ctx.fillStyle = assets.color;
-        ctx.fill();
+        // ctx.fill();
         ctx.strokeStyle = assets.stroke_style;
         ctx.lineWidth = assets.stroke_width;
         ctx.stroke();
         ctx.closePath();
+
+
 
         
     }

@@ -15,6 +15,7 @@
     <script src="beziertools.js"></script>
     <script src="SingleFontOnCanvas/SingleFontOnCanvas_update_for_warp_1.js"></script>
     <script src="assets/font_data/GlyphToCanvas/Neue Haas Grotesk Display Pro 55 Roman_data.js"></script>
+    <script src="assets/font_data/MessinaSerif_Regular_data.js"></script>
     <script src="assets/font_data/test_glyph_Regular_data.js"></script>
 
     <script>
@@ -698,7 +699,8 @@
 
 
     // let letter_a_1 = new StaticSingleFontOnCanvas(Neue_Haas_Grotesk_Display_Pro_55_Roman, 'ASDFASDFASDFASDFASDFASDFASDFASDFASDFASDFASDFASDFASDFASDFASDFASDFASDFASDFASDFASDFASDFASDFASDFASDFASDFASDFASDFASDFASDFASDFASDF');
-    let letter_a_1 = new StaticSingleFontOnCanvas(Neue_Haas_Grotesk_Display_Pro_55_Roman, 'HELLO EVERYONE THIS IS ME');
+    // let letter_a_1 = new StaticSingleFontOnCanvas(MessinaSerif_Regular, 'adtq');
+    let letter_a_1 = new StaticSingleFontOnCanvas(MessinaSerif_Regular, '6dtq9');
 
 console.log(letter_a_1)
 
@@ -759,7 +761,7 @@ console.log(letter_a_1)
         
         // grid_letter.draw_grid(shape_con.grid_points_con[3][0]);
         // grid_letter.draw_shape(shape_con.grid_points_con[2][0]);
-        grid_letter.draw_letter(shape_con.grid_points_con[3][0], total_grid_amount, 'black', 'pink');
+        // grid_letter.draw_letter(shape_con.grid_points_con[3][0], total_grid_amount, 'black', 'rgba(0,0,0,0)');
 
         letter_a_1.draw()
         window.requestAnimationFrame(anim);
