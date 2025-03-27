@@ -1,5 +1,5 @@
 function StaticSingleFontOnCanvas(typeface, letter, assets){
-console.log(typeface)
+// console.log(typeface)
     let defaults = {
         position: { x: 0, y: 0 },
         weight: 0,
@@ -42,6 +42,7 @@ console.log(typeface)
     }
     
 
+
     function getKerning(leftGlyphIndex, rightGlyphIndex) {
         return typeface.letters.kern[`${leftGlyphIndex}_${rightGlyphIndex}`] || 0;
     }
@@ -64,7 +65,6 @@ console.log(typeface)
     }
 
     
-
 
     //  Similar to path, letter_path_con containers points but ONLY for the selected letters
     let letter_path_con = [];
@@ -169,7 +169,17 @@ console.log(typeface)
 
         kern_con.unshift(0);
         
-        
+
+for(let i = 0; i < typeface.letters.path.length; i++){
+    for(let l = 0; l < typeface.letters.path[i].length; l++){
+        for(let k = 0; k < typeface.letters.path[i][l].length; k++){
+            if(typeface.letters.path[i][l][k].in_x == undefined){
+                console.log(i, l, k)
+            }
+        }
+    }
+}
+
 
         // applying kerning
         for(let n = 0; n < kern_con.length; n++){
@@ -185,6 +195,7 @@ console.log(typeface)
         }
         // applying kerning
 
+
         for(let i = 0; i < path.length; i++){
             for(let j = 0; j < path[i].length; j++){
                 for(let k = 0; k < path[i][j].length; k++){
@@ -197,6 +208,12 @@ console.log(typeface)
                 }
             }
         }
+
+        console.log(path[0])
+        console.log(typeface.letters.path[46])
+        console.log(path[0][1][4])
+        console.log(typeface.letters.path[46][1][4])
+
 
 
         for(let i = 0; i < letter.length; i++){
@@ -320,31 +337,12 @@ console.log(typeface)
                             path[i][j][k + 1].x, path[i][j][k + 1].y
                         );
                     }
+                    
 
-                    // ctx.bezierCurveTo(
-                    //     path[i][j][path[i][j].length - 2].out_x, path[i][j][path[i][j].length - 2].out_y,
-                    //     path[i][j][path[i][j].length - 1].in_x, path[i][j][path[i][j].length - 1].in_y,
-                    //     path[i][j][path[i][j].length - 1].x, path[i][j][path[i][j].length - 1].y
-                    // );
+                    ctx.lineTo(path[i][j][0].x, path[i][j][0].y);
 
-                    // ctx.bezierCurveTo(
-                    //     path[i][j][path[i][j].length - 1].out_x, path[i][j][path[i][j].length - 1].out_y,
-                    //     path[i][j][0].in_x, path[i][j][0].in_y,
-                    //     path[i][j][0].x, path[i][j][0].y
-                    // );
-
-
-                    // ctx.lineTo(path[i][j][path[i][j].length - 2].x, path[i][j][path[i][j].length - 2].y);
-                    // ctx.lineTo(path[i][j][path[i][j].length - 1].x, path[i][j][path[i][j].length - 1].y);
-                    // ctx.lineTo(path[i][j][0].x, path[i][j][0].y);
-
-                    // ctx.beginPath();
-                    ctx.rect(path[i][j][0].x, path[i][j][0].y, 20, 20);
-                    // ctx.stroke();
             }
         }
-// console.log(path[0][0])
-// asdf
 
 
         ctx.fillStyle = assets.color;
@@ -355,6 +353,27 @@ console.log(typeface)
         ctx.closePath();
 
 
+        
+
+
+        ctx.beginPath();
+            
+
+        for(let i = 0; i < path.length; i++){
+            for(let j = 0; j < path[i].length; j++){
+                for(let k = 0; k < path[i][j].length - 1; k++){
+                    ctx.rect(path[i][j][k].x - 5, path[i][j][k].y - 5, 10, 10);
+                }
+            }
+        }
+
+
+        ctx.fillStyle = assets.color;
+        // ctx.fill();
+        ctx.strokeStyle = assets.stroke_style;
+        ctx.lineWidth = assets.stroke_width;
+        ctx.stroke();
+        ctx.closePath();
 
         
     }
