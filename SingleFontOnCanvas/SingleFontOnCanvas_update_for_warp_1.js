@@ -170,15 +170,15 @@ function StaticSingleFontOnCanvas(typeface, letter, assets){
         kern_con.unshift(0);
         
 
-for(let i = 0; i < typeface.letters.path.length; i++){
-    for(let l = 0; l < typeface.letters.path[i].length; l++){
-        for(let k = 0; k < typeface.letters.path[i][l].length; k++){
-            if(typeface.letters.path[i][l][k].in_x == undefined){
-                console.log(i, l, k)
-            }
-        }
-    }
-}
+        // for(let i = 0; i < typeface.letters.path.length; i++){
+        //     for(let l = 0; l < typeface.letters.path[i].length; l++){
+        //         for(let k = 0; k < typeface.letters.path[i][l].length; k++){
+        //             if(typeface.letters.path[i][l][k].in_x == undefined){
+        //                 console.log(i, l, k)
+        //             }
+        //         }
+        //     }
+        // }
 
 
         // applying kerning
@@ -209,10 +209,6 @@ for(let i = 0; i < typeface.letters.path.length; i++){
             }
         }
 
-        console.log(path[0])
-        console.log(typeface.letters.path[46])
-        console.log(path[0][1][4])
-        console.log(typeface.letters.path[46][1][4])
 
 
 

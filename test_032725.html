@@ -17,6 +17,8 @@
     <script src="assets/font_data/GlyphToCanvas/Neue Haas Grotesk Display Pro 55 Roman_data.js"></script>
     <script src="assets/font_data/MessinaSerif_Regular_data.js"></script>
     <script src="assets/font_data/test_glyph_Regular_data.js"></script>
+    <script src="assets/font_data/DeutscheDruckschrift_data.js"></script>
+    <script src="assets/font_data/Trap_Regular_data.js"></script>
 
     <script>
       
@@ -229,6 +231,25 @@
 
     function Get_Grid_based_Glyph(canvas_letter, num_of_points){
 
+
+    let adjust_start_x_to_0 = null;
+    console.log(canvas_letter.letters.path[0][0][0].x)
+
+    if(canvas_letter.letters.path[0][0][0].x < 0){
+      adjust_start_x_to_0 = Math.abs(canvas_letter.letters.path[0][0][0].x);
+    }
+
+      for(let i = 0; i < canvas_letter.letters.path.length; i++){
+        for(let l = 0; l < canvas_letter.letters.path[i].length; l++){
+          for(let k = 0; k < canvas_letter.letters.path[i][l].length; k++){
+            canvas_letter.letters.path[i][l][k].x = canvas_letter.letters.path[i][l][k].x + adjust_start_x_to_0;
+          }
+        }
+      }
+
+      
+      // space has a unicode but doesnt have any path. 
+      // its essential to detect the space to remove, since displaying it will create error, looping through arr that has no path.
       let space_detector = [];
 
       for(let i = 0; i < canvas_letter.letters.path.length; i++){
@@ -241,7 +262,6 @@
         canvas_letter.letters.path.splice(space_detector[i], 1)
       }
       
-      // canvas_letter.assets.total_height = 700;
 
       let grid_info = {
         num_of_points: num_of_points,
@@ -250,11 +270,11 @@
       }
 
       // Calculate the distance between grid points based on the letter's dimensions(width)
-      if((canvas_letter.assets.extreme_val.max - canvas_letter.assets.position.x) > canvas_letter.assets.total_width){
-          grid_info.dist_btwn_points = (canvas_letter.assets.extreme_val.max - canvas_letter.assets.position.x) / grid_info.num_of_points;
-      }else{
+      // if((canvas_letter.assets.extreme_val.max - canvas_letter.assets.position.x) > canvas_letter.assets.total_width){
+      //     grid_info.dist_btwn_points = (canvas_letter.assets.extreme_val.max - canvas_letter.assets.position.x) / grid_info.num_of_points;
+      // }else{
           grid_info.dist_btwn_points = canvas_letter.assets.total_width / grid_info.num_of_points;
-      }
+      // }
 
       // Populate the grid points with calculated distances
       for(let i = 0; i <= grid_info.num_of_points; i++){
@@ -262,7 +282,7 @@
       }
 
 
-      //  Finding points percentage within the grid for interpolation
+      //  Finding points position percentage within the grid for interpolation
       let path_pos_by_perc = structuredClone(canvas_letter.letters.path);
 
       //  Finding which grid the points lies on
@@ -300,7 +320,6 @@
         }
       }
 
-        
 
       let corresponding_grid_index_ahead = structuredClone(corresponding_grid_index);
 
@@ -318,9 +337,17 @@
 
       
       let grid_index_for_background = Find_min_max_grid_index_for_each_letter(corresponding_grid_index)
-// console.log(corresponding_grid_index)
 
-// console.log(grid_index_for_background)
+
+        console.log("path_pos_by_perc")
+        console.log(path_pos_by_perc)
+        console.log("corresponding_grid_index")
+        console.log(corresponding_grid_index)
+        console.log("corresponding_grid_index_ahead")
+        console.log(corresponding_grid_index_ahead)
+        console.log('grid_index_for_background')
+        console.log(grid_index_for_background)
+
       function Find_min_max_grid_index_for_each_letter(grid_index){
 
       let each_letter_index_con = [];
@@ -355,7 +382,6 @@
     }
 
 
-    
 
 
         this.draw_grid = function(path){
@@ -423,7 +449,7 @@
           }
         // }
           
-
+console.log(path)
 
           // console.log(grid_index_for_background)
           // console.log(path_pos_by_perc)
@@ -645,7 +671,7 @@
         }
 
         let point_a = 0;
-        let point_b = 200;
+        let point_b = 2500;
 
         this.draw_shape = function(path){
 
@@ -700,7 +726,9 @@
 
     // let letter_a_1 = new StaticSingleFontOnCanvas(Neue_Haas_Grotesk_Display_Pro_55_Roman, 'ASDFASDFASDFASDFASDFASDFASDFASDFASDFASDFASDFASDFASDFASDFASDFASDFASDFASDFASDFASDFASDFASDFASDFASDFASDFASDFASDFASDFASDFASDFASDF');
     // let letter_a_1 = new StaticSingleFontOnCanvas(MessinaSerif_Regular, 'adtq');
-    let letter_a_1 = new StaticSingleFontOnCanvas(MessinaSerif_Regular, 'qLasdfasdfasfd');
+    // let letter_a_1 = new StaticSingleFontOnCanvas(MessinaSerif_Regular, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890?!@#$%^&*()');
+    // let letter_a_1 = new StaticSingleFontOnCanvas(Trap_Regular, 'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA');
+    // let letter_a_1 = new StaticSingleFontOnCanvas(DeutscheDruckschrift, 'asdf');
 
 console.log(letter_a_1)
 
@@ -741,7 +769,7 @@ console.log(letter_a_1)
     // console.log(letter_a_2.letters.path)
     // console.log(path_swap)
 
-    let grid_letter = new Get_Grid_based_Glyph(letter_a_2, 500);
+    let grid_letter = new Get_Grid_based_Glyph(letter_a_2, 2500);
 
     console.log(letter_a_2)
     
@@ -761,7 +789,7 @@ console.log(letter_a_1)
         
         // grid_letter.draw_grid(shape_con.grid_points_con[3][0]);
         // grid_letter.draw_shape(shape_con.grid_points_con[2][0]);
-        grid_letter.draw_letter(shape_con.grid_points_con[3][0], total_grid_amount, 'black', 'rgba(0,0,0,0)');
+        grid_letter.draw_letter(shape_con.grid_points_con[3][0], total_grid_amount, 'black', 'pink');
 
         letter_a_1.draw()
         window.requestAnimationFrame(anim);
