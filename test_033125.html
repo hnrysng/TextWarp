@@ -14,7 +14,7 @@
 
     <script src="beziertools.js"></script>
     <script src="SingleFontOnCanvas/SingleFontOnCanvas_update_for_warp_1.js"></script>
-    <script src="assets/font_data/GlyphToCanvas/Neue Haas Grotesk Display Pro 55 Roman_data.js"></script>
+    <script src="assets/font_data/Neue Haas Grotesk Text Pro 55 Roman_data.js"></script>
     <script src="assets/font_data/MessinaSerif_Regular_data.js"></script>
     <script src="assets/font_data/test_glyph_Regular_data.js"></script>
     <script src="assets/font_data/DeutscheDruckschrift_data.js"></script>
@@ -32,7 +32,6 @@
     ctx.oImageSmoothingEnabled = true;
 
 
-    // snake_path_0.letters.path[2][0][0].x = 9000;
 
     let closed_snake_path_0 = Close_path(snake_path_0);
     let closed_snake_path_1 = Close_path(snake_path_1);
@@ -233,7 +232,7 @@
 
 
     let adjust_start_x_to_0 = null;
-    console.log(canvas_letter.letters.path[0][0][0].x)
+      
 
     if(canvas_letter.letters.path[0][0][0].x < 0){
       adjust_start_x_to_0 = Math.abs(canvas_letter.letters.path[0][0][0].x);
@@ -722,14 +721,8 @@
 
     let num_of_points = 2500;
 
-
-    // let letter_a_1 = new StaticSingleFontOnCanvas(Neue_Haas_Grotesk_Display_Pro_55_Roman, 'ASDFASDFASDFASDFASDFASDFASDFASDFASDFASDFASDFASDFASDFASDFASDFASDFASDFASDFASDFASDFASDFASDFASDFASDFASDFASDFASDFASDFASDFASDFASDF');
-    // let letter_a_1 = new StaticSingleFontOnCanvas(MessinaSerif_Regular, 'adtq');
-    let letter_a_1 = new StaticSingleFontOnCanvas(MessinaSerif_Regular, 'asdfghjkl;zxcvbnm,qwertyuiopABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890?!@#$%^&*()');
-    // let letter_a_1 = new StaticSingleFontOnCanvas(Trap_Regular, 'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA');
-    // let letter_a_1 = new StaticSingleFontOnCanvas(DeutscheDruckschrift, 'asdf');
-
-console.log(letter_a_1)
+    // let letter_a_1 = new StaticSingleFontOnCanvas(Neue_Haas_Grotesk_Text_Pro_55_Roman, 'A          D               P      F          W       N  C        U    P        T 3      2');
+    let letter_a_1 = new StaticSingleFontOnCanvas(Neue_Haas_Grotesk_Text_Pro_55_Roman, 'BASDFASDFASDFASDFASDF');
 
     orient_to_canvas_path(test_glyph_Regular);
 
@@ -745,32 +738,18 @@ console.log(letter_a_1)
         )
       );
     }
-
-    // console.log(letter_a_1)
-
-    // console.log(letter_a_1);
+    
     let letter_a_2 = deepClone(letter_a_1);
 
     let letter_a_3 = Close_path(letter_a_1);
 
-    let path_swap = new Shape_container_arr(letter_a_3, 1000, 1);
-
-    // console.log(closed_snake_path_0)
-    // console.log(Neue_Haas_Grotesk_Display_Pro_55_Roman)
-
-    // letter_a_2.path = structuredClone(path_swap.points_position);
-
-    // console.log(letter_a_2.letters.path);
+    let path_swap = new Shape_container_arr(letter_a_3, 2500, 1);
 
     letter_a_2.letters.path = path_swap.points_position;
 
 
-    // console.log(letter_a_2.letters.path)
-    // console.log(path_swap)
-
+  
     let grid_letter = new Get_Grid_based_Glyph(letter_a_2, 2500);
-
-    console.log(letter_a_2)
     
     let total_grid_amount = 2500;
     
@@ -790,7 +769,7 @@ console.log(letter_a_1)
         // grid_letter.draw_shape(shape_con.grid_points_con[2][0]);
         grid_letter.draw_letter(shape_con.grid_points_con[3][0], total_grid_amount, 'black', 'pink');
 
-        letter_a_1.draw()
+        // letter_a_1.draw();
         window.requestAnimationFrame(anim);
 
     }
